@@ -6,27 +6,20 @@ import { Link } from 'next-transition-router';
 import { gsap, useGSAP } from '@/lib/gsap';
 import { useRouter } from 'next/navigation';
 import AnimatedHeading from '@/components/ui/AnimateHeading';
-import { getAllProjects } from '@/lib/projects';
-import { Project } from '@/lib/projects';
+import { getAllProjects, Project } from '@/lib/projects';
 
-const useHoverPreview = () => {
+const useHoverPreview = (containerRef?: React.RefObject<HTMLDivElement | null>) => {
   const floatingRef = useRef<HTMLDivElement | null>(null);
   const innerRef = useRef<HTMLDivElement | null>(null);
   const imageContainerRef = useRef<HTMLDivElement | null>(null);
   const imgXTo = useRef<any>(null);
   const imgYTo = useRef<any>(null);
-  const mouse = useRef({ x: 0, y: 0, prevX: 0, prevY: 0 });
+  const mouse = useRef({ x: 0, y: 0 });
   const delayedMouse = useRef({ x: 0, y: 0 });
   const isHovering = useRef<boolean>(false);
   const rafId = useRef<number | null>(null);
-  const dynamics = useRef({ velocityX: 0, velocityY: 0, rotation: 0 });
-  /**
-   * Snellenberg-style single-writer architecture: scale/opacity are NOT
-   * tweened on enter/exit. One rAF loop lerps EVERYTHING (position, scale,
-   * opacity, rotation, inner zoom) and emits exactly one transform per
-   * frame. No tween-vs-rAF races, no blur repaints -> perfectly fluid.
-   */
-  const vis = useRef({ scale: 0, opacity: 0 });
+  const dynamics = useRef({ rotation: 0, scale: 0, opacity: 0 });
+  const isVisibleRef = useRef<boolean>(false);
 
   const setFloatingRef = useCallback((el: HTMLDivElement | null) => {
     floatingRef.current = el;
@@ -51,81 +44,118 @@ const useHoverPreview = () => {
   const setImageContainerRef = useCallback((el: HTMLDivElement | null) => {
     imageContainerRef.current = el;
     if (!el) return;
-    imgXTo.current = gsap.quickTo(el, 'x', { duration: 0.25, ease: 'power2' });
-    imgYTo.current = gsap.quickTo(el, 'y', { duration: 0.25, ease: 'power2' });
+    imgXTo.current = gsap.quickTo(el, 'x', { duration: 0.35, ease: 'power2.out' });
+    imgYTo.current = gsap.quickTo(el, 'y', { duration: 0.35, ease: 'power2.out' });
   }, []);
+
+  const tick = useCallback(() => {
+    if (!isVisibleRef.current) {
+      rafId.current = null;
+      return;
+    }
+
+    const m = mouse.current;
+    const d = dynamics.current;
+
+    const dx = m.x - delayedMouse.current.x;
+    const dy = m.y - delayedMouse.current.y;
+
+    delayedMouse.current.x += dx * 0.055;
+    delayedMouse.current.y += dy * 0.055;
+
+    const targetRot = isHovering.current ? gsap.utils.clamp(-9, 9, dx * 0.15) : 0;
+    d.rotation += (targetRot - d.rotation) * 0.08;
+
+    if (imageContainerRef.current && imgXTo.current && imgYTo.current) {
+      if (isHovering.current) {
+        imgXTo.current(gsap.utils.clamp(-14, 14, -dx * 0.25));
+        imgYTo.current(gsap.utils.clamp(-12, 12, -dy * 0.25));
+      } else {
+        imgXTo.current(0);
+        imgYTo.current(0);
+      }
+    }
+
+    const el = floatingRef.current;
+    if (el) {
+      if (d.opacity < 0.005) {
+        el.style.visibility = 'hidden';
+      } else {
+        if (el.style.visibility !== 'visible') el.style.visibility = 'visible';
+        gsap.set(el, {
+          x: delayedMouse.current.x,
+          y: delayedMouse.current.y,
+          scale: Math.max(d.scale, 0.0001),
+          opacity: d.opacity,
+          rotation: d.rotation,
+        });
+      }
+    }
+
+    if (!isHovering.current && d.opacity < 0.005 && Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+      rafId.current = null;
+      return;
+    }
+
+    rafId.current = requestAnimationFrame(tick);
+  }, []);
+
+  const startLoop = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(pointer: coarse)').matches || !window.matchMedia('(hover: hover)').matches) return;
+    if (!isVisibleRef.current) return;
+    if (rafId.current === null) {
+      rafId.current = requestAnimationFrame(tick);
+    }
+  }, [tick]);
+
+  const stopLoop = useCallback(() => {
+    if (rafId.current !== null) {
+      cancelAnimationFrame(rafId.current);
+      rafId.current = null;
+    }
+  }, []);
+
+  const forceHide = useCallback(() => {
+    isHovering.current = false;
+    dynamics.current.opacity = 0;
+    dynamics.current.scale = 0;
+    dynamics.current.rotation = 0;
+    stopLoop();
+    const el = floatingRef.current;
+    if (el) {
+      el.style.visibility = 'hidden';
+      gsap.set(el, { opacity: 0, scale: 0, rotation: 0 });
+    }
+  }, [stopLoop]);
 
   useEffect(() => {
     if (window.matchMedia('(pointer: coarse)').matches || !window.matchMedia('(hover: hover)').matches) return;
 
-    const POSITION_LERP = 0.115;
-    const SCALE_LERP = 0.13;
-    const OPACITY_LERP = 0.17;
-    const ROT_LERP = 0.09;
-    const MAX_ROT = 6;
-    const MAX_PARALLAX = 12;
+    const container = containerRef?.current;
+    if (!container) return;
 
-    const tick = () => {
-      const m = mouse.current;
-      const d = dynamics.current;
-
-      // Smoothed cursor velocity (for tilt + parallax)
-      d.velocityX += (m.x - m.prevX - d.velocityX) * 0.18;
-      d.velocityY += (m.y - m.prevY - d.velocityY) * 0.18;
-      m.prevX = m.x;
-      m.prevY = m.y;
-
-      delayedMouse.current.x += (m.x - delayedMouse.current.x) * POSITION_LERP;
-      delayedMouse.current.y += (m.y - delayedMouse.current.y) * POSITION_LERP;
-
-      const target = isHovering.current ? 1 : 0;
-      vis.current.scale += (target - vis.current.scale) * SCALE_LERP;
-      vis.current.opacity += (target - vis.current.opacity) * OPACITY_LERP;
-
-      const targetR = isHovering.current
-        ? gsap.utils.clamp(-MAX_ROT, MAX_ROT, d.velocityX * 0.3)
-        : 0;
-      d.rotation += (targetR - d.rotation) * ROT_LERP;
-
-      if (imageContainerRef.current) {
-        gsap.set(imageContainerRef.current, {
-          scale: 1.12 + (1 - vis.current.scale) * 0.26,
-        });
-        if (imgXTo.current && imgYTo.current) {
-          if (isHovering.current) {
-            imgXTo.current(gsap.utils.clamp(-MAX_PARALLAX, MAX_PARALLAX, -d.velocityX));
-            imgYTo.current(gsap.utils.clamp(-MAX_PARALLAX, MAX_PARALLAX, -d.velocityY));
-          } else {
-            imgXTo.current(0);
-            imgYTo.current(0);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          if (isHovering.current || dynamics.current.opacity > 0.005) {
+            startLoop();
           }
-        }
-      }
-
-      const el = floatingRef.current;
-      if (el) {
-        if (vis.current.opacity < 0.02) {
-          el.style.visibility = 'hidden';
         } else {
-          if (el.style.visibility !== 'visible') el.style.visibility = 'visible';
-          gsap.set(el, {
-            x: delayedMouse.current.x,
-            y: delayedMouse.current.y,
-            scale: Math.max(vis.current.scale, 0.0001),
-            opacity: vis.current.opacity,
-            rotation: d.rotation,
-          });
+          forceHide();
         }
-      }
+      },
+      { threshold: 0.01 }
+    );
 
-      rafId.current = requestAnimationFrame(tick);
-    };
+    observer.observe(container);
 
-    rafId.current = requestAnimationFrame(tick);
     return () => {
-      if (rafId.current) cancelAnimationFrame(rafId.current);
+      observer.disconnect();
+      forceHide();
     };
-  }, []);
+  }, [containerRef, startLoop, forceHide]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -133,20 +163,67 @@ const useHoverPreview = () => {
       mouse.current.x = e.clientX;
       mouse.current.y = e.clientY;
     };
+
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const show = useCallback(() => {
+  const show = useCallback((clientX?: number, clientY?: number) => {
     if (typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || !window.matchMedia('(hover: hover)').matches)) return;
-    isHovering.current = true;
-  }, []);
+    const el = floatingRef.current;
+    if (!el) return;
+
+    const targetX = clientX ?? mouse.current.x;
+    const targetY = clientY ?? mouse.current.y;
+
+    if (!isHovering.current) {
+      if (targetX !== 0 && targetY !== 0) {
+        delayedMouse.current.x = targetX;
+        delayedMouse.current.y = targetY;
+        gsap.set(el, { x: targetX, y: targetY });
+      }
+      isHovering.current = true;
+    }
+
+    gsap.to(dynamics.current, {
+      scale: 1,
+      opacity: 1,
+      duration: 0.45,
+      ease: 'power3.out',
+      overwrite: 'auto',
+    });
+
+    startLoop();
+  }, [startLoop]);
 
   const hide = useCallback(() => {
-    isHovering.current = false;
-  }, []);
+    if (typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || !window.matchMedia('(hover: hover)').matches)) return;
+    const el = floatingRef.current;
+    if (!el) return;
 
-  return { setFloatingRef, setInnerRef, setImageContainerRef, show, hide, isHovering, mouse };
+    isHovering.current = false;
+    if (!isVisibleRef.current) {
+      forceHide();
+      return;
+    }
+    gsap.to(dynamics.current, {
+      scale: 0,
+      opacity: 0,
+      duration: 0.35,
+      ease: 'power3.inOut',
+      overwrite: 'auto',
+      onComplete: () => {
+        if (!isHovering.current && el) {
+          el.style.visibility = 'hidden';
+          gsap.set(el, { opacity: 0, scale: 0 });
+        }
+      },
+    });
+
+    startLoop();
+  }, [startLoop, forceHide]);
+
+  return { setFloatingRef, setInnerRef, setImageContainerRef, show, hide, forceHide, isHovering, mouse };
 };
 
 interface MobileSnapProjectsProps {
@@ -164,7 +241,7 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
       const mm = gsap.matchMedia();
 
       mm.add('(max-width: 767px)', () => {
-        const cards = cardRefs.current.filter(Boolean);
+        const cards = cardRefs.current.filter((card): card is HTMLAnchorElement => card !== null);
         cards.forEach((card) => {
           const imgWrap = card.querySelector('.mc-img-wrap');
           const img = card.querySelector('.mc-img');
@@ -326,24 +403,23 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
 export default function ProjectsPage() {
   const router = useRouter();
   const projects = getAllProjects();
-  const isLoading = false;
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderReelRef = useRef<HTMLDivElement>(null);
   const activeIndexRef = useRef<number>(-1);
 
-  const { setFloatingRef, setInnerRef, setImageContainerRef, show, hide, mouse } =
-    useHoverPreview();
-
-  useEffect(() => {
-    getAllProjects().slice(0, 4).forEach((project) => {
-      const img = new window.Image();
-      img.src = project.hoverImage || project.images[0];
-    });
-  }, []);
+  const {
+    setFloatingRef,
+    setInnerRef,
+    setImageContainerRef,
+    show,
+    hide,
+    forceHide,
+    mouse,
+  } = useHoverPreview(containerRef);
 
   useGSAP(
     () => {
-      if (isLoading || projects.length === 0) return;
+      if (projects.length === 0) return;
       const rows = containerRef.current?.querySelectorAll('.project-row-desktop');
       if (!rows?.length) return;
       rows.forEach((row, index) => {
@@ -356,11 +432,11 @@ export default function ProjectsPage() {
         }
       });
     },
-    { scope: containerRef, dependencies: [isLoading, projects] },
+    { scope: containerRef, dependencies: [projects] },
   );
 
   const activateRow = useCallback(
-    (index: number) => {
+    (index: number, clientX?: number, clientY?: number) => {
       if (
         typeof window !== 'undefined' &&
         (window.matchMedia('(pointer: coarse)').matches || !window.matchMedia('(hover: hover)').matches)
@@ -369,7 +445,7 @@ export default function ProjectsPage() {
       if (!containerRef.current) return;
 
       if (activeIndexRef.current === index) {
-        show();
+        show(clientX, clientY);
         return;
       }
       activeIndexRef.current = index;
@@ -398,23 +474,30 @@ export default function ProjectsPage() {
         });
       }
 
-      show();
+      show(clientX, clientY);
     },
     [projects, router, show],
   );
 
-  const deactivateAll = useCallback(() => {
-    activeIndexRef.current = -1;
-    if (containerRef.current) {
-      const lines = containerRef.current.querySelectorAll('.hover-line-ref');
-      lines.forEach((line) => gsap.to(line, { width: '0%', duration: 0.3, ease: 'power2.out', overwrite: 'auto' }));
-      const overlays = containerRef.current.querySelectorAll('.title-reveal-overlay');
-      overlays.forEach((ov) => {
-        (ov as HTMLElement).style.clipPath = 'inset(0 100% 0 0)';
-      });
-    }
-    hide();
-  }, [hide]);
+  const deactivateAll = useCallback(
+    (immediate = false) => {
+      activeIndexRef.current = -1;
+      if (containerRef.current) {
+        const lines = containerRef.current.querySelectorAll('.hover-line-ref');
+        lines.forEach((line) => gsap.to(line, { width: '0%', duration: 0.25, ease: 'power2.out', overwrite: 'auto' }));
+        const overlays = containerRef.current.querySelectorAll('.title-reveal-overlay');
+        overlays.forEach((ov) => {
+          (ov as HTMLElement).style.clipPath = 'inset(0 100% 0 0)';
+        });
+      }
+      if (immediate) {
+        forceHide();
+      } else {
+        hide();
+      }
+    },
+    [hide, forceHide],
+  );
 
   useEffect(() => {
     const handleCheckScroll = () => {
@@ -429,14 +512,16 @@ export default function ProjectsPage() {
       if (mx === 0 && my === 0) return;
 
       const containerRect = containerRef.current.getBoundingClientRect();
+      const isContainerOutOfView = containerRect.bottom <= 0 || containerRect.top >= window.innerHeight;
       if (
+        isContainerOutOfView ||
         my < containerRect.top ||
         my > containerRect.bottom ||
         mx < containerRect.left ||
         mx > containerRect.right
       ) {
-        if (activeIndexRef.current !== -1) {
-          deactivateAll();
+        if (activeIndexRef.current !== -1 || isContainerOutOfView) {
+          deactivateAll(isContainerOutOfView);
         }
         return;
       }
@@ -451,13 +536,19 @@ export default function ProjectsPage() {
       });
 
       if (foundIndex !== -1) {
-        activateRow(foundIndex);
+        activateRow(foundIndex, mx, my);
       } else if (activeIndexRef.current !== -1) {
         deactivateAll();
       }
     };
 
+    const handleWindowLeave = () => {
+      deactivateAll(true);
+    };
+
     window.addEventListener('scroll', handleCheckScroll, { passive: true });
+    window.addEventListener('mouseleave', handleWindowLeave);
+    window.addEventListener('blur', handleWindowLeave);
     const lenis = (window as any).__lenis;
     if (lenis) {
       lenis.on('scroll', handleCheckScroll);
@@ -465,6 +556,8 @@ export default function ProjectsPage() {
 
     return () => {
       window.removeEventListener('scroll', handleCheckScroll);
+      window.removeEventListener('mouseleave', handleWindowLeave);
+      window.removeEventListener('blur', handleWindowLeave);
       if (lenis) {
         lenis.off('scroll', handleCheckScroll);
       }
@@ -487,31 +580,11 @@ export default function ProjectsPage() {
     sessionStorage.setItem('previous-project-url', window.location.pathname);
   };
 
-  if (isLoading) {
-    return (
-      <section id="projects" className="relative min-h-screen w-full bg-cream text-charcoal overflow-hidden px-12 py-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="h-20 bg-gray-300 rounded animate-pulse w-1/3 mb-10" />
-          <div className="space-y-8">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="py-8 border-b border-border flex animate-pulse">
-                <div className="w-12 h-6 bg-gray-300 rounded mr-8" />
-                <div className="flex-1 space-y-4">
-                  <div className="h-10 bg-gray-300 rounded w-1/2" />
-                  <div className="h-6 bg-gray-300 rounded w-1/4" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section
       id="projects"
       ref={containerRef}
+      onMouseLeave={handleTableMouseLeave}
       className="relative w-full bg-cream text-charcoal overflow-hidden"
     >
       <div className="hidden md:block pt-16 pb-20 md:pt-20 md:pb-24 px-6 sm:px-8 md:px-12 lg:px-16 max-w-7xl mx-auto">
@@ -529,7 +602,11 @@ export default function ProjectsPage() {
               key={project.id}
               href={`/projects/${project.slug}`}
               className="project-row-desktop relative flex items-stretch border-b border-border py-8 min-h-[120px] group cursor-pointer no-underline"
-              onMouseEnter={() => activateRow(index)}
+              onMouseEnter={(e) => {
+                mouse.current.x = e.clientX;
+                mouse.current.y = e.clientY;
+                activateRow(index, e.clientX, e.clientY);
+              }}
               data-cursor="view"
               onClick={handleRowClick}
             >
@@ -585,16 +662,16 @@ export default function ProjectsPage() {
           style={{
             top: 0,
             left: 0,
-            willChange: 'transform',
+            willChange: 'transform, opacity',
           }}
         >
           <div
             ref={setInnerRef}
-            className="w-[400px] xl:w-[440px] rounded-2xl overflow-hidden shadow-2xl bg-surface-mid"
+            className="w-[420px] xl:w-[460px] rounded-2xl overflow-hidden shadow-2xl bg-surface-mid"
             style={{
               aspectRatio: '16 / 10',
               willChange: 'transform',
-              boxShadow: '0 24px 48px -12px rgba(0, 0, 0, 0.38), 0 10px 20px -8px rgba(0, 0, 0, 0.22)',
+              boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.4), 0 10px 20px -8px rgba(0, 0, 0, 0.22)',
             }}
           >
             <div
@@ -612,17 +689,17 @@ export default function ProjectsPage() {
                   return (
                     <div
                       key={project.id}
-                      className="w-full h-full absolute inset-0"
+                      className="w-full h-full absolute inset-0 overflow-hidden"
                       style={{ top: `${idx * 100}%` }}
                     >
-                  <Image
-                    src={imgUrl}
-                    alt={project.title}
-                    fill
-                    sizes="460px"
-                    priority={idx < 2}
-                    className="object-cover object-top"
-                  />
+                      <Image
+                        src={imgUrl}
+                        alt={project.title}
+                        fill
+                        sizes="480px"
+                        priority={idx < 2}
+                        className="object-cover object-top"
+                      />
                     </div>
                   );
                 })}
