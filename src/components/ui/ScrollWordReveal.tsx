@@ -8,11 +8,9 @@ interface ScrollWordRevealProps {
   text: string;
   className?: string;
   dimOpacity?: number;
-  /** Framer-style offsets kept for API compatibility: ['start 0.95', 'end 0.7'] */
   offset?: [string, string];
   highlightColor?: string;
   dimColor?: string;
-  /** Color for *accented* words (rendered serif italic) */
   accentColor?: string;
 }
 
@@ -21,7 +19,6 @@ interface Token {
   accent: boolean;
 }
 
-/** Parses "*word*" markup into serif-accent tokens. */
 const tokenize = (text: string): Token[] => {
   const tokens: Token[] = [];
   const re = /\*([^*]+)\*|(\S+)/g;
@@ -75,8 +72,9 @@ export const ScrollWordReveal: React.FC<ScrollWordRevealProps> = ({
 
       gsap.set(wordEls, {
         opacity: dimOpacity,
-        y: isTouch ? 0 : 10,
-        filter: isTouch ? 'none' : 'blur(4px)',
+        y: isTouch ? 0 : 8,
+        scale: isTouch ? 1 : 0.94,
+        transformOrigin: '50% 100%',
         color: (i: number, target: Element) =>
           (target as HTMLElement).dataset.accent === 'true'
             ? hexToRgba(accentColor, Math.max(dimOpacity, 0.3))
@@ -86,7 +84,7 @@ export const ScrollWordReveal: React.FC<ScrollWordRevealProps> = ({
       gsap.to(wordEls, {
         opacity: 1,
         y: 0,
-        filter: isTouch ? 'none' : 'blur(0px)',
+        scale: 1,
         color: (i: number, target: Element) =>
           (target as HTMLElement).dataset.accent === 'true' ? accentColor : highlightColor,
         ease: 'none',
@@ -107,7 +105,7 @@ export const ScrollWordReveal: React.FC<ScrollWordRevealProps> = ({
       {tokens.map((tok, i) => (
         <span key={`${tok.t}-${i}`} className="relative inline-block mr-[0.28em] my-[0.04em]">
           <span
-            className={`swr-word inline-block will-change-[transform,filter,opacity] ${
+            className={`swr-word inline-block will-change-[transform,opacity] ${
               tok.accent ? 'serif-accent normal-case text-[1.12em]' : ''
             }`}
             data-accent={tok.accent}

@@ -6,14 +6,12 @@
   --font-mono: var(--font-geist-mono), monospace;
   --font-serif: var(--font-instrument-serif), Georgia, serif;
 
-  /* Editorial fluid type scale */
   --text-hero: clamp(4.25rem, 18vw, 12rem);
   --text-hero-sm: clamp(3.6rem, 15.5vw, 9.5rem);
   --text-section-xl: clamp(2.75rem, 8.5vw, 7.5rem);
   --text-section: clamp(2.25rem, 6.5vw, 5.5rem);
   --text-stat: clamp(2.5rem, 6vw, 4.75rem);
 
-  /* Rhythm */
   --spacing-section: clamp(6rem, 12vw, 11rem);
 
   --color-cream: #E8E4DE;
@@ -21,12 +19,17 @@
   --color-accent: #C45D3E;
   --color-accent-light: #E07A5F;
   --color-accent-muted: #D4956B;
-  --color-warm: #6b645c;
+  --color-warm: #524c46;
+  --color-warm-light: #9e9a93;
   --color-muted: #b0ada8;
   --color-light: #d1d1c7;
   --color-elevated: #2a2a2a;
   --color-elevated-dark: #1a1a18;
   --color-surface: #0d0d0c;
+  --color-surface-base: #0b0a09;
+  --color-surface-card: #121210;
+  --color-surface-float: #181816;
+  --color-surface-border: #242320;
   --color-surface-mid: #161615;
   --color-border: #d0d0c8;
   --color-border-dark: #c8c8c0;
@@ -52,16 +55,11 @@
     scroll-behavior: auto !important;
   }
 
-  .film-grain {
-    animation: none !important;
-  }
-
+  .film-grain,
   .marquee-content-left,
-  .marquee-content-right {
-    animation: none !important;
-  }
-
-  .arrow-pulse {
+  .marquee-content-right,
+  .arrow-pulse,
+  .stamp-disc {
     animation: none !important;
   }
 
@@ -81,6 +79,11 @@ body.preloader-active {
 
 html {
   touch-action: pan-y;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -91,12 +94,6 @@ body {
 ::selection {
   background: #C45D3E;
   color: #ffffff;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .preloader-active main {
-    visibility: visible !important;
-  }
 }
 
 .bg-primary {
@@ -115,6 +112,7 @@ body {
   opacity: 0.035;
   pointer-events: none;
   z-index: 9990;
+  will-change: transform;
 }
 
 .marquee-container {
@@ -127,6 +125,36 @@ body {
   overflow: hidden;
   width: 100%;
   white-space: nowrap;
+  position: relative;
+}
+
+.marquee-row::before,
+.marquee-row::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marquee-row-light::before {
+  left: 0;
+  background: linear-gradient(to right, #E8E4DE, transparent);
+}
+.marquee-row-light::after {
+  right: 0;
+  background: linear-gradient(to left, #E8E4DE, transparent);
+}
+
+.marquee-row-dark::before {
+  left: 0;
+  background: linear-gradient(to right, #0F0E0C, transparent);
+}
+.marquee-row-dark::after {
+  right: 0;
+  background: linear-gradient(to left, #0F0E0C, transparent);
 }
 
 .marquee-content-left {
@@ -179,9 +207,6 @@ body {
 .scroll-progress-bar {
   will-change: transform;
 }
-.film-grain {
-  will-change: transform;
-}
 
 @keyframes arrowPulse {
   0%, 100% { transform: translateX(0); }
@@ -189,38 +214,6 @@ body {
 }
 .arrow-pulse {
   animation: arrowPulse 1.5s ease-in-out infinite;
-}
-
-.marquee-row {
-  position: relative;
-}
-.marquee-row::before,
-.marquee-row::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 8%;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.marquee-row-light::before {
-  left: 0;
-  background: linear-gradient(to right, #E8E4DE, transparent);
-}
-.marquee-row-light::after {
-  right: 0;
-  background: linear-gradient(to left, #E8E4DE, transparent);
-}
-
-.marquee-row-dark::before {
-  left: 0;
-  background: linear-gradient(to right, #0F0E0C, transparent);
-}
-.marquee-row-dark::after {
-  right: 0;
-  background: linear-gradient(to left, #0F0E0C, transparent);
 }
 
 @media (pointer: fine) {
@@ -234,15 +227,6 @@ body.cursor-disabled,
 body.cursor-disabled * {
   cursor: auto !important;
 }
-
-html {
-  scrollbar-width: none;
-}
-html::-webkit-scrollbar {
-  display: none;
-}
-
-/* ---------- Accessibility ---------- */
 
 :focus-visible {
   outline: 2px solid #c45d3e;
@@ -270,8 +254,6 @@ html::-webkit-scrollbar {
   top: 1rem;
 }
 
-/* ---------- Editorial helpers ---------- */
-
 .serif-accent {
   font-family: var(--font-instrument-serif), Georgia, serif;
   font-style: italic;
@@ -291,10 +273,4 @@ html::-webkit-scrollbar {
 .stamp-disc {
   animation: stamp-spin 14s linear infinite;
   transform-origin: center;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .stamp-disc {
-    animation: none !important;
-  }
 }

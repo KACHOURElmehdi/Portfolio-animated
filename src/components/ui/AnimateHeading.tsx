@@ -6,16 +6,12 @@ import { EASE } from '@/lib/motion';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 
 export interface HeadingWord {
-  /** Word text */
   t: string;
-  /** Render this word in italic serif accent instead of heavy grotesk */
   serif?: boolean;
 }
 
 interface AnimatedHeadingProps {
-  /** Simple mode: single-style heading */
   text?: string;
-  /** Editorial mode: mix of grotesk + serif-accent words */
   words?: HeadingWord[];
   className?: string;
   containerClassName?: string;

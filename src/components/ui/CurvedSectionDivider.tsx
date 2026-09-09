@@ -6,9 +6,7 @@ import { useReducedMotion } from '@/lib/useReducedMotion';
 
 interface CurvedSectionDividerProps {
   className?: string;
-  /** color of the curved shape (e.g. #E8E4DE / bg-cream) */
   curveColor?: string;
-  /** background of the section underneath (e.g. #0F0E0C / bg-ink) */
   bottomColor?: string;
 }
 
