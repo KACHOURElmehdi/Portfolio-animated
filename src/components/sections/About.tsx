@@ -1,17 +1,17 @@
 import React from 'react';
-import About from './AboutMe';
+import AboutMe from './AboutMe';
 import Services from './Services';
 import TechStack from './TechStack';
-interface ReuniteBlackProps {
-  techStackRef: React.RefObject<HTMLDivElement | null> | any;
+
+interface AboutProps {
+  techStackRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-const ReuniteBlack: React.FC<ReuniteBlackProps> = ({ techStackRef }) => {
+const About: React.FC<AboutProps> = ({ techStackRef }) => {
   return (
     <>
-      <About />
+      <AboutMe />
       <Services />
-
       <div ref={techStackRef}>
         <TechStack />
       </div>
@@ -19,4 +19,4 @@ const ReuniteBlack: React.FC<ReuniteBlackProps> = ({ techStackRef }) => {
   );
 };
 
-export default ReuniteBlack;
+export default About;
