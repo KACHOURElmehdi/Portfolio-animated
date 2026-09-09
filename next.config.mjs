@@ -4,7 +4,7 @@
  * Licensed under the MIT License. See LICENSE in the project root for license information.
  * Project: Portfolio
  * Author: Aitezaz Sikandar (aitezazdev)
- * Website: https://aitezaz.xyz
+ * Website: https://aitezazdev.vercel.app
  */
 
 const nextConfig = {
@@ -15,6 +15,7 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
-  reactStrictMode: false,
+  reactStrictMode: true,
 };
+
 export default nextConfig;

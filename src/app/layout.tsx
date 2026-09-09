@@ -4,7 +4,7 @@
  * Licensed under the MIT License. See LICENSE in the project root for license information.
  * Project: Portfolio
  * Author: Aitezaz Sikandar (aitezazdev)
- * Website: https://aitezaz.xyz
+ * Website: https://aitezazdev.vercel.app
  */
 
 import { Geist, Geist_Mono, Space_Grotesk, Instrument_Serif } from 'next/font/google';

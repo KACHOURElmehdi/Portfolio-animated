@@ -24,7 +24,7 @@ export const siteMetadata: Metadata = {
     },
   ],
   creator: 'Aitezaz Sikandar',
-  metadataBase: new URL('https://aitezaz.xyz'),
+  metadataBase: new URL('https://aitezazdev.vercel.app'),
   alternates: {
     canonical: './',
   },
@@ -35,7 +35,7 @@ export const siteMetadata: Metadata = {
     title: 'Aitezaz Sikandar - Full Stack Developer',
     description:
       'Portfolio of Aitezaz Sikandar, Full Stack Developer specializing in MERN stack, Next.js, and polished web experiences.',
-    url: 'https://aitezaz.xyz',
+    url: 'https://aitezazdev.vercel.app',
     siteName: 'Aitezaz Sikandar Portfolio',
     images: [
       {

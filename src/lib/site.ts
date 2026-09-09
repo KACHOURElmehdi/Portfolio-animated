@@ -8,7 +8,7 @@ export const site = {
   location: 'Pakistan',
   timeZone: 'Asia/Karachi',
   timeZoneLabel: 'PKT',
-  url: 'https://aitezaz.xyz',
+  url: 'https://aitezazdev.vercel.app',
   tagline: 'Full Stack Developer crafting fast, expressive web experiences.',
   roles: [
     'Full Stack Developer',
