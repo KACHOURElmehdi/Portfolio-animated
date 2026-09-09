@@ -10,7 +10,7 @@ interface Particle {
   life: number;
   maxLife: number;
   speed: number;
-  hueMix: number; // 0 = rust, 1 = cream
+  hueMix: number;
 }
 
 export default function FlowField() {
@@ -35,7 +35,6 @@ export default function FlowField() {
     const mouse = { x: -9999, y: -9999 };
     let particles: Particle[] = [];
 
-    // Layered trigonometric noise — smooth, organic, dependency-free.
     const noiseAngle = (x: number, y: number, t: number): number => {
       const n =
         Math.sin(x * 1.7 + t) * Math.cos(y * 1.35 - t * 0.7) +
@@ -59,6 +58,7 @@ export default function FlowField() {
     const resize = () => {
       if (!container) return;
       const rect = container.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
       width = rect.width;
       height = rect.height;
       const isMobile = width < 768;
@@ -76,7 +76,6 @@ export default function FlowField() {
         return p;
       });
 
-      // Fresh ink base
       ctx.fillStyle = '#0d0d0c';
       ctx.fillRect(0, 0, width, height);
       if (reduced) renderStatic();
@@ -89,7 +88,6 @@ export default function FlowField() {
       let vx = Math.cos(angle) * p.speed;
       let vy = Math.sin(angle) * p.speed * 0.85;
 
-      // Cursor bends the field
       if (finePointer && mouse.x > -999) {
         const dx = p.x - mouse.x;
         const dy = p.y - mouse.y;
@@ -121,7 +119,6 @@ export default function FlowField() {
     };
 
     const drawFrame = () => {
-      // Silk-trail fade
       ctx.fillStyle = 'rgba(13, 13, 12, 0.045)';
       ctx.fillRect(0, 0, width, height);
 
@@ -130,7 +127,7 @@ export default function FlowField() {
         const alive = stepParticle(p);
         if (!alive) continue;
 
-        const fadeEdge = Math.sin((p.life / p.maxLife) * Math.PI); // ease in/out
+        const fadeEdge = Math.sin((p.life / p.maxLife) * Math.PI);
         if (p.hueMix === 0) {
           ctx.strokeStyle = `rgba(196, 93, 62, ${0.34 + fadeEdge * 0.4})`;
         } else {
@@ -166,7 +163,16 @@ export default function FlowField() {
       const observer = new IntersectionObserver(
         ([entry]) => {
           visible = entry.isIntersecting;
-          if (visible && rafId === null) rafId = requestAnimationFrame(animate);
+          if (visible) {
+            if (rafId === null) {
+              rafId = requestAnimationFrame(animate);
+            }
+          } else {
+            if (rafId !== null) {
+              cancelAnimationFrame(rafId);
+              rafId = null;
+            }
+          }
         },
         { threshold: 0.02 }
       );
@@ -186,13 +192,19 @@ export default function FlowField() {
           resizeObserver.disconnect();
           container.removeEventListener('mousemove', onMove);
           container.removeEventListener('mouseleave', onLeave);
-          if (rafId !== null) cancelAnimationFrame(rafId);
+          if (rafId !== null) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+          }
         };
       }
       return () => {
         observer.disconnect();
         resizeObserver.disconnect();
-        if (rafId !== null) cancelAnimationFrame(rafId);
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
       };
     }
 
