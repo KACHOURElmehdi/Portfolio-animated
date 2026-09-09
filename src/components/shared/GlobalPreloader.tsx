@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { gsap } from '@/lib/gsap';
 
 export const preloaderWords = [
   'السلام علیکم',
@@ -12,22 +12,12 @@ export const preloaderWords = [
   'Welcome',
 ];
 
-export const slideUp: Variants = {
-  initial: {
-    top: 0,
-    backgroundColor: '#141516',
-  },
-  exit: {
-    top: '-100vh',
-    backgroundColor: 'rgba(20, 21, 22, 0)',
-    transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
-  },
-};
-
 const MIN_DISPLAY_MS = 1400;
 const HARD_CAP_MS = 3200;
 
 export default function GlobalPreloader({ onComplete }: { onComplete?: () => void }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const curvePathRef = useRef<SVGPathElement>(null);
   const [index, setIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [dimension, setDimension] = useState<{ width: number; height: number }>({
@@ -43,6 +33,39 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
   const finishedRef = useRef(false);
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
+
+  const playExitAnimation = useRef(() => {});
+  playExitAnimation.current = () => {
+    if (!containerRef.current || !curvePathRef.current) {
+      onCompleteRef.current?.();
+      return;
+    }
+
+    const targetD = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${
+      dimension.width / 2
+    } ${dimension.height} 0 ${dimension.height} L0 0`;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        onCompleteRef.current?.();
+      },
+    });
+
+    tl.to(curvePathRef.current, {
+      attr: { d: targetD },
+      duration: 0.7,
+      ease: 'power3.inOut',
+      delay: 0.15,
+    }).to(
+      containerRef.current,
+      {
+        yPercent: -100,
+        duration: 0.8,
+        ease: 'power4.inOut',
+      },
+      '<',
+    );
+  };
 
   useEffect(() => {
     startedAtRef.current = performance.now();
@@ -88,7 +111,7 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
         try {
           sessionStorage.setItem('preloader-seen', '1');
         } catch {}
-        setTimeout(() => onCompleteRef.current?.(), 220);
+        setTimeout(() => playExitAnimation.current(), 180);
         return;
       }
       rafId = requestAnimationFrame(tick);
@@ -125,35 +148,17 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
     dimension.width / 2
   } ${dimension.height + 300} 0 ${dimension.height} L0 0`;
 
-  const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${
-    dimension.width / 2
-  } ${dimension.height} 0 ${dimension.height} L0 0`;
-
-  const curve: Variants = {
-    initial: {
-      d: initialPath,
-      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] },
-    },
-    exit: {
-      d: targetPath,
-      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1], delay: 0.3 },
-    },
-  };
-
   return (
-    <motion.div
-      variants={slideUp}
-      initial="initial"
-      exit="exit"
+    <div
+      ref={containerRef}
       className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#141516] cursor-wait text-cream select-none pointer-events-auto"
+      style={{ willChange: 'transform' }}
     >
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.75, transition: { duration: 1, delay: 0.15 } }}
-        className="flex items-center text-3xl sm:text-4xl md:text-5xl font-display font-medium text-[#f0ede6] z-10"
+      <div
+        className="flex items-center text-3xl sm:text-4xl md:text-5xl font-display font-medium text-[#f0ede6] z-10 transition-opacity duration-700 opacity-90"
       >
         <p className="tracking-wide">{preloaderWords[index]}</p>
-      </motion.div>
+      </div>
 
       <div className="absolute bottom-8 left-8 z-10 flex items-baseline gap-3 font-mono" aria-hidden="true">
         <span className="text-accent text-sm uppercase tracking-widest">loading</span>
@@ -167,13 +172,12 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
       />
 
       <svg className="absolute top-0 -z-10 h-[calc(100%+300px)] w-full pointer-events-none">
-        <motion.path
+        <path
+          ref={curvePathRef}
           className="fill-[#141516]"
-          variants={curve}
-          initial="initial"
-          exit="exit"
+          d={initialPath}
         />
       </svg>
-    </motion.div>
+    </div>
   );
 }

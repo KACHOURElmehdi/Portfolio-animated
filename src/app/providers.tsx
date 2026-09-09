@@ -16,44 +16,19 @@ declare global {
 
 let _isCurtainCovering = false;
 
-function restoreScroll(target: number, lenisInst: React.RefObject<Lenis | null> | null | any) {
-  const lenisObj = lenisInst?.current || window.__lenis;
-  if (lenisObj) {
-    lenisObj.scrollTo(target, { immediate: true });
-  }
+function restoreScroll(target: number, lenisInst: React.RefObject<Lenis | null> | null) {
+  const lenisObj = lenisInst?.current || (typeof window !== 'undefined' ? window.__lenis : null);
   document.documentElement.scrollTop = target;
   document.body.scrollTop = target;
-
-  let lockFrames = 12;
-  const lockLoop = () => {
+  if (lenisObj) {
+    lenisObj.scrollTo(target, { immediate: true });
+    lenisObj.start();
+  }
+  requestAnimationFrame(() => {
     document.documentElement.scrollTop = target;
     document.body.scrollTop = target;
     if (lenisObj) lenisObj.scrollTo(target, { immediate: true });
-    lockFrames--;
-    if (lockFrames > 0) requestAnimationFrame(lockLoop);
-  };
-  requestAnimationFrame(lockLoop);
-
-  if (lenisInst?.current) lenisInst.current.start();
-
-  requestAnimationFrame(() => {
-    if (lenisObj) lenisObj.stop();
     ScrollTrigger.refresh();
-    document.documentElement.scrollTop = target;
-    document.body.scrollTop = target;
-    requestAnimationFrame(() => {
-      document.documentElement.scrollTop = target;
-      document.body.scrollTop = target;
-      if (lenisObj) {
-        lenisObj.scrollTo(target, { immediate: true });
-        lenisObj.start();
-      }
-      setTimeout(() => {
-        document.documentElement.scrollTop = target;
-        document.body.scrollTop = target;
-        if (lenisObj) lenisObj.scrollTo(target, { immediate: true });
-      }, 200);
-    });
   });
 }
 
@@ -160,11 +135,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <TransitionRouter
       auto={true}
-      leave={(next: () => void, _from: string, to: string) => {
+      leave={(next: () => void, _from?: string, to?: string) => {
         if (lenis?.current) lenis.current.stop();
-        const isGoingToProject = to.startsWith('/projects/');
+        const isGoingToProject = to ? to.startsWith('/projects/') : false;
         const savedScroll = safeSessionStorage.getItem('projects-scroll');
-        const isReturningHome = (to === '/' || to === '') && savedScroll && !isGoingToProject;
+        const isReturningHome = (to === '/' || to === '' || !to) && savedScroll && !isGoingToProject;
         if (isGoingToProject) safeSessionStorage.setItem('navigating-to-project', 'true');
         scrollTargetRef.current = isReturningHome ? parseInt(savedScroll, 10) : 0;
 
