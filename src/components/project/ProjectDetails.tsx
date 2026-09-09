@@ -78,7 +78,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
   };
 
   return (
-    <section ref={rootRef} className="min-h-screen bg-[#080807] text-white px-6 sm:px-8 md:px-12 lg:px-16 py-12 md:py-20 relative">
+    <section ref={rootRef} className="min-h-screen bg-surface-base text-white px-6 sm:px-8 md:px-12 lg:px-16 py-12 md:py-20 relative">
       <div className="max-w-6xl mx-auto">
         <div>
           <Link
@@ -92,7 +92,6 @@ export default function ProjectDetails({ project }: { project: Project }) {
           </Link>
         </div>
 
-        {/* ---------- Hero ---------- */}
         <header className="mb-16 md:mb-24">
           <h1
             ref={titleRef}
@@ -106,11 +105,11 @@ export default function ProjectDetails({ project }: { project: Project }) {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 border-t border-white/[0.08] pt-6 items-start">
             <div className="pd-meta-item">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-warm mb-1.5">Role</p>
+              <p className="font-mono text-[11px] uppercase tracking-widest text-warm-light mb-1.5">Role</p>
               <p className="text-sm md:text-base font-medium">{project.role}</p>
             </div>
             <div className="pd-meta-item">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-warm mb-1.5">Type</p>
+              <p className="font-mono text-[11px] uppercase tracking-widest text-warm-light mb-1.5">Type</p>
               <p className="text-sm md:text-base font-medium">{project.type}</p>
             </div>
             <div className="pd-meta-item col-span-2 sm:col-span-1 flex flex-wrap items-start sm:justify-end gap-2.5">
@@ -160,7 +159,6 @@ export default function ProjectDetails({ project }: { project: Project }) {
           </div>
         </header>
 
-        {/* ---------- Stats band ---------- */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/[0.08] rounded-2xl overflow-hidden mb-20 md:mb-28 border border-white/[0.08]">
           {project.stats.map((stat) => (
             <div key={stat.label} className="bg-[#0d0d0c] px-6 py-8 md:py-10 text-center sm:text-left">
@@ -177,10 +175,9 @@ export default function ProjectDetails({ project }: { project: Project }) {
           ))}
         </div>
 
-        {/* ---------- Narrative ---------- */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-20 md:mb-28">
           <div className="md:col-span-4">
-            <p className="font-mono text-xs uppercase tracking-widest text-warm">(Overview)</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-warm-light">(Overview)</p>
           </div>
           <div className="md:col-span-8">
             <ScrollWordReveal
@@ -214,7 +211,6 @@ export default function ProjectDetails({ project }: { project: Project }) {
           </div>
         </div>
 
-        {/* ---------- Contributions ---------- */}
         <div className="mb-20 md:mb-28">
           <AnimatedHeading
             words={[{ t: 'KEY' }, { t: 'moves', serif: true }]}
@@ -238,7 +234,6 @@ export default function ProjectDetails({ project }: { project: Project }) {
           </ul>
         </div>
 
-        {/* ---------- Parallax gallery ---------- */}
         <div className="flex flex-col gap-12 md:gap-16 mb-24 md:mb-32">
           {project.images?.map((img, i) => {
             const wide = i % 3 === 0;
@@ -250,7 +245,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
                 }`}
               >
                 <div
-                  className={`overflow-hidden rounded-xl bg-[#121211] border border-[#1f1f1d] relative aspect-[21/9] ${
+                  className={`overflow-hidden rounded-xl bg-surface-card border border-surface-border relative aspect-[21/9] ${
                     wide ? 'max-h-[500px]' : 'max-h-[420px]'
                   } w-full`}
                 >
@@ -278,9 +273,8 @@ export default function ProjectDetails({ project }: { project: Project }) {
           })}
         </div>
 
-        {/* ---------- Tech stack chips ---------- */}
         <div className="mb-24 md:mb-32">
-          <p className="font-mono text-xs uppercase tracking-widest text-warm mb-5">Built with</p>
+          <p className="font-mono text-xs uppercase tracking-widest text-warm-light mb-5">Built with</p>
           <div className="flex flex-wrap gap-2">
             {project.tech?.map((t) => (
               <span
@@ -293,7 +287,6 @@ export default function ProjectDetails({ project }: { project: Project }) {
           </div>
         </div>
 
-        {/* ---------- Prev / Next ---------- */}
         <nav aria-label="Project navigation" className="grid grid-cols-1 md:grid-cols-2 border-t border-white/[0.08] mb-20">
           {prev && (
             <Link
@@ -327,7 +320,6 @@ export default function ProjectDetails({ project }: { project: Project }) {
           )}
         </nav>
 
-        {/* ---------- CTA ---------- */}
         <div className="relative flex justify-center py-8">
           <div className="text-center flex flex-col items-center">
             <ScrollWordReveal
