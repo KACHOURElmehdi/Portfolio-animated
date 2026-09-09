@@ -20,13 +20,13 @@ export const getSectionElement = (targetId: string): HTMLElement | null => {
     return document.getElementById('contact');
   }
   if (id === 'techstack' || id === 'stack') {
-    return document.getElementById('TechStack');
+    return document.getElementById('tech-stack') || document.getElementById('TechStack');
   }
   return document.getElementById(targetId);
 };
 
-export const scrollToSection = (targetId: string, lenis?: any) => {
-  const activeLenis = lenis || (typeof window !== 'undefined' ? (window as any).__lenis : null);
+export const scrollToSection = (targetId: string, lenis?: Lenis | null) => {
+  const activeLenis = lenis || (typeof window !== 'undefined' ? window.__lenis : null);
 
   if (!targetId || targetId === 'top' || targetId === 'home') {
     if (activeLenis) {
@@ -109,14 +109,13 @@ export const useHandleLinkClick = (setIsMenuOpen?: (isOpen: boolean) => void) =>
       return;
     }
 
-    const lenis = lenisRef?.current || (typeof window !== 'undefined' ? (window as any).__lenis : null);
+    const lenis = lenisRef?.current || (typeof window !== 'undefined' ? window.__lenis : null);
     if (lenis) {
       lenis.start();
     }
 
     scrollToSection(targetId, lenis);
 
-    // Keep URL clean without appending or leaving #hash
     if (typeof window !== 'undefined') {
       window.history.replaceState(null, '', window.location.pathname);
     }

@@ -6,7 +6,7 @@ import Magnetic from '@/components/ui/Magnetic';
 import { FaArrowUp } from 'react-icons/fa';
 import { useHandleLinkClick } from '@/lib/navigation';
 import { useLenis } from '@/components/providers/SmoothScrollProvider';
-import { site, socialList } from '@/lib/site';
+import { site, socialList, navLinks } from '@/lib/site';
 import Lenis from 'lenis';
 
 const Footer = () => {
@@ -49,12 +49,7 @@ const Footer = () => {
   }, []);
 
   const handleLinkClick = useHandleLinkClick();
-  const links = [
-    { name: 'About', href: '/#about' },
-    { name: 'Services', href: '/#services' },
-    { name: 'Work', href: '/#projects' },
-    { name: 'Contact', href: '/#contact' },
-  ];
+  const links = navLinks.filter((l) => !('menuOnly' in l && l.menuOnly));
 
   const scrollToTop = () => {
     if (lenis) {
