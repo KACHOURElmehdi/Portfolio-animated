@@ -26,6 +26,7 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
   const [successMessage, setSuccessMessage] = useState<string>('');
+  const [copiedToast, setCopiedToast] = useState<boolean>(false);
 
   useEffect(() => {
     if (submitStatus) {
@@ -33,6 +34,13 @@ const Contact = () => {
       return () => clearTimeout(timer);
     }
   }, [submitStatus]);
+
+  useEffect(() => {
+    if (copiedToast) {
+      const timer = setTimeout(() => setCopiedToast(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [copiedToast]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -58,10 +66,6 @@ const Contact = () => {
       const card = cardRef.current;
       const cta = ctaRef.current;
 
-      // One-shot, NON-scrubbed reveals. Scrubbed positional parallax snapped
-      // whenever ScrollTrigger.refresh() re-mapped scroll->progress (fonts,
-      // images, pins). Non-scrubbed tweens hold their end state forever, so
-      // a jump is impossible by construction.
       if (card) {
         gsap.fromTo(
           card,
@@ -132,7 +136,7 @@ const Contact = () => {
     setSubmitStatus(null);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000);
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
 
     try {
       const response = await fetch('/api/contact', {
@@ -244,7 +248,7 @@ const Contact = () => {
                 disabled={isDisabled}
               />
               {errors.message && <p className="text-red-400 text-xs sm:text-sm">{errors.message}</p>}
-              <p className="text-xs text-warm">{formData.message.length} / 30 minimum characters</p>
+              <p className="text-xs text-gray-soft">{formData.message.length} / 30 minimum characters</p>
             </div>
 
             <div role="status" aria-live="polite">
@@ -296,15 +300,7 @@ const Contact = () => {
                   aria-label={`Copy ${site.email} to clipboard`}
                   onClick={() => {
                     navigator.clipboard.writeText(site.email);
-                    const toast = document.getElementById('email-copy-toast');
-                    if (toast) {
-                      toast.style.opacity = '1';
-                      toast.style.transform = 'translateY(0)';
-                      setTimeout(() => {
-                        toast.style.opacity = '0';
-                        toast.style.transform = 'translateY(8px)';
-                      }, 2000);
-                    }
+                    setCopiedToast(true);
                   }}
                   className="group relative inline-flex items-center justify-center cursor-pointer text-light font-display font-black uppercase leading-tight hover:text-accent transition-colors duration-300 max-w-full text-center"
                   style={{
@@ -325,10 +321,11 @@ const Contact = () => {
       </div>
 
       <div
-        id="email-copy-toast"
         role="status"
         aria-live="polite"
-        className="fixed bottom-8 right-8 z-[9998] pointer-events-none"
+        className={`fixed bottom-8 right-8 z-[9998] pointer-events-none transition-all duration-300 ${
+          copiedToast ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+        }`}
         style={{
           background: '#C45D3E',
           color: 'white',
@@ -338,9 +335,6 @@ const Contact = () => {
           textTransform: 'uppercase',
           padding: '0.75rem 1.25rem',
           borderRadius: '9999px',
-          opacity: 0,
-          transform: 'translateY(8px)',
-          transition: 'opacity 0.3s ease, transform 0.3s ease',
         }}
       >
         ✓ Copied to clipboard

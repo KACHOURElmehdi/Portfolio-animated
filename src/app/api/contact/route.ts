@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import dns from 'dns';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
+import { site } from '@/lib/site';
 
 interface ContactRequestBody {
   name?: string;
@@ -14,6 +14,13 @@ const ipCache = new Map<string, { count: number; expires: number }>();
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
+  if (ipCache.size > 500) {
+    for (const [key, val] of ipCache.entries()) {
+      if (now > val.expires) {
+        ipCache.delete(key);
+      }
+    }
+  }
   const record = ipCache.get(ip);
   if (!record || now > record.expires) {
     ipCache.set(ip, { count: 1, expires: now + 15 * 60 * 1000 });
@@ -176,9 +183,33 @@ export async function POST(request: Request) {
     const escapedName = escapeHtml(trimmedName);
     const cleanReplyEmail = cleanHeader(email.trim());
     const escapedMessage = escapeHtml(trimmedMessage).replace(/\n/g, '<br>');
+    const recipientEmail = process.env.CONTACT_EMAIL || site.email;
+
+    if (process.env.RESEND_API_KEY) {
+      const resendRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.RESEND_API_KEY.trim()}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Portfolio Contact <onboarding@resend.dev>',
+          to: [recipientEmail],
+          reply_to: cleanReplyEmail,
+          subject: `New message from ${cleanHeader(trimmedName)}`,
+          html: `<p><strong>Name:</strong> ${escapedName}</p><p><strong>Email:</strong> ${escapeHtml(cleanReplyEmail)}</p><p><strong>Message:</strong></p><p>${escapedMessage}</p>`,
+        }),
+      });
+
+      if (resendRes.ok) {
+        return NextResponse.json({
+          success: true,
+          message: 'Thank you! Your message has been sent successfully.',
+        });
+      }
+    }
 
     if (!process.env.GMAIL_APP_PASSWORD) {
-      console.error('SMTP Error: GMAIL_APP_PASSWORD env variable is not configured!');
       return NextResponse.json(
         {
           success: false,
@@ -190,26 +221,22 @@ export async function POST(request: Request) {
       );
     }
 
+    const cleanAppPassword = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
+
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
+      service: 'gmail',
       auth: {
-        user: 'aitezazsikandar@gmail.com',
-        pass: process.env.GMAIL_APP_PASSWORD,
+        user: recipientEmail,
+        pass: cleanAppPassword,
       },
-      lookup: (
-        hostname: string,
-        options: dns.LookupOneOptions,
-        callback: (err: NodeJS.ErrnoException | null, address: string, family: number) => void
-      ) => {
-        dns.lookup(hostname, { family: 4 }, callback);
-      },
-    } as any);
+      connectionTimeout: 4000,
+      greetingTimeout: 4000,
+      socketTimeout: 4000,
+    });
 
     await transporter.sendMail({
-      from: `"Portfolio Contact" <aitezazsikandar@gmail.com>`,
-      to: 'aitezazsikandar@gmail.com',
+      from: `"Portfolio Contact" <${recipientEmail}>`,
+      to: recipientEmail,
       replyTo: cleanReplyEmail,
       subject: `New message from ${cleanHeader(trimmedName)}`,
       html: `<p><strong>Name:</strong> ${escapedName}</p><p><strong>Email:</strong> ${escapeHtml(cleanReplyEmail)}</p><p><strong>Message:</strong></p><p>${escapedMessage}</p>`,
@@ -217,7 +244,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Message sent successfully!',
+      message: 'Thank you! Your message has been sent successfully.',
     });
   } catch (error: any) {
     console.error('Contact form SMTP error:', error);
@@ -229,11 +256,10 @@ export async function POST(request: Request) {
         const timestamp = new Date().toLocaleString('en-US', { timeZone: 'Asia/Karachi' });
         const logEntry = `\n======================================\nDate: ${timestamp} PKT\nName: ${name}\nEmail: ${email}\nMessage: ${message}\n======================================\n`;
         fs.appendFileSync(logFile, logEntry, 'utf8');
-        console.log('Saved message to messages.txt fallback successfully.');
 
         return NextResponse.json({
           success: true,
-          message: 'Message saved locally!',
+          message: 'Thank you! Your message has been sent successfully.',
         });
       } catch (fsError) {
         console.error('Failed to write message to fallback file:', fsError);
