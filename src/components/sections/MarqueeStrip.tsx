@@ -16,7 +16,6 @@ export default function MarqueeStrip() {
     const track = track1Ref.current;
     if (!track) return;
 
-    // Measure half-width for seamless modulo wrapping
     let totalWidth = track.scrollWidth;
     let halfWidth = totalWidth / 2;
 
@@ -63,10 +62,7 @@ export default function MarqueeStrip() {
 
     gsap.ticker.add(onTick);
 
-    // Feed scroll velocity into the flywheel
     const onScrollUpdate = (vel: number) => {
-      // vel: px per second from ScrollTrigger/Lenis
-      // Convert to per-frame velocity delta with progressive scaling
       const sign = vel >= 0 ? 1 : -1;
       const absV = Math.abs(vel);
 
@@ -76,19 +72,16 @@ export default function MarqueeStrip() {
       }
     };
 
-    // Universal ScrollTrigger
     const trigger = ScrollTrigger.create({
       onUpdate: (self) => {
         onScrollUpdate(self.getVelocity());
       },
     });
 
-    // Lenis listener for micro-scroll delta fidelity
     const attachLenis = () => {
       const lenis = (window as any).__lenis;
       if (lenis) {
         const handleLenis = ({ velocity }: { velocity: number }) => {
-          // Lenis velocity is typically between -10 and +10
           if (Math.abs(velocity) > 0.02) {
             onScrollUpdate(velocity * 80);
           }

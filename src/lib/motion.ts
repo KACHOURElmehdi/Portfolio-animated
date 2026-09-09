@@ -1,5 +1,4 @@
 export const EASE = {
-  /** Signature expo-style in-out used by curtains/menus */
   curtain: [0.76, 0, 0.24, 1],
   outExpo: 'expo.out',
   outQuart: 'power4.out',
@@ -19,7 +18,6 @@ export const DUR = {
   hero: 0.9,
 } as const;
 
-/** Standard scroll-trigger starts */
 export const TRIGGER = {
   enter: 'top 85%',
   enterLate: 'top 75%',
