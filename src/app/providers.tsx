@@ -60,12 +60,22 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const playCurtainIn = () => {
+      if (_isCurtainCovering) return;
       _isCurtainCovering = true;
       const lenisInst = lenisRef.current;
       if (lenisInst?.current) lenisInst.current.stop();
 
       const tl = gsap.timeline({
-        onComplete: () => { history.back(); },
+        onComplete: () => {
+          history.back();
+          setTimeout(() => {
+            if (_isCurtainCovering) {
+              const savedScroll = safeSessionStorage.getItem('projects-scroll');
+              const target = savedScroll ? parseInt(savedScroll, 10) : 0;
+              playCurtainOut(target);
+            }
+          }, 1500);
+        },
       });
       tl.fromTo(firstLayer.current, { y: '100%' }, { y: '0%', duration: 0.45, ease: 'circ.inOut' })
         .fromTo(secondLayer.current, { y: '100%' }, { y: '0%', duration: 0.45, ease: 'circ.inOut' }, '<50%');
@@ -169,6 +179,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       }}
       enter={(next: () => void) => {
         if (_isCurtainCovering) {
+          _isCurtainCovering = false;
           startTransition(next);
           return () => {};
         }
