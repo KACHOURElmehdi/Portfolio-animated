@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function ProjectLoading() {
   return (
-    <section className="min-h-screen bg-[#080807] text-white px-6 md:px-48 py-10 relative overflow-hidden select-none">
+    <section className="min-h-screen bg-[#0F0E0C] text-white px-6 sm:px-10 md:px-20 lg:px-32 xl:px-48 py-10 relative overflow-hidden select-none">
       <style>{`
         @keyframes shimmerGlow {
           0% { transform: translateX(-100%); }
@@ -35,6 +35,15 @@ export default function ProjectLoading() {
         }
         .pulse-subtle {
           animation: subtlePulse 2s infinite ease-in-out;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .shimmer-box::after {
+            animation: none;
+          }
+          .pulse-subtle {
+            animation: none;
+            opacity: 0.6;
+          }
         }
       `}</style>
 

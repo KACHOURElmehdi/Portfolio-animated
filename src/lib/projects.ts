@@ -12,8 +12,8 @@ export interface Project {
   tech: string[];
   description: string;
   overview: string;
-  challenge: string;
-  solution: string;
+  architecture: string;
+  implementation: string;
   stats: ProjectStat[];
   accent: string;
   myRole: string[];
@@ -28,30 +28,30 @@ const projects: Project[] = [
     id: 1,
     slug: 'c-study',
     title: 'Collaborative Study Platform',
-    type: 'Real-time Web App',
+    type: 'Real-time Learning Platform',
     role: 'Full Stack Developer',
-    tech: ['React', 'Node.js', 'Express', 'Socket.io', 'MongoDB', 'Study Assistant', 'Tailwind CSS'],
+    tech: ['React 19', 'Node.js', 'Express 5', 'Socket.io', 'MongoDB', 'LibreOffice', 'pdfjs-dist', 'Cloudinary', 'Firebase', 'Groq', 'Google Gemini'],
     description:
-      'A real-time collaborative study platform featuring interactive classrooms, document rendering, and integrated study tools. Students can join virtual study rooms to collaborate on files, utilize text-to-speech learning aids, and query an automated assistant for summaries. Teachers can upload resource materials and participate in peer-to-peer discussions.',
+      'A real-time collaborative learning platform featuring interactive slide presentations, live canvas annotations, AI study assistance with token streaming, automated quiz generation, and draggable video calls.',
     overview:
-      'CSP turns scattered study material into *live*, shared classrooms. Students join a room, see the same document rendered *instantly*, and learn together — with an AI assistant generating summaries, flashcards and quizzes from whatever the class is reading.',
-    challenge:
-      'Keeping documents, chat and whiteboard state perfectly synchronized across dozens of concurrent users was the core problem. Documents arrive as DOCX/PPTX, need server-side conversion to PDF, then page-by-page rendering with text selection — all while Socket.io events fight to keep every client pixel-identical.',
-    solution:
-      'I built a room-state authority on Express + Socket.io with event-sourced sync so late joiners reconstruct exact state. A libreoffice-convert pipeline normalizes uploads to PDF, and React PDF/PDF.js renders interactive pages with highlighting. Cloudinary stores media; Firebase handles auth and file hosting.',
+      'A virtual classroom platform where teachers and students share lecture materials and interact in real time. Instead of relying on static file downloads, classrooms load documents directly onto synchronized canvases with live pen strokes, instant page flips, audio transcription, and an embedded AI study assistant.',
+    architecture:
+      'Instructors upload course files in PPTX, DOCX, or PDF format. The backend spawns a headless LibreOffice process to convert presentations into standardized PDF documents, with an in-memory pdf-lib generator handling plain text and fallback scenarios. Output buffers are saved directly to Cloudinary raw storage. On the client, pdfjs-dist renders pages onto HTML5 canvases with offscreen neighbor pre-rendering to keep transitions fluid. A coordinate-normalized overlay canvas captures drawing strokes, highlighters, and page changes, broadcasting them through Socket.io room hierarchies and persisting notes per user and page in MongoDB.',
+    implementation:
+      'The AI study assistant uses a dual-engine streaming architecture. It primarily streams responses from Groq using Llama models, automatically falling back to Google Gemini when rate limits or quotas are reached. Express delivers tokens via Server-Sent Events to the active user while simultaneously relaying chunks over Socket.io to peers. An automated quiz generator scans slide text directly in the browser, creates multiple-choice or short-answer assessments, and evaluates written student submissions with fractional grading against reference answers. Jitsi Meet runs inside a floating, draggable picture-in-picture frame so participants can talk over video without losing their place in the slides.',
     stats: [
-      { value: '<200ms', label: 'Sync latency across rooms' },
-      { value: '5+', label: 'Document formats supported' },
-      { value: '3-in-1', label: 'Summaries, cards & quizzes' },
+      { value: '<200ms', label: 'Real-time sync latency' },
+      { value: '7+', label: 'File formats converted' },
+      { value: 'Dual-LLM', label: 'Groq & Gemini fallback' },
     ],
     accent: '#C45D3E',
     myRole: [
-      'Designed and implemented real-time classroom state synchronization and live chat using Express and Socket.io.',
-      'Integrated text processing and search SDKs to build an automated Study Assistant capable of generating lecture summaries, flashcards, and quizzes.',
-      'Configured a backend document processor using libreoffice-convert to transform DOCX/PPTX slides into PDFs for frontend rendering.',
-      'Implemented multi-format PDF rendering using React PDF and PDF.js to support interactive whiteboard and text highlighting features.',
-      'Integrated Cloudinary for persistent media assets and Firebase SDK for secure file hosting and user authentication.',
-      'Built responsive student and teacher dashboard layouts featuring smooth micro-animations using React, Tailwind CSS v4, and Framer Motion.',
+      'Built the real-time presentation engine using Express and Socket.io with dedicated room hierarchies for page flips and live pen coordinates.',
+      'Implemented the server-side document conversion pipeline using headless LibreOffice and in-memory pdf-lib for PPTX, DOCX, and PDF uploads.',
+      'Engineered the dual-model AI study assistant using Groq and Google Gemini with token streaming over Server-Sent Events and Socket.io.',
+      'Created the HTML5 canvas annotation overlay with coordinate normalization, highlighters, and per-user persistent MongoDB storage.',
+      'Built the AI quiz generator and semantic short-answer evaluation system with automatic scoring and class performance tracking.',
+      'Integrated Jitsi Meet inside a persistent floating picture-in-picture container to allow simultaneous video calls and slide navigation.',
     ],
     images: [
       '/Projects/c-study/02_CSP.webp',
@@ -61,37 +61,37 @@ const projects: Project[] = [
       '/Projects/c-study/06_CSP.webp',
     ],
     hoverImage: '/Projects/c-study/02_CSP.webp',
-    github: '',
+    github: 'https://github.com/aitezazdev/collaborative-study-platform',
     liveUrl: 'https://collaborative-study-platform-uni.vercel.app/',
   },
   {
     id: 2,
     slug: 'hms',
     title: 'Hospital Management System',
-    type: 'Full Stack Platform',
+    type: 'Full Stack Healthcare Platform',
     role: 'Full Stack Developer',
-    tech: ['React', 'Express', 'Node.js', 'MongoDB', 'Clinical Assessment', 'Redux Toolkit', 'Tailwind CSS'],
+    tech: ['React 19', 'Vite', 'Node.js', 'Express 5', 'MongoDB', 'Mongoose', 'Google Gemini', 'Redux Toolkit', 'Tailwind CSS', 'Ant Design', 'Nodemailer'],
     description:
-      'A full stack hospital management system featuring dedicated, role based dashboards for patients, doctors, and system administrators. The platform integrates an automated clinical summary system to assist both patients and medical staff through an interactive symptom checker, pre appointment medical history summaries, and suggested prescription generators. Patients can find doctors by specialization, book consultation slots, and track booking statuses, while doctors can manage schedules, record clinical notes, and edit prescriptions. Administrators oversee doctor registrations, verify credentials, and manage patient records with a global search interface.',
+      'A full stack clinical platform featuring dedicated portals for patients, doctors, and administrators with automated appointment booking, schedule management, email confirmations, and AI clinical summaries.',
     overview:
-      '*MediCore* digitizes the hospital front desk: three role-based portals (patient, doctor, admin), appointment scheduling, credential verification, and an assistive layer that drafts pre-consultation summaries and prescription suggestions for clinicians.',
-    challenge:
-      'Healthcare workflows are unforgiving: booking races between patients for the same slot, role-based access must be airtight, and clinicians will not adopt anything that adds clicks. The system had to model approvals, schedule conflicts and verification states without becoming slow or confusing.',
-    solution:
-      'A MERN architecture with Redux Toolkit state slices per portal, atomic slot booking with conflict guards, and a verification pipeline for doctor registrations. The symptom advisor synthesizes structured history into a pre-visit brief so doctors start every consultation already *informed*.',
+      'A comprehensive medical workflow system called MediCore built to handle clinic administration, patient scheduling, and physician workflows. It separates responsibilities into three dedicated portals, giving patients an intuitive booking experience, doctors a structured appointment and schedule manager, and administrators complete oversight.',
+    architecture:
+      'Built with React 19 and Express using dual-token JWT authentication with short-lived access tokens and 7-day httpOnly refresh cookies. An Axios response interceptor queues concurrent requests during token renewal so sessions never drop mid-action. When new doctors sign up, their profiles remain unapproved and hidden from public search until administrators verify their qualifications in the admin dashboard. Doctors set their weekly schedule, slot durations, and daily patient quotas. Patients search by medical specialty, location, or consultation fee, and the backend verifies open capacity before confirming bookings to eliminate double-booking.',
+    implementation:
+      'Integrated an AI clinical assistant powered by Google Gemini with a 5-tier model fallback chain and an offline simulation mode. Patients can describe symptoms in plain language to get suggested specialist categories and self-care recommendations. For physicians, the system synthesizes patient medical history and current appointment notes into a concise pre-consultation brief, and suggests prescription drafts that cross-check recorded conditions. The backend includes security hardening with Helmet, response compression, and custom recursive NoSQL injection sanitizers that strip MongoDB operator characters from incoming requests.',
     stats: [
-      { value: '3', label: 'Dedicated role portals' },
-      { value: '0', label: 'Double-booked slots' },
-      { value: '100%', label: 'Credential verification flow' },
+      { value: '3', label: 'Role-based portals' },
+      { value: '5-Tier', label: 'Gemini model fallback' },
+      { value: '0', label: 'Double-booking conflicts' },
     ],
     accent: '#2E7D6B',
     myRole: [
-      'Built the full-stack healthcare workflow using React, Express, Node.js, and MongoDB, incorporating Redux Toolkit for state management.',
-      'Integrated text analysis engines to implement a patient symptom advisor, pre-consultation medical history synthesis, and suggested prescriptions.',
-      'Developed independent portals for patients, doctors, and admins with custom dashboards and schedule slot managers.',
-      'Implemented doctor registration verification and appointment approval workflows.',
-      'Created global patient and staff search functionality for administrative record management.',
-      'Designed a fully responsive UI utilizing Tailwind CSS, Ant Design layouts, and custom loading states for text generation.',
+      'Architected the three role-based portals for patients, doctors, and administrators using React 19, Tailwind CSS, and Ant Design.',
+      'Built the dual-token JWT authentication system with httpOnly cookies and an Axios concurrency queue for silent token refreshing.',
+      'Implemented the doctor availability engine with weekly schedule configuration, daily patient limits, and atomic slot validation.',
+      'Developed the AI clinical assistant using Google Gemini with sequential model fallbacks and an offline simulation mode.',
+      'Created automated transactional email workflows using Nodemailer for appointment confirmations, cancellations, and account approvals.',
+      'Implemented recursive NoSQL injection sanitization and role-based route guards across all Express API endpoints.',
     ],
     images: [
       '/Projects/HMS/hospital-1.webp',
@@ -111,30 +111,30 @@ const projects: Project[] = [
     id: 3,
     slug: 'ecommerce',
     title: 'E-Commerce Store',
-    type: 'SSR Commerce App',
+    type: 'SSR Commerce Application',
     role: 'Full Stack Developer',
-    tech: ['Next.js 16', 'React 19', 'TypeScript', 'Redux Toolkit', 'Stripe', 'MongoDB', 'Tailwind CSS'],
+    tech: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS', 'Redux Toolkit', 'Stripe', 'MongoDB', 'Mongoose', 'Zod'],
     description:
-      'A high performance e-commerce platform built using the Next.js App Router and React 19 to provide a smooth, dark themed shopping experience. The storefront integrates server side rendering for catalog queries, category filters, and sorting parameters, allowing for fast initial loads and search optimization. A key feature is the database persisted shopping cart which uses React 19 transition states and optimistic updates to reflect quantity changes instantly, automatically rolling back to the cached Redux store if backend updates fail. Transactions are completed through a secure Stripe checkout session that collects delivery details, logs orders, and flushes cart states upon redirect confirmation. The backend includes database safeguards such as connection caching, a failure cooldown guard, and an offline mock dataset fallback to maintain stability.',
+      'A high performance online storefront built on the Next.js App Router and React 19 featuring server-side catalog rendering, optimistic shopping cart updates, Stripe checkout sessions, and connection resilience guards.',
     overview:
-      'A dark-themed storefront built on the Next.js App Router with SSR catalog queries, a database-persisted cart powered by React 19 optimistic updates, and a full Stripe checkout pipeline — engineered so the UI never waits on the network to feel *instant*.',
-    challenge:
-      'Commerce lives or dies on latency and trust. Cart mutations had to feel zero-latency without risking divergence from the database, checkout had to be PCI-safe via Stripe sessions, and the catalog needed SEO-friendly server rendering with filters that do not tank TTFB.',
-    solution:
-      '*Optimistic* cart updates through React 19 transitions with automatic rollback to the cached Redux store on failure; SSR for category/filter/sort routes; Zod-validated forms mirrored by API middleware; and a resilient Mongo connection wrapper with caching, cooldown locks and mock-data fallbacks for graceful degradation.',
+      'A dark-themed modern retail storefront called Zaz Store engineered for fast catalog browsing and zero-delay shopping cart interactions. It pairs server-rendered category and product pages with client-side optimistic UI updates, ensuring the interface responds instantly to user clicks while maintaining strict database consistency.',
+    architecture:
+      'The catalog, category routes, and product detail pages are async Server Components that query MongoDB directly with URL-driven search parameters and price sorting. When customers modify quantities or add items to their cart, a custom React hook combines React 19 useOptimistic and startTransition with Redux Toolkit thunks. The interface updates locally with zero delay; if the network fails, the hook catches the rejection and rolls back to the last confirmed server state. Cart data persists to MongoDB per authenticated user, with handlers automatically cleaning up references if a product is removed from the catalog.',
+    implementation:
+      'Engineered a resilient database layer featuring connection pooling, a 10-second failure cooldown circuit breaker, and automatic fallback to an in-memory mock catalog. If MongoDB experiences an outage, the storefront continues serving catalog pages without throwing 500 error pages. Checkout security enforces prices strictly on the server: POST requests to the checkout endpoint pull verified amounts from the database, build Stripe Hosted Checkout Sessions, and log immutable order records upon return while clearing the active cart. Server-to-client session hydration decodes JWT cookies in the root layout to prevent unauthenticated layout flashes.',
     stats: [
-      { value: '0ms', label: 'Perceived cart latency' },
-      { value: 'SSR', label: 'SEO-ready catalog routes' },
-      { value: 'Stripe', label: 'Secure hosted checkout' },
+      { value: '0ms', label: 'Optimistic cart latency' },
+      { value: 'SSR', label: 'Server-rendered catalog' },
+      { value: 'Stripe', label: 'Hosted checkout sessions' },
     ],
     accent: '#C45D3E',
     myRole: [
-      'Architected the full-stack catalog using Next.js App Router, TypeScript, and MongoDB, employing server-side data fetching for category collections.',
-      'Integrated React 19 optimistic updates and transition hooks inside a custom React Context provider to enable zero-latency cart modifications.',
-      'Engineered an end-to-end checkout pipeline with Stripe Checkout Sessions, capturing payment events, user details, and order logging.',
-      'Configured a resilient Mongoose database connection wrapper featuring caching, a 10-second failure cooldown lock, and mock data fallbacks.',
-      'Implemented type-safe form validation using Zod and React Hook Form on the frontend and custom validation middleware on API routes.',
-      'Designed a responsive, dark-themed user interface utilizing Tailwind CSS, custom loading spinners, and skeleton loaders to minimize layout shifts.',
+      'Built the server-side catalog and product detail pages using Next.js App Router with dynamic category routes and URL search params.',
+      'Implemented optimistic cart mutations using React 19 useOptimistic and useTransition hooks backed by Redux Toolkit thunks.',
+      'Built the Stripe Checkout Session integration with server-enforced pricing and post-payment order verification.',
+      'Configured a resilient Mongoose connection pool with a 10-second failure cooldown circuit breaker and mock data fallbacks.',
+      'Designed server-to-client session hydration via HTTP-only JWT cookies to eliminate authentication layout flashes.',
+      'Created responsive zinc-dark loading skeletons and error boundaries with retry buttons across all core routes.',
     ],
     images: [
       '/Projects/ecommerce/1.webp',
@@ -152,30 +152,30 @@ const projects: Project[] = [
     id: 4,
     slug: 'finance',
     title: 'Personal Finance Tracker',
-    type: 'Analytics Dashboard',
+    type: 'Financial Analytics Dashboard',
     role: 'Full Stack Developer',
-    tech: ['React', 'Express', 'Node.js', 'MongoDB', 'JWT Auth', 'Recharts.js', 'Tailwind CSS'],
+    tech: ['React 19', 'Vite', 'Tailwind CSS', 'Redux Toolkit', 'Recharts', 'Node.js', 'Express', 'MongoDB', 'Mongoose', 'JWT'],
     description:
-      'A personal finance tracking application designed to help users log, organize, and review their daily incomes and expenses. The platform features an analytics dashboard that converts raw transaction feeds into interactive charts, including monthly spending comparisons, category breakdowns, and daily financial trends. Built with security in mind, the application secures all user records through JSON Web Tokens and bcrypt encryption. A global state store synchronizes transaction histories and user login states across the interface, utilizing request interceptors to automatically verify access tokens on outgoing API calls.',
+      'A personal finance tracking application featuring segregated income and expense management, inline transaction editing, duplicate entry prevention, and MongoDB aggregation pipelines powering Recharts visualizations.',
     overview:
-      'A personal finance app that transforms raw transaction logs into *living* dashboards — monthly comparisons, category breakdowns and trend lines — secured end-to-end with JWT auth and bcrypt hashing.',
-    challenge:
-      'Financial data demands both correctness and clarity: token expiry mid-session must never corrupt in-flight edits, and raw ledgers are useless until aggregated into honest, readable visualizations people actually check daily.',
-    solution:
-      'Axios interceptors handle *transparent* token refresh and session-expiry redirects; aggregation endpoints power Recharts dashboards fed by filtered, sorted CRUD APIs; Redux keeps transactions and auth state coherent across every view.',
+      'A personal finance manager designed to give users clear visibility into daily cash flow and spending patterns. It combines quick transaction entry with interactive data visualizations, helping individuals track where their money goes through automated category breakdowns, monthly comparisons, and daily spending trendlines.',
+    architecture:
+      'The frontend is built with React 19 and Redux Toolkit for authentication, communicating with an Express API through Axios request and response interceptors. The backend maintains separate MongoDB collections for expenses and incomes, linked to user documents. Users log transactions with amount, category, date, and description. A duplicate detection check queries existing records before saving to prevent accidental double-submits. The transaction ledger supports in-place inline row editing, allowing users to modify dates, categories, or amounts directly within the table view without opening modal dialogs.',
+    implementation:
+      'Built three distinct MongoDB aggregation pipelines to convert raw transaction dates and amounts into actionable visualizations. Using toDate conversions and dateTrunc operators, the backend computes monthly spending totals, category distributions, and daily spending trendlines. The frontend renders these datasets using Recharts bar and line charts, complete with dynamic year filters, highest and lowest spending indicators, and average spending calculations. When a user requests account deletion, a cascading database routine purges the user profile alongside all associated income and expense records.',
     stats: [
-      { value: 'JWT', label: 'Stateless secure sessions' },
-      { value: '4+', label: 'Interactive chart types' },
-      { value: 'CRUD', label: 'Filtered & sortable ledger' },
+      { value: '3', label: 'Aggregation pipelines' },
+      { value: 'Recharts', label: 'Interactive analytics' },
+      { value: 'CRUD', label: 'Inline editable ledger' },
     ],
     accent: '#B08968',
     myRole: [
-      'Developed the full stack application using the MERN stack and configured Redux Toolkit to manage global application states.',
-      'Created interactive analytics dashboards using Recharts to visualize monthly income and expense metrics, category distributions, and spending trends.',
-      'Implemented secure user authentication and authorization using JSON Web Tokens and bcrypt password hashing.',
-      'Built transaction CRUD endpoints supporting dynamic category filtering and sorting by transaction amounts.',
-      'Configured Axios interceptors to automatically append JWT bearer tokens to requests and handle session timeouts on 401 response codes.',
-      'Designed a responsive client interface using Tailwind CSS, implementing alert notifications and table views for transaction management.',
+      'Built the full stack ledger application using React 19, Tailwind CSS, Express, and MongoDB.',
+      'Designed MongoDB aggregation pipelines using toDate and dateTrunc to group transaction records for analytics.',
+      'Implemented interactive visual dashboards using Recharts with monthly bar charts, category distributions, and daily trendlines.',
+      'Created in-place inline editing for transaction rows and mobile-friendly card views.',
+      'Configured JWT authentication with Axios request interceptors and automatic session-expiry handling.',
+      'Implemented duplicate transaction detection and cascading account deletion across income and expense collections.',
     ],
     images: [
       '/Projects/financeTracker/1.webp',
@@ -186,39 +186,37 @@ const projects: Project[] = [
       '/Projects/financeTracker/6.webp',
     ],
     hoverImage: '/Projects/financeTracker/1.webp',
-    github: 'https://github.com/aitezazdev/Finance-Tracker-Mern',
+    github: 'https://github.com/aitezazdev/Expense-Tracker_Mern',
     liveUrl: 'https://aitezazdev-finance-tracker.vercel.app/',
   },
   {
     id: 5,
     slug: 'blog',
     title: 'Modern Blog Space',
-    type: 'Content Platform',
+    type: 'Content & Publishing Platform',
     role: 'Full Stack Developer',
-    tech: ['React', 'Express', 'Node.js', 'MongoDB', 'JWT Auth', 'Cloudinary', 'Tailwind CSS'],
+    tech: ['React 19', 'Vite', 'Tailwind CSS', 'Redux Toolkit', 'React Router', 'Node.js', 'Express', 'MongoDB', 'Cloudinary', 'Docker', 'AWS EC2'],
     description:
-      'A full stack blogging application featuring a modern, responsive design and robust account management. The system implements secure JWT authentication, password encryption, and dynamic image uploads using Cloudinary. Users can publish articles, categorize posts with tags, interact through comments, save bookmarked reading lists, and manage their author profiles. Designed with performance in mind, the platform integrates MongoDB database indexes and an optimized connection cache to deliver fast, scalable query resolutions.',
+      'A modern content publishing platform called ZazBlog featuring article authoring, Cloudinary media lifecycle management, in-place comments, bookmark reading lists, debounced search, and Dockerized AWS EC2 deployment.',
     overview:
-      'A publishing platform with JWT auth, *Cloudinary*-backed media, bookmarks, comments and author profiles — tuned with compound Mongo indexes and debounced search so it stays fast as content grows.',
-    challenge:
-      'User-generated platforms rot quickly: orphaned media after deletions, N+1 comment lookups, and search endpoints hammered by keystrokes. Account deletion especially needs to cascade cleanly across posts, comments, likes and CDN assets.',
-    solution:
-      'Text and compound indexes speed chronological queries; Multer-to-Cloudinary pipelines destroy replaced assets automatically; a cascading purge routine removes every trace of deleted accounts; *debounced* search protects the API from request storms.',
+      'A full-featured publishing web platform built for writers and readers. It offers a clean, typography-focused reading experience with article authoring, image uploads, categorized tag navigation, reader comments, personal bookmark reading lists, and a containerized deployment setup.',
+    architecture:
+      'Built with React 19 and Express with JWT authentication, using Redux Toolkit to manage authentication and saved post states. Authors publish articles with images handled through Multer disk storage and Cloudinary. The backend enforces strict filesystem hygiene: temporary local uploads are immediately unlinked upon completion or error, and replaced or deleted images are purged from Cloudinary using public IDs to prevent storage leaks. Readers can leave comments with in-place editing, toggle article likes, and manage a personal bookmarks list synchronized across views.',
+    implementation:
+      'Implemented article search using a MongoDB aggregation pipeline with lookup joining author profiles and regex filtering across titles, tags, and author names. The frontend search input includes a 500ms debounce handler to minimize server requests. Engineered relational cascade deletions: deleting an article automatically removes its comments, clears references from every user reading list, and deletes its Cloudinary asset; deleting an account cascades through all authored posts, comments, comments on authored posts, and likes. In the DevOps setup, Docker Compose orchestrates frontend and backend containers, with a multi-stage Alpine Nginx Dockerfile handling client-side SPA routing and GitHub Actions deploying to AWS EC2.',
     stats: [
-      { value: 'Indexed', label: 'Compound DB queries' },
-      { value: 'Cascade', label: 'Clean account deletion' },
-      { value: 'CDN', label: 'Cloudinary media pipeline' },
+      { value: 'NoSQL', label: 'Relational cascade cleanup' },
+      { value: 'Docker', label: 'Multi-stage Nginx container' },
+      { value: 'CDN', label: 'Cloudinary asset lifecycle' },
     ],
     accent: '#5B7DB1',
     myRole: [
-      'Architected the full stack system using React, Express, Node.js, and MongoDB, enforcing a clean modular codebase.',
-      'Integrated Cloudinary and Multer disk storage to support dynamic image uploads, incorporating automated asset destruction routines during post updates and deletions.',
-      'Engineered complex Mongoose database schemas featuring text indexing on key query fields and compound indexes to speed up chronological lookups.',
-      'Developed a stateless, token-based authentication system utilizing JSON Web Tokens and bcrypt password hashing.',
-      'Built a real-time search interface on the frontend with a debounced input handler to limit API request frequencies.',
-      'Implemented a cascading database purge workflow that automatically removes posts, comments, likes, and Cloudinary media assets upon account deletion.',
-      'Configured centralized state management using Redux Toolkit to persist user authentication states and bookmarks across page reloads.',
-      'Created Axios request and response interceptors to handle automatic token attachment and graceful session expiration redirects.',
+      'Built the full stack publishing application using React 19, Tailwind CSS, Express, and MongoDB.',
+      'Implemented full asset lifecycle management with Multer and Cloudinary, including local file unlinking and remote asset destruction.',
+      'Designed real-time article search using MongoDB aggregation pipelines with lookup across author profiles and debounced frontend input.',
+      'Built in-place comment editing and global bookmark state management using Redux Toolkit.',
+      'Engineered relational cascade deletions across posts, comments, bookmarks, likes, and user profiles.',
+      'Created Docker Compose configurations, multi-stage Alpine Nginx Dockerfiles, and GitHub Actions CI/CD for AWS EC2 deployment.',
     ],
     images: [
       '/Projects/blogsite/1.webp',
@@ -229,7 +227,7 @@ const projects: Project[] = [
       '/Projects/blogsite/6.webp',
     ],
     hoverImage: '/Projects/blogsite/1.webp',
-    github: 'https://github.com/aitezazdev/Blog-App-Mern',
+    github: 'https://github.com/aitezazdev/Blog-App-MERN',
     liveUrl: 'https://aitezazdev-blog-app.vercel.app/',
   },
 ];

@@ -38,12 +38,6 @@ export default function ProjectDetails({ project }: { project: Project }) {
         }
       );
 
-      gsap.fromTo(
-        '.pd-meta-item',
-        { y: 24, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7, ease: EASE.outCubic, stagger: 0.07, delay: 0.4 }
-      );
-
       gsap.utils.toArray<HTMLElement>('.pd-figure-parallax').forEach((wrap) => {
         const inner = wrap.querySelector('.pd-figure-inner');
         if (!inner) return;
@@ -80,39 +74,19 @@ export default function ProjectDetails({ project }: { project: Project }) {
   return (
     <section ref={rootRef} className="min-h-screen bg-surface-base text-white px-6 sm:px-8 md:px-12 lg:px-16 py-12 md:py-20 relative">
       <div className="max-w-6xl mx-auto">
-        <div>
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-10 md:mb-14">
           <Link
             href="/"
-            className="inline-flex items-center gap-2.5 text-muted hover:text-white transition-all duration-300 group mb-10 md:mb-14"
+            className="inline-flex items-center gap-2.5 text-muted hover:text-white transition-all duration-300 group"
           >
             <span className="text-base md:text-xl transform group-hover:-translate-x-1 transition-transform duration-300">
               ←
             </span>
             <span className="font-mono text-xs md:text-sm uppercase tracking-widest">Back to Projects</span>
           </Link>
-        </div>
 
-        <header className="mb-16 md:mb-24">
-          <h1
-            ref={titleRef}
-            aria-label={project.title}
-            className="font-display font-black uppercase tracking-tight leading-[1.02] text-[clamp(2.4rem,6.5vw,5.5rem)] mb-10"
-          >
-            <span aria-hidden="true" className="pd-title-text block">
-              {project.title}
-            </span>
-          </h1>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 border-t border-white/[0.08] pt-6 items-start">
-            <div className="pd-meta-item">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-warm-light mb-1.5">Role</p>
-              <p className="text-sm md:text-base font-medium">{project.role}</p>
-            </div>
-            <div className="pd-meta-item">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-warm-light mb-1.5">Type</p>
-              <p className="text-sm md:text-base font-medium">{project.type}</p>
-            </div>
-            <div className="pd-meta-item col-span-2 sm:col-span-1 flex flex-wrap items-start sm:justify-end gap-2.5">
+          {(project.liveUrl || project.github) && (
+            <div className="flex items-center gap-2.5">
               {project.liveUrl && (
                 <AnimatedButton
                   as="a"
@@ -127,7 +101,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
                   }
                   bottomText={
                     <span className="flex items-center gap-2">
-                      <span>EXPLORE ↗</span>
+                      <span>DEMO ↗</span>
                     </span>
                   }
                   variant="primary"
@@ -156,24 +130,20 @@ export default function ProjectDetails({ project }: { project: Project }) {
                 />
               )}
             </div>
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/[0.08] rounded-2xl overflow-hidden mb-20 md:mb-28 border border-white/[0.08]">
-          {project.stats.map((stat) => (
-            <div key={stat.label} className="bg-[#0d0d0c] px-6 py-8 md:py-10 text-center sm:text-left">
-              <p
-                className="font-display font-black leading-none mb-2 text-stat"
-                style={{ color: project.accent }}
-              >
-                {stat.value}
-              </p>
-              <p className="font-mono text-[11px] uppercase tracking-widest text-muted">
-                {stat.label}
-              </p>
-            </div>
-          ))}
+          )}
         </div>
+
+        <header className="mb-16 md:mb-24">
+          <h1
+            ref={titleRef}
+            aria-label={project.title}
+            className="font-display font-black uppercase tracking-tight leading-[1.02] text-[clamp(2.4rem,6.5vw,5.5rem)]"
+          >
+            <span aria-hidden="true" className="pd-title-text block">
+              {project.title}
+            </span>
+          </h1>
+        </header>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-20 md:mb-28">
           <div className="md:col-span-4">
@@ -188,26 +158,29 @@ export default function ProjectDetails({ project }: { project: Project }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-20 md:mb-28">
-          <div className="md:col-span-5 space-y-10">
-            <div>
-              <p className="font-mono text-xs uppercase tracking-widest text-accent mb-4">(The Challenge)</p>
-              <ScrollWordReveal
-                text={project.challenge}
-                offset={['start 0.98', 'end 0.88']}
-                className="text-sm sm:text-base text-light/70 font-sans leading-relaxed"
-              />
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-16 md:mb-24">
+          <div className="md:col-span-4">
+            <p className="font-mono text-xs uppercase tracking-widest text-warm-light">(Architecture)</p>
           </div>
-          <div className="md:col-span-5 md:col-start-8 space-y-10">
-            <div>
-              <p className="font-mono text-xs uppercase tracking-widest text-accent mb-4">(The Solution)</p>
-              <ScrollWordReveal
-                text={project.solution}
-                offset={['start 0.98', 'end 0.88']}
-                className="text-sm sm:text-base text-light/70 font-sans leading-relaxed"
-              />
-            </div>
+          <div className="md:col-span-8">
+            <ScrollWordReveal
+              text={project.architecture}
+              offset={['start 0.98', 'end 0.88']}
+              className="text-base sm:text-lg text-light/80 font-sans leading-relaxed"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-20 md:mb-28">
+          <div className="md:col-span-4">
+            <p className="font-mono text-xs uppercase tracking-widest text-warm-light">(Engineering)</p>
+          </div>
+          <div className="md:col-span-8">
+            <ScrollWordReveal
+              text={project.implementation}
+              offset={['start 0.98', 'end 0.88']}
+              className="text-base sm:text-lg text-light/80 font-sans leading-relaxed"
+            />
           </div>
         </div>
 
@@ -245,7 +218,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
                 }`}
               >
                 <div
-                  className={`overflow-hidden rounded-xl bg-surface-card border border-surface-border relative aspect-[21/9] ${
+                  className={`overflow-hidden rounded-xl bg-surface-card border border-surface-border relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] ${
                     wide ? 'max-h-[500px]' : 'max-h-[420px]'
                   } w-full`}
                 >
@@ -273,7 +246,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
           })}
         </div>
 
-        <div className="mb-24 md:mb-32">
+        <div className="mb-20 md:mb-24">
           <p className="font-mono text-xs uppercase tracking-widest text-warm-light mb-5">Built with</p>
           <div className="flex flex-wrap gap-2">
             {project.tech?.map((t) => (
@@ -286,6 +259,63 @@ export default function ProjectDetails({ project }: { project: Project }) {
             ))}
           </div>
         </div>
+
+        {(project.liveUrl || project.github) && (
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 sm:p-8 rounded-2xl bg-surface-card border border-white/[0.08] mb-20 md:mb-28">
+            <div>
+              <p className="font-display font-bold text-xl sm:text-2xl text-white mb-1">
+                Explore this project
+              </p>
+              <p className="font-sans text-sm text-muted">
+                Inspect the live deployment or browse the repository code.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              {project.liveUrl && (
+                <AnimatedButton
+                  as="a"
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  topText={
+                    <span className="flex items-center gap-2">
+                      <span>LIVE DEMO</span>
+                      <FaExternalLinkAlt className="text-[11px]" />
+                    </span>
+                  }
+                  bottomText={
+                    <span className="flex items-center gap-2">
+                      <span>LAUNCH ↗</span>
+                    </span>
+                  }
+                  variant="primary"
+                />
+              )}
+              {project.github && (
+                <AnimatedButton
+                  as="a"
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  topText={
+                    <span className="flex items-center gap-2">
+                      <FaGithub className="text-sm" />
+                      <span>SOURCE CODE</span>
+                    </span>
+                  }
+                  bottomText={
+                    <span className="flex items-center gap-2">
+                      <FaGithub className="text-sm" />
+                      <span>GITHUB ↗</span>
+                    </span>
+                  }
+                  variant="dark"
+                  className="!border !border-white/15 hover:!border-white/40"
+                />
+              )}
+            </div>
+          </div>
+        )}
 
         <nav aria-label="Project navigation" className="grid grid-cols-1 md:grid-cols-2 border-t border-white/[0.08] mb-20">
           {prev && (
