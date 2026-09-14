@@ -9,20 +9,26 @@ import FlowField from '@/components/canvas/FlowField';
 const CREDENTIALS = [
   {
     year: '2026',
-    title: 'HEC National Skills Competency Test (NSCT)',
-    organization: 'HEC, PSEB & P@SHA',
-    stat: '95th Percentile — Top 5% nationwide',
-    type: 'Competition',
-  },
-  {
-    year: '2026',
-    title: 'Software Engineer Intern — MERN Stack',
+    title: 'Software Engineer Intern - MERN Stack',
     organization: 'e-strats, Islamabad',
-    stat: 'Real-time WebSocket APIs & multi-tenant cloud access control',
     type: 'Industry',
   },
   {
-    year: '2022–26',
+    year: '2026',
+    title: 'HEC National Skills Competency Test (NSCT)',
+    organization: 'HEC, PSEB & P@SHA',
+    stat: '95th Percentile, Top 5% nationwide',
+    type: 'Recognition',
+  },
+  {
+    year: '2024-25',
+    title: 'Web and Mobile App Development',
+    organization: 'Saylani Mass IT Training (SMIT), Peshawar',
+    stat: 'Full-Stack MERN, TypeScript, Next.js & Hybrid Apps',
+    type: 'Certification',
+  },
+  {
+    year: '2022-26',
     title: 'BS Computer Science',
     organization: 'University of Peshawar',
     stat: '3.60 / 4.00 GPA',
@@ -42,6 +48,7 @@ const About = () => {
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
 
   useGSAP(
     () => {
@@ -78,15 +85,17 @@ const About = () => {
         },
       );
 
-      // Stagger each credential row in on scroll
       const rows = gsap.utils.toArray<HTMLElement>('.cred-row');
       rows.forEach((row, i) => {
+        const side = row.dataset.side === 'left' ? -1 : 1;
+        const dot = row.querySelector('.timeline-dot');
+        const connector = row.querySelector('.timeline-connector');
+        const content = row.querySelector('.timeline-content');
         gsap.fromTo(
           row,
-          { opacity: 0, y: 28 },
+          { opacity: 0 },
           {
             opacity: 1,
-            y: 0,
             duration: 0.65,
             ease: 'power3.out',
             delay: i * 0.07,
@@ -97,26 +106,59 @@ const About = () => {
             },
           },
         );
+        if (content) {
+          gsap.fromTo(
+            content,
+            { x: side * 42, y: 18 },
+            {
+              x: 0,
+              y: 0,
+              duration: 0.8,
+              ease: 'power4.out',
+              scrollTrigger: {
+                trigger: row,
+                start: 'top 87%',
+                once: true,
+              },
+            },
+          );
+        }
+        if (dot) {
+          gsap.fromTo(
+            dot,
+            { scale: 0 },
+            {
+              scale: 1,
+              duration: 0.45,
+              ease: 'back.out(2.5)',
+              delay: 0.18,
+              scrollTrigger: {
+                trigger: row,
+                start: 'top 87%',
+                once: true,
+              },
+            },
+          );
+        }
+        if (connector) {
+          gsap.fromTo(
+            connector,
+            { scaleX: 0 },
+            {
+              scaleX: 1,
+              duration: 0.55,
+              delay: 0.1,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: row,
+                start: 'top 87%',
+                once: true,
+              },
+            },
+          );
+        }
       });
 
-      // Header row fade-in
-      gsap.fromTo(
-        '.cred-header',
-        { opacity: 0, y: 16 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.55,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: tableRef.current,
-            start: 'top 88%',
-            once: true,
-          },
-        },
-      );
-
-      // Section label
       gsap.fromTo(
         '.cred-section-label',
         { opacity: 0 },
@@ -131,6 +173,41 @@ const About = () => {
           },
         },
       );
+
+      const experienceWords = gsap.utils.toArray<HTMLElement>('.experience-word > span');
+      if (experienceWords.length) {
+        gsap.fromTo(
+          experienceWords,
+          { yPercent: 120, rotate: 3 },
+          {
+            yPercent: 0,
+            rotate: 0,
+            duration: 1,
+            stagger: 0.12,
+            ease: 'power4.out',
+            scrollTrigger: {
+              trigger: tableRef.current,
+              start: 'top 82%',
+              once: true,
+            },
+          },
+        );
+      }
+
+      if (pathRef.current) {
+        const length = pathRef.current.getTotalLength();
+        gsap.set(pathRef.current, { strokeDasharray: length, strokeDashoffset: length });
+        gsap.to(pathRef.current, {
+          strokeDashoffset: 0,
+          duration: 2.2,
+          ease: 'power2.inOut',
+          scrollTrigger: {
+            trigger: tableRef.current,
+            start: 'top 75%',
+            once: true,
+          },
+        });
+      }
     },
     { scope: sectionRef },
   );
@@ -163,7 +240,7 @@ const About = () => {
             </div>
 
             <div className="col-span-12 md:col-span-7 lg:col-span-6 md:col-start-6 lg:col-start-7 flex flex-col justify-center space-y-8">
-              <span className="about-label text-sm sm:text-base md:text-base text-warm uppercase tracking-[0.3em] font-medium text-center md:text-left inline-block">
+              <span className="about-label font-mono text-sm sm:text-base md:text-base text-warm uppercase tracking-[0.3em] font-medium text-center md:text-left inline-block">
                 (About Me)
               </span>
               <div className="space-y-6">
@@ -179,67 +256,58 @@ const About = () => {
             </div>
           </div>
 
-          {/* ── Editorial Credentials Table ──────────────────────────── */}
           <div ref={tableRef} className="pt-12 md:pt-20 border-t border-white/10">
-
-            {/* Section label */}
-            <span className="cred-section-label font-mono text-xs text-accent uppercase tracking-[0.3em] block mb-8 md:mb-12 opacity-0">
-              (Experience & Credentials)
-            </span>
-
-            {/* Column headers — hidden on mobile */}
-            <div className="cred-header hidden md:grid grid-cols-[100px_1fr_1fr_1fr] gap-x-8 pb-3 border-b border-white/10 opacity-0">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-gray-soft">Year</span>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-gray-soft">Title</span>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-gray-soft">Organisation</span>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-gray-soft">Highlight</span>
+            <div className="mb-12 text-center md:mb-20">
+              <span className="cred-section-label font-mono text-sm sm:text-base md:text-base text-warm uppercase tracking-[0.3em] font-medium inline-block opacity-0">
+                (Experience)
+              </span>
+              <h3 className="mt-5 font-display text-[clamp(2.5rem,7vw,6.5rem)] font-black uppercase tracking-tight leading-none text-light">
+                <span className="experience-word inline-block overflow-hidden align-top"><span className="block">The</span></span>{' '}
+                <span className="experience-word inline-block overflow-hidden align-top"><span className="serif-accent block normal-case tracking-[-0.05em] text-accent">path</span></span>{' '}
+                <span className="experience-word inline-block overflow-hidden align-top"><span className="block">so far.</span></span>
+              </h3>
             </div>
 
-            {/* Rows */}
-            <div className="flex flex-col">
-              {CREDENTIALS.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="cred-row group relative opacity-0"
-                >
-                  {/* Desktop row */}
-                  <div className="hidden md:grid grid-cols-[100px_1fr_1fr_1fr] gap-x-8 py-6 border-b border-white/[0.07] items-baseline transition-colors duration-300 group-hover:border-white/20">
-                    <span className="font-mono text-sm text-warm tabular-nums">{item.year}</span>
+            <div className="relative mx-auto max-w-6xl">
+              <div aria-hidden="true" className="absolute bottom-0 left-[7px] top-0 w-px bg-white/15 md:hidden" />
+              <svg aria-hidden="true" className="pointer-events-none absolute bottom-0 left-1/2 hidden h-full w-16 -translate-x-1/2 md:block" viewBox="0 0 64 1000" preserveAspectRatio="none">
+                <path
+                  ref={pathRef}
+                  d="M32 0 C25 84 39 164 32 250 C25 334 39 416 32 500 C25 584 39 666 32 750 C25 834 39 916 32 1000"
+                  fill="none"
+                  stroke="rgba(232, 228, 222, 0.28)"
+                  strokeWidth="1.5"
+                />
+              </svg>
+              <div className="flex flex-col gap-12 md:gap-20">
+                {CREDENTIALS.map((item, idx) => {
+                  const isLeft = idx % 2 === 0;
+                  return (
+                    <article key={item.title} data-side={isLeft ? 'left' : 'right'} className="cred-row relative grid grid-cols-[32px_1fr] gap-x-5 opacity-0 md:grid-cols-[1fr_96px_1fr] md:gap-x-0">
+                      <div className="relative order-1 md:col-start-2 md:row-start-1 md:justify-self-center">
+                        <span className="timeline-dot relative z-10 block h-[15px] w-[15px] rounded-full border-[3px] border-ink bg-cream" />
+                        <span aria-hidden="true" className={`timeline-connector absolute top-[7px] hidden h-px w-14 bg-white/25 md:block ${isLeft ? 'right-full origin-right' : 'left-full origin-left'}`} />
+                        <span className={`absolute top-7 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-warm-light ${isLeft ? 'left-0 md:right-7 md:left-auto md:text-right' : 'left-0 md:left-7'}`}>
+                          {item.year}
+                        </span>
+                      </div>
 
-                    <span className="font-display font-bold text-base lg:text-lg uppercase tracking-tight text-cream leading-snug">
-                      {item.title}
-                    </span>
-
-                    <span className="font-mono text-sm text-gray-soft leading-snug">
-                      {item.organization}
-                    </span>
-
-                    <span className="font-sans text-sm text-warm-light leading-snug">
-                      {item.stat}
-                    </span>
-                  </div>
-
-                  {/* Accent bottom-line sweep on hover (matches Projects section) */}
-                  <div className="hidden md:block absolute bottom-0 left-0 h-[1px] bg-accent w-0 transition-all duration-[350ms] ease-out group-hover:w-full pointer-events-none" />
-
-                  {/* Mobile row — stacked */}
-                  <div className="md:hidden py-5 border-b border-white/[0.07] flex flex-col gap-1.5">
-                    <div className="flex items-center justify-between gap-4">
-                      <span className="font-mono text-xs text-warm tabular-nums">{item.year}</span>
-                      <span className="font-mono text-[10px] text-accent/70 uppercase tracking-widest">{item.type}</span>
-                    </div>
-                    <span className="font-display font-bold text-base uppercase tracking-tight text-cream leading-snug">
-                      {item.title}
-                    </span>
-                    <span className="font-mono text-xs text-gray-soft">{item.organization}</span>
-                    <span className="font-sans text-xs text-warm-light mt-0.5 leading-relaxed">{item.stat}</span>
-                  </div>
-                </div>
-              ))}
+                      <div className={`timeline-content order-2 pt-8 md:row-start-1 md:pt-0 ${isLeft ? 'md:col-start-1 md:pr-14 md:text-right' : 'md:col-start-3 md:pl-14'}`}>
+                        <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-accent">{item.type}</span>
+                        <h4 className="mt-4 font-display text-[clamp(2.15rem,4.4vw,4.5rem)] font-bold uppercase tracking-[-0.065em] leading-[0.86] text-cream">
+                          {item.title}
+                        </h4>
+                        <div className={`mt-6 border-t border-white/10 pt-4 ${isLeft ? 'md:ml-auto md:max-w-md' : 'md:max-w-md'}`}>
+                          <p className="font-mono text-xs leading-relaxed text-gray-soft">{item.organization}</p>
+                          {item.stat && <p className="mt-3 font-sans text-sm leading-relaxed text-warm-light">{item.stat}</p>}
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
-
           </div>
-          {/* ─────────────────────────────────────────────────────────── */}
 
         </div>
       </section>
