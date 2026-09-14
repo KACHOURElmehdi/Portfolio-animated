@@ -53,18 +53,18 @@ npm run dev
 
 ```
 src/
-├── app/                  # App Router pages, layouts, and API routes
-│   ├── api/              # Backend handlers (contact form)
-│   └── projects/         # Individual project pages
+├── app/
+│   ├── api/
+│   └── projects/
 ├── components/
-│   ├── canvas/           # Canvas background components
-│   ├── project/          # Project detail components
-│   ├── providers/        # Lenis smooth scroll provider
-│   ├── sections/         # Page sections (Banner, About, Projects, Contact)
-│   ├── shared/           # Navbar, Footer, Preloader, Custom Cursor
-│   └── ui/               # Animated text and button components
-├── lib/                  # Metadata, navigation config, project data
-└── utils/                # Utility functions
+│   ├── canvas/
+│   ├── project/
+│   ├── providers/
+│   ├── sections/
+│   ├── shared/
+│   └── ui/
+├── lib/
+└── utils/
 ```
 
 ## Contributing
