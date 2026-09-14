@@ -186,12 +186,6 @@ body {
   .marquee-row:hover .marquee-content-right {
     animation-play-state: running !important;
   }
-  .group:hover * {
-    transform: none !important;
-  }
-  .group:hover {
-    transform: none !important;
-  }
 }
 
 @keyframes marquee-left {

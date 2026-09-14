@@ -99,7 +99,7 @@ const AnimatedHeading: React.FC<AnimatedHeadingProps> = ({
             <span
               key={`${word.t}-${i}`}
               className={`ah-word relative inline-block overflow-visible ${
-                word.serif ? 'serif-accent normal-case font-normal text-[1.06em]' : ''
+                word.serif ? 'serif-accent normal-case font-normal text-[1.06em] text-accent' : ''
               }`}
               style={{
                 paddingBottom: '0.14em',

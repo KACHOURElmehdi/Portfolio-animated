@@ -177,7 +177,7 @@ const Contact = () => {
         >
           <AnimatedHeading
             words={headingWords}
-            className="text-[clamp(2.75rem,8.5vw,7.5rem)] tracking-tight mb-6 text-light"
+            className="text-[clamp(2.5rem,7vw,6.5rem)] tracking-tight mb-6 text-light"
           />
           <div className="max-w-2xl mb-12">
             <ScrollWordReveal
@@ -203,12 +203,14 @@ const Contact = () => {
                 onChange={handleChange}
                 placeholder="Your Name"
                 autoComplete="name"
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? 'name-error' : undefined}
                 className={`w-full px-4 py-3 text-sm sm:text-base border rounded-xl bg-surface text-cream placeholder-[#6a6a68] focus:outline-none transition-all duration-300 border-white/[0.08] focus:border-accent focus:ring-1 focus:ring-accent/30 ${
                   errors.name ? 'border-red-500 focus:border-red-500' : ''
                 }`}
                 disabled={isDisabled}
               />
-              {errors.name && <p className="text-red-400 text-xs sm:text-sm">{errors.name}</p>}
+              {errors.name && <p id="name-error" className="text-red-400 text-xs sm:text-sm">{errors.name}</p>}
             </div>
 
             <div className="flex flex-col gap-2">
@@ -223,12 +225,14 @@ const Contact = () => {
                 onChange={handleChange}
                 autoComplete="email"
                 placeholder="you@example.com"
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? 'email-error' : undefined}
                 className={`w-full px-4 py-3 text-sm sm:text-base border rounded-xl bg-surface text-cream placeholder-[#6a6a68] focus:outline-none transition-all duration-300 border-white/[0.08] focus:border-accent focus:ring-1 focus:ring-accent/30 ${
                   errors.email ? 'border-red-500 focus:border-red-500' : ''
                 }`}
                 disabled={isDisabled}
               />
-              {errors.email && <p className="text-red-400 text-xs sm:text-sm">{errors.email}</p>}
+              {errors.email && <p id="email-error" className="text-red-400 text-xs sm:text-sm">{errors.email}</p>}
             </div>
 
             <div className="flex flex-col gap-2">
@@ -242,12 +246,14 @@ const Contact = () => {
                 value={formData.message}
                 onChange={handleChange}
                 placeholder="Write your message here..."
+                aria-invalid={!!errors.message}
+                aria-describedby={errors.message ? 'message-error' : undefined}
                 className={`w-full px-4 py-3 text-sm sm:text-base border rounded-xl bg-surface text-cream placeholder-[#6a6a68] resize-none focus:outline-none transition-all duration-300 border-white/[0.08] focus:border-accent focus:ring-1 focus:ring-accent/30 ${
                   errors.message ? 'border-red-500 focus:border-red-500' : ''
                 }`}
                 disabled={isDisabled}
               />
-              {errors.message && <p className="text-red-400 text-xs sm:text-sm">{errors.message}</p>}
+              {errors.message && <p id="message-error" className="text-red-400 text-xs sm:text-sm">{errors.message}</p>}
               <p className="text-xs text-gray-soft">{formData.message.length} / 30 minimum characters</p>
             </div>
 

@@ -87,7 +87,7 @@ const Services = () => {
 
           <div className="grid md:grid-cols-12 gap-4 md:gap-8">
             <div className="md:col-start-6 md:col-span-7 flex flex-col md:flex-row gap-3 md:gap-10">
-              <span className="text-accent-light uppercase text-sm md:text-base font-bold tracking-[0.2em] whitespace-nowrap">
+              <span className="font-mono text-sm sm:text-base md:text-base text-warm uppercase tracking-[0.3em] font-medium whitespace-nowrap inline-block">
                 (Services)
               </span>
 
