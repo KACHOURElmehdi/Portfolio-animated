@@ -138,13 +138,23 @@ export default function CustomCursor() {
       }
     };
 
+    let scrollCheckScheduled = false;
+    const scheduleCheckElementUnderCursor = () => {
+      if (scrollCheckScheduled) return;
+      scrollCheckScheduled = true;
+      requestAnimationFrame(() => {
+        scrollCheckScheduled = false;
+        checkElementUnderCursor();
+      });
+    };
+
     window.addEventListener('mouseover', handleMouseOver);
     document.addEventListener('mouseleave', handleMouseLeavePage);
-    window.addEventListener('scroll', checkElementUnderCursor, { passive: true });
+    window.addEventListener('scroll', scheduleCheckElementUnderCursor, { passive: true });
 
     const lenis = (window as any).__lenis;
     if (lenis) {
-      lenis.on('scroll', checkElementUnderCursor);
+      lenis.on('scroll', scheduleCheckElementUnderCursor);
     }
 
     return () => {
@@ -152,9 +162,9 @@ export default function CustomCursor() {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseleave', handleMouseLeavePage);
-      window.removeEventListener('scroll', checkElementUnderCursor);
+      window.removeEventListener('scroll', scheduleCheckElementUnderCursor);
       if (lenis) {
-        lenis.off('scroll', checkElementUnderCursor);
+        lenis.off('scroll', scheduleCheckElementUnderCursor);
       }
     };
   }, [enabled]);

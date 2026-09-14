@@ -261,16 +261,16 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ onClose, handleLinkClic
     const el = magnetRefs.current[index];
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const dx = (e.clientX - rect.left - rect.width / 2) * 0.25;
-    const dy = (e.clientY - rect.top - rect.height / 2) * 0.25;
-    gsap.to(el, { x: dx, y: dy, duration: 0.4, ease: 'power2.out' });
+    const dx = (e.clientX - rect.left - rect.width / 2) * 0.35;
+    const dy = (e.clientY - rect.top - rect.height / 2) * 0.35;
+    gsap.to(el, { x: dx, y: dy, duration: 0.38, ease: 'power2.out' });
   };
 
   const handleMagneticMouseLeave = (index: number) => {
     if (typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || !window.matchMedia('(hover: hover)').matches)) return;
     const el = magnetRefs.current[index];
     if (!el) return;
-    gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)' });
+    gsap.to(el, { x: 0, y: 0, duration: 0.65, ease: 'elastic.out(1, 0.35)' });
   };
 
   return (
@@ -576,7 +576,7 @@ const Navbar: React.FC<NavbarProps> = ({ hamburgerOnly = false }) => {
       {!hamburgerOnly && (
         <nav
           ref={navRef}
-          className="hidden md:block fixed w-full py-6 z-50 bg-cream"
+          className="hidden md:block fixed w-full py-6 z-50 bg-transparent"
           style={navStyle}
         >
           <div className="w-full px-6 sm:px-8 md:px-12 lg:px-16 flex justify-between items-center">
@@ -606,7 +606,7 @@ const Navbar: React.FC<NavbarProps> = ({ hamburgerOnly = false }) => {
       {!hamburgerOnly && (
         <nav
           ref={mobileNavRef}
-          className="mobile-navbar md:hidden fixed w-full z-50 bg-cream/90 backdrop-blur-md border-b border-warm/10"
+          className="mobile-navbar md:hidden fixed w-full z-50 bg-transparent"
           style={navStyle}
         >
           <div className="flex justify-between items-center px-6 sm:px-8 h-20 w-full">
@@ -623,8 +623,8 @@ const Navbar: React.FC<NavbarProps> = ({ hamburgerOnly = false }) => {
           hamburgerOnly
             ? { opacity: 1, scale: 1 }
             : {
-                opacity: isTransitioning ? 0 : 0,
-                scale: isTransitioning ? 0 : 0,
+                opacity: isTransitioning ? 0 : 1,
+                scale: isTransitioning ? 0 : 1,
                 pointerEvents: isTransitioning ? 'none' : 'auto',
                 transition: 'opacity 0.5s ease-in-out',
               }

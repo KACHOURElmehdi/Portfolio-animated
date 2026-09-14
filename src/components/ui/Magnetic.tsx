@@ -12,7 +12,7 @@ interface MagneticProps {
 
 const Magnetic: React.FC<MagneticProps> = ({
   children,
-  strength = 0.35,
+  strength = 0.38,
   className = '',
   disabled = false,
 }) => {
@@ -31,11 +31,11 @@ const Magnetic: React.FC<MagneticProps> = ({
       const rect = trigger.getBoundingClientRect();
       const x = (e.clientX - (rect.left + rect.width / 2)) * strength;
       const y = (e.clientY - (rect.top + rect.height / 2)) * strength;
-      gsap.to(target, { x, y, duration: 0.35, ease: 'power2.out', overwrite: 'auto' });
+      gsap.to(target, { x, y, duration: 0.38, ease: 'power2.out', overwrite: 'auto' });
     };
 
     const handleMouseLeave = () => {
-      gsap.to(target, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.3)', overwrite: 'auto' });
+      gsap.to(target, { x: 0, y: 0, duration: 0.65, ease: 'elastic.out(1, 0.35)', overwrite: 'auto' });
     };
 
     trigger.addEventListener('mousemove', handleMouseMove);
@@ -48,8 +48,8 @@ const Magnetic: React.FC<MagneticProps> = ({
   }, [strength, disabled]);
 
   return (
-    <div ref={triggerRef} className={`inline-block ${className}`.trim()}>
-      <div ref={targetRef} className="w-full h-full">
+    <div ref={triggerRef} className={`inline-block p-3.5 -m-3.5 pointer-events-auto ${className}`.trim()}>
+      <div ref={targetRef} className="w-full h-full will-change-transform">
         {children}
       </div>
     </div>

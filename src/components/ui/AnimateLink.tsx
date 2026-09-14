@@ -7,6 +7,7 @@ interface AnimatedLinkProps {
   className?: string;
   magnetic?: boolean;
   strength?: number;
+  as?: React.ElementType;
 }
 
 const AnimatedLink: React.FC<AnimatedLinkProps> = ({
@@ -14,7 +15,8 @@ const AnimatedLink: React.FC<AnimatedLinkProps> = ({
   onClick,
   className = '',
   magnetic = true,
-  strength = 0.3,
+  strength = 0.38,
+  as: Wrapper = 'li',
 }) => {
   if (React.isValidElement(children) && children.type === 'a') {
     const { href, children: text, onClick: childOnClick, target, rel, className: childClassName, ...rest } = children.props as any;
@@ -25,20 +27,17 @@ const AnimatedLink: React.FC<AnimatedLinkProps> = ({
         onClick={childOnClick || onClick}
         target={target}
         rel={rel}
-        className={`${childClassName || ''} relative z-10 overflow-hidden h-6 group cursor-pointer inline-flex items-center`.trim()}
-        style={{ display: 'inline-flex', alignItems: 'center' }}
+        className={`${childClassName || ''} relative z-10 overflow-hidden h-[1.25em] group cursor-pointer inline-flex items-center`.trim()}
         {...rest}
       >
         <span
-          className="block transition-transform duration-300 ease-in-out group-hover:-translate-y-full"
-          style={{ height: '100%', display: 'flex', alignItems: 'center' }}
+          className="block transition-transform duration-300 ease-in-out group-hover:-translate-y-full h-full flex items-center"
         >
           {text}
         </span>
         <span
           aria-hidden="true"
-          className="block absolute top-full left-0 transition-transform duration-500 ease-in-out group-hover:-translate-y-full pointer-events-none"
-          style={{ height: '100%', display: 'flex', alignItems: 'center' }}
+          className="block absolute top-full left-0 transition-transform duration-300 ease-in-out group-hover:-translate-y-full pointer-events-none h-full flex items-center"
         >
           {text}
         </span>
@@ -46,7 +45,7 @@ const AnimatedLink: React.FC<AnimatedLinkProps> = ({
     );
 
     return (
-      <li className={`${className} list-none`}>
+      <Wrapper className={`${className} ${Wrapper === 'li' ? 'list-none' : ''}`.trim()}>
         {magnetic ? (
           <Magnetic strength={strength}>
             {linkContent}
@@ -54,26 +53,23 @@ const AnimatedLink: React.FC<AnimatedLinkProps> = ({
         ) : (
           linkContent
         )}
-      </li>
+      </Wrapper>
     );
   }
 
   const spanContent = (
     <span
-      className="relative z-10 overflow-hidden h-6 group cursor-pointer inline-flex items-center"
+      className="relative z-10 overflow-hidden h-[1.25em] group cursor-pointer inline-flex items-center"
       onClick={onClick}
-      style={{ display: 'inline-flex', alignItems: 'center' }}
     >
       <span
-        className="block transition-transform duration-300 ease-in-out group-hover:-translate-y-full"
-        style={{ height: '100%', display: 'flex', alignItems: 'center' }}
+        className="block transition-transform duration-300 ease-in-out group-hover:-translate-y-full h-full flex items-center"
       >
         {children}
       </span>
       <span
         aria-hidden="true"
-        className="block absolute top-full left-0 transition-transform duration-500 ease-in-out group-hover:-translate-y-full pointer-events-none"
-        style={{ height: '100%', display: 'flex', alignItems: 'center' }}
+        className="block absolute top-full left-0 transition-transform duration-300 ease-in-out group-hover:-translate-y-full pointer-events-none h-full flex items-center"
       >
         {children}
       </span>
@@ -81,7 +77,7 @@ const AnimatedLink: React.FC<AnimatedLinkProps> = ({
   );
 
   return (
-    <li className={`${className} list-none`}>
+    <Wrapper className={`${className} ${Wrapper === 'li' ? 'list-none' : ''}`.trim()}>
       {magnetic ? (
         <Magnetic strength={strength}>
           {spanContent}
@@ -89,7 +85,7 @@ const AnimatedLink: React.FC<AnimatedLinkProps> = ({
       ) : (
         spanContent
       )}
-    </li>
+    </Wrapper>
   );
 };
 

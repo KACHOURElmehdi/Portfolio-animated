@@ -68,6 +68,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   }
 
   const handleMouseEnter = (e: React.MouseEvent<any>) => {
+    if (disabled) return;
     if (typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || !window.matchMedia('(hover: hover)').matches)) return;
     const button = buttonRef.current;
     const ripple = rippleRef.current;
@@ -98,8 +99,9 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   };
 
   useEffect(() => {
+    const container = containerRef.current;
     const el = buttonRef.current;
-    if (!el || disabled) return;
+    if (!container || !el || disabled) return;
 
     const isTouch = window.matchMedia('(pointer: coarse)').matches || !window.matchMedia('(hover: hover)').matches;
     if (isTouch) return;
@@ -115,11 +117,11 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' });
     };
 
-    el.addEventListener('mousemove', handleMouseMove);
-    el.addEventListener('mouseleave', handleMouseLeave);
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseleave', handleMouseLeave);
     return () => {
-      el.removeEventListener('mousemove', handleMouseMove);
-      el.removeEventListener('mouseleave', handleMouseLeave);
+      container.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [disabled]);
 
@@ -141,11 +143,11 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
           style={{ backgroundColor: rippleColor, opacity: 0 }}
         />
 
-        <span className="flex items-center justify-center h-full transition-transform duration-400 ease-in-out group-hover:-translate-y-full relative z-10">
+        <span className="flex items-center justify-center h-full transition-transform duration-300 ease-in-out group-hover:-translate-y-full relative z-10">
           {topText}
         </span>
 
-        <span className="flex items-center justify-center h-full absolute inset-0 top-full transition-transform duration-400 ease-in-out group-hover:-translate-y-full z-10">
+        <span aria-hidden="true" className="flex items-center justify-center h-full absolute inset-0 top-full transition-transform duration-300 ease-in-out group-hover:-translate-y-full z-10">
           {bottomText}
         </span>
       </Component>

@@ -324,7 +324,10 @@ const HomeBanner = () => {
                 variant="light"
               />
               <AnimatedButton
-                onClick={() => window.open('/01_aitezaz_resume.pdf', '_blank')}
+                as="a"
+                href="/01_aitezaz_resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 topText="RESUME"
                 bottomText="DOWNLOAD →"
                 variant="outline"

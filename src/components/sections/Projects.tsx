@@ -320,7 +320,7 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
             <div className="p-3 pb-0">
               <div
                 className="mc-img-wrap relative overflow-hidden rounded-2xl"
-                style={{ aspectRatio: '21 / 9', clipPath: 'inset(100% 0 0 0 round 14px)' }}
+                style={{ aspectRatio: '16 / 10', clipPath: 'inset(100% 0 0 0 round 14px)' }}
               >
                 <Image
                   src={project.hoverImage || project.images[0]}
