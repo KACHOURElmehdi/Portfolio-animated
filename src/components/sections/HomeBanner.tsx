@@ -302,8 +302,7 @@ const HomeBanner = () => {
               ref={paragraphRef}
               className="text-warm font-sans text-base sm:text-lg md:text-xl leading-relaxed mb-8 md:mb-10 text-center mx-auto"
             >
-              Open to job opportunities worldwide. Passionate about building polished, intuitive,
-              and thoughtful digital experiences that leave a mark.
+              Full-stack engineer building fast, scalable, and reliable web applications.
             </p>
 
             <div ref={tickerRef} className="w-full flex justify-center">
