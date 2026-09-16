@@ -72,21 +72,33 @@ export default function ProjectDetails({ project }: { project: Project }) {
   };
 
   return (
-    <section ref={rootRef} className="min-h-screen bg-surface-base text-white px-6 sm:px-8 md:px-12 lg:px-16 py-12 md:py-20 relative">
+    <section ref={rootRef} className="min-h-screen bg-surface-base text-white px-4 sm:px-8 md:px-12 lg:px-16 py-8 sm:py-12 md:py-20 relative">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-10 md:mb-14">
+        <div className="mb-8 sm:mb-12 md:mb-16">
           <Link
             href="/"
-            className="inline-flex items-center gap-2.5 text-muted hover:text-white transition-all duration-300 group"
+            className="inline-flex items-center gap-2 text-muted hover:text-white transition-colors duration-200 group"
           >
-            <span className="text-base md:text-xl transform group-hover:-translate-x-1 transition-transform duration-300">
+            <span className="text-base sm:text-lg transform group-hover:-translate-x-1 transition-transform duration-200">
               ←
             </span>
-            <span className="font-mono text-xs md:text-sm uppercase tracking-widest">Back to Projects</span>
+            <span className="font-mono text-xs uppercase tracking-widest">Back to Projects</span>
           </Link>
+        </div>
+
+        <header className="mb-8 sm:mb-12 md:mb-16">
+          <h1
+            ref={titleRef}
+            aria-label={project.title}
+            className="font-display font-black uppercase tracking-tight leading-[0.98] sm:leading-[1.02] text-[clamp(2rem,6vw,5.5rem)] mb-5 sm:mb-8"
+          >
+            <span aria-hidden="true" className="pd-title-text block">
+              {project.title}
+            </span>
+          </h1>
 
           {(project.liveUrl || project.github) && (
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
               {project.liveUrl && (
                 <AnimatedButton
                   as="a"
@@ -131,128 +143,140 @@ export default function ProjectDetails({ project }: { project: Project }) {
               )}
             </div>
           )}
-        </div>
-
-        <header className="mb-16 md:mb-24">
-          <h1
-            ref={titleRef}
-            aria-label={project.title}
-            className="font-display font-black uppercase tracking-tight leading-[1.02] text-[clamp(2.4rem,6.5vw,5.5rem)]"
-          >
-            <span aria-hidden="true" className="pd-title-text block">
-              {project.title}
-            </span>
-          </h1>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-20 md:mb-28">
+        {project.images && project.images.length > 0 && (
+          <div className="mb-10 sm:mb-14 md:mb-20">
+            <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden bg-surface-card border border-surface-border shadow-2xl">
+              <div className="pd-figure-parallax absolute inset-0 overflow-hidden">
+                <div className="pd-figure-inner absolute inset-x-0 -top-[8%] h-[116%]" style={{ willChange: 'transform' }}>
+                  <Image
+                    src={project.images[0]}
+                    alt={`${project.title} preview`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 1200px"
+                    priority
+                    className="object-cover object-top"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-col md:grid md:grid-cols-12 gap-2 sm:gap-3 md:gap-8 mb-8 sm:mb-12 md:mb-20">
           <div className="md:col-span-4">
-            <p className="font-mono text-xs uppercase tracking-widest text-warm-light">(Overview)</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-accent md:text-warm-light">(Overview)</p>
           </div>
           <div className="md:col-span-8">
             <ScrollWordReveal
               text={project.overview}
               offset={['start 0.98', 'end 0.85']}
-              className="text-lg sm:text-xl md:text-2xl text-light font-sans leading-relaxed"
+              className="text-base sm:text-lg md:text-2xl text-light font-sans leading-relaxed"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-16 md:mb-24">
+        <div className="flex flex-col md:grid md:grid-cols-12 gap-2 sm:gap-3 md:gap-8 mb-8 sm:mb-12 md:mb-20">
           <div className="md:col-span-4">
-            <p className="font-mono text-xs uppercase tracking-widest text-warm-light">(Architecture)</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-accent md:text-warm-light">(Architecture)</p>
           </div>
           <div className="md:col-span-8">
             <ScrollWordReveal
               text={project.architecture}
               offset={['start 0.98', 'end 0.88']}
-              className="text-base sm:text-lg text-light/80 font-sans leading-relaxed"
+              className="text-sm sm:text-base md:text-lg text-light/80 font-sans leading-relaxed"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-20 md:mb-28">
+        <div className="flex flex-col md:grid md:grid-cols-12 gap-2 sm:gap-3 md:gap-8 mb-10 sm:mb-14 md:mb-20">
           <div className="md:col-span-4">
-            <p className="font-mono text-xs uppercase tracking-widest text-warm-light">(Engineering)</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-accent md:text-warm-light">(Engineering)</p>
           </div>
           <div className="md:col-span-8">
             <ScrollWordReveal
               text={project.implementation}
               offset={['start 0.98', 'end 0.88']}
-              className="text-base sm:text-lg text-light/80 font-sans leading-relaxed"
+              className="text-sm sm:text-base md:text-lg text-light/80 font-sans leading-relaxed"
             />
           </div>
         </div>
 
-        <div className="mb-20 md:mb-28">
+        <div className="mb-12 sm:mb-16 md:mb-24">
           <AnimatedHeading
             words={[{ t: 'KEY' }, { t: 'moves', serif: true }]}
             showLine={false}
-            containerClassName="mb-10"
-            className="text-[clamp(1.9rem,4.5vw,3.4rem)] text-white"
+            containerClassName="mb-6 sm:mb-10"
+            className="text-[clamp(1.75rem,4.5vw,3.4rem)] text-white"
           />
           <ul className="divide-y divide-white/[0.06] border-t border-b border-white/[0.06]">
             {project.myRole.map((role, i) => (
-              <li key={i} className="py-5 flex items-start gap-5 group">
-                <span className="font-mono text-xs text-accent mt-1 shrink-0 w-8">
+              <li key={i} className="py-3.5 sm:py-5 flex items-start gap-3 sm:gap-5 group">
+                <span className="font-mono text-xs text-accent mt-0.5 shrink-0 w-6 sm:w-8">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <ScrollWordReveal
                   text={role}
                   offset={['start 0.99', 'end 0.92']}
-                  className="text-sm sm:text-base text-light/80 font-sans leading-relaxed flex-1 group-hover:text-light transition-colors duration-300"
+                  className="text-xs sm:text-base text-light/80 font-sans leading-relaxed flex-1 group-hover:text-light transition-colors duration-300"
                 />
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="flex flex-col gap-12 md:gap-16 mb-24 md:mb-32">
-          {project.images?.map((img, i) => {
-            const wide = i % 3 === 0;
-            return (
-              <figure
-                key={`${project.slug}-img-${i}`}
-                className={`relative ${wide ? 'w-full' : 'w-full md:w-10/12'} ${
-                  i % 3 === 1 ? 'md:ml-auto' : ''
-                }`}
-              >
-                <div
-                  className={`overflow-hidden rounded-xl bg-surface-card border border-surface-border relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] ${
-                    wide ? 'max-h-[500px]' : 'max-h-[420px]'
-                  } w-full`}
+        {project.images && project.images.length > 1 && (
+          <div className="flex flex-col gap-6 sm:gap-10 md:gap-16 mb-14 sm:mb-18 md:mb-28">
+            <div className="mb-1">
+              <p className="font-mono text-xs uppercase tracking-widest text-warm-light">Gallery</p>
+            </div>
+            {project.images.slice(1).map((img, i) => {
+              const actualIdx = i + 1;
+              const wide = actualIdx % 3 === 0;
+              return (
+                <figure
+                  key={`${project.slug}-img-${actualIdx}`}
+                  className={`relative ${wide ? 'w-full' : 'w-full md:w-10/12'} ${
+                    actualIdx % 3 === 1 ? 'md:ml-auto' : ''
+                  }`}
                 >
-                  <div className="pd-figure-parallax absolute inset-0 overflow-hidden">
-                    <div className="pd-figure-inner absolute inset-x-0 -top-[8%] h-[116%]" style={{ willChange: 'transform' }}>
-                      <Image
-                        src={img}
-                        alt={`${project.title} screenshot ${i + 1}`}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 1100px"
-                        priority={i === 0}
-                        className="object-cover object-top"
-                      />
+                  <div
+                    className={`overflow-hidden rounded-xl bg-surface-card border border-surface-border relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] ${
+                      wide ? 'max-h-[500px]' : 'max-h-[420px]'
+                    } w-full`}
+                  >
+                    <div className="pd-figure-parallax absolute inset-0 overflow-hidden">
+                      <div className="pd-figure-inner absolute inset-x-0 -top-[8%] h-[116%]" style={{ willChange: 'transform' }}>
+                        <Image
+                          src={img}
+                          alt={`${project.title} screenshot ${actualIdx + 1}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 1100px"
+                          className="object-cover object-top"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <figcaption className="mt-3 flex items-center justify-between font-mono text-[11px] uppercase tracking-widest text-muted">
-                  <span>{project.title}</span>
-                  <span>
-                    {String(i + 1).padStart(2, '0')} / {String(project.images.length).padStart(2, '0')}
-                  </span>
-                </figcaption>
-              </figure>
-            );
-          })}
-        </div>
+                  <figcaption className="mt-2.5 flex items-center justify-between font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-muted">
+                    <span>{project.title}</span>
+                    <span>
+                      {String(actualIdx + 1).padStart(2, '0')} / {String(project.images.length).padStart(2, '0')}
+                    </span>
+                  </figcaption>
+                </figure>
+              );
+            })}
+          </div>
+        )}
 
-        <div className="mb-20 md:mb-24">
-          <p className="font-mono text-xs uppercase tracking-widest text-warm-light mb-5">Built with</p>
+        <div className="mb-12 sm:mb-16 md:mb-20">
+          <p className="font-mono text-xs uppercase tracking-widest text-warm-light mb-3 sm:mb-5">Built with</p>
           <div className="flex flex-wrap gap-2">
             {project.tech?.map((t) => (
               <span
                 key={t}
-                className="font-mono text-xs px-3.5 py-1.5 rounded-full bg-surface-mid border border-white/[0.08] text-cream"
+                className="font-mono text-xs px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-surface-mid border border-white/[0.08] text-cream"
               >
                 {t}
               </span>
@@ -261,16 +285,16 @@ export default function ProjectDetails({ project }: { project: Project }) {
         </div>
 
         {(project.liveUrl || project.github) && (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 sm:p-8 rounded-2xl bg-surface-card border border-white/[0.08] mb-20 md:mb-28">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 p-5 sm:p-8 rounded-2xl bg-surface-card border border-white/[0.08] mb-12 sm:mb-16 md:mb-20">
             <div>
-              <p className="font-display font-bold text-xl sm:text-2xl text-white mb-1">
+              <p className="font-display font-bold text-lg sm:text-2xl text-white mb-1">
                 Explore this project
               </p>
-              <p className="font-sans text-sm text-muted">
+              <p className="font-sans text-xs sm:text-sm text-muted">
                 Inspect the live deployment or browse the repository code.
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
               {project.liveUrl && (
                 <AnimatedButton
                   as="a"
@@ -317,17 +341,17 @@ export default function ProjectDetails({ project }: { project: Project }) {
           </div>
         )}
 
-        <nav aria-label="Project navigation" className="grid grid-cols-1 md:grid-cols-2 border-t border-white/[0.08] mb-20">
+        <nav aria-label="Project navigation" className="grid grid-cols-1 md:grid-cols-2 border-t border-white/[0.08] mb-12 sm:mb-16">
           {prev && (
             <Link
               href={`/projects/${prev.slug}`}
-              className="group py-10 md:py-14 md:pr-10 border-b md:border-b-0 md:border-r border-white/[0.08] no-underline"
+              className="group py-6 sm:py-10 md:py-14 md:pr-10 border-b md:border-b-0 md:border-r border-white/[0.08] no-underline"
             >
-              <p className="font-mono text-[11px] uppercase tracking-widest text-muted mb-3 flex items-center gap-2">
+              <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-muted mb-2 sm:mb-3 flex items-center gap-2">
                 <span className="inline-block transition-transform duration-300 group-hover:-translate-x-1.5">←</span>
                 Previous
               </p>
-              <p className="font-display font-black uppercase tracking-tight leading-none text-[clamp(1.5rem,3.5vw,2.8rem)] text-light/60 group-hover:text-accent transition-colors duration-400">
+              <p className="font-display font-black uppercase tracking-tight leading-none text-[clamp(1.3rem,3.5vw,2.8rem)] text-light/60 group-hover:text-accent transition-colors duration-400">
                 {prev.title}
               </p>
             </Link>
@@ -335,31 +359,31 @@ export default function ProjectDetails({ project }: { project: Project }) {
           {next && (
             <Link
               href={`/projects/${next.slug}`}
-              className={`group py-10 md:py-14 md:pl-10 no-underline text-right items-end ${
+              className={`group py-6 sm:py-10 md:py-14 md:pl-10 no-underline text-right items-end ${
                 prev ? '' : 'md:col-span-2'
               }`}
             >
-              <p className="font-mono text-[11px] uppercase tracking-widest text-muted mb-3 flex items-center justify-end gap-2">
+              <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-muted mb-2 sm:mb-3 flex items-center justify-end gap-2">
                 Next
                 <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>
               </p>
-              <p className="font-display font-black uppercase tracking-tight leading-none text-[clamp(1.5rem,3.5vw,2.8rem)] text-light/60 group-hover:text-accent transition-colors duration-400">
+              <p className="font-display font-black uppercase tracking-tight leading-none text-[clamp(1.3rem,3.5vw,2.8rem)] text-light/60 group-hover:text-accent transition-colors duration-400">
                 {next.title}
               </p>
             </Link>
           )}
         </nav>
 
-        <div className="relative flex justify-center py-8">
+        <div className="relative flex justify-center py-6 sm:py-8">
           <div className="text-center flex flex-col items-center">
             <ScrollWordReveal
               text="Have a project in mind?"
               offset={['start 0.98', 'end 0.88']}
-              className="text-muted text-lg justify-center mb-1"
+              className="text-muted text-base sm:text-lg justify-center mb-1"
             />
             <a
               href={`mailto:${site.email}`}
-              className="text-xl font-semibold text-[#bab6b3] hover:text-[#d4d2d0] transition"
+              className="text-lg sm:text-xl font-semibold text-[#bab6b3] hover:text-[#d4d2d0] transition"
             >
               {site.email}
             </a>
