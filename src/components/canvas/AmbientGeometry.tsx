@@ -214,7 +214,30 @@ export default function AmbientGeometry() {
 
     observer.observe(container);
 
+    const handlePause = () => {
+      isVisibleRef.current = false;
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+    };
+    const handleResume = () => {
+      const rect = container.getBoundingClientRect();
+      const inView = rect.bottom > 0 && rect.top < window.innerHeight;
+      if (inView) {
+        isVisibleRef.current = true;
+        if (!animationFrameRef.current) {
+          animationFrameRef.current = requestAnimationFrame(animate);
+        }
+      }
+    };
+
+    window.addEventListener('pause-ambient-geometry', handlePause);
+    window.addEventListener('resume-ambient-geometry', handleResume);
+
     return () => {
+      window.removeEventListener('pause-ambient-geometry', handlePause);
+      window.removeEventListener('resume-ambient-geometry', handleResume);
       resizeObserver.disconnect();
       observer.disconnect();
       if (parentSection) {

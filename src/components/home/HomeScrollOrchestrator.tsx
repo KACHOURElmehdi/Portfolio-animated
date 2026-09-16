@@ -37,8 +37,10 @@ export default function HomeScrollOrchestrator({
       const updatePointerEvents = (self: ScrollTrigger) => {
         if (self.progress >= 0.85) {
           home.style.pointerEvents = 'none';
+          window.dispatchEvent(new CustomEvent('pause-ambient-geometry'));
         } else {
           home.style.pointerEvents = 'auto';
+          window.dispatchEvent(new CustomEvent('resume-ambient-geometry'));
         }
       };
 
@@ -52,9 +54,11 @@ export default function HomeScrollOrchestrator({
             onUpdate: updatePointerEvents,
             onLeave: () => {
               home.style.pointerEvents = 'none';
+              window.dispatchEvent(new CustomEvent('pause-ambient-geometry'));
             },
             onEnterBack: () => {
               home.style.pointerEvents = 'auto';
+              window.dispatchEvent(new CustomEvent('resume-ambient-geometry'));
             },
             onRefresh: updatePointerEvents,
           },
