@@ -173,7 +173,6 @@ const Contact = () => {
         <div
           ref={cardRef}
           className="rounded-3xl bg-surface text-light p-8 sm:p-12 md:p-16 lg:p-20 border border-elevated-dark"
-          style={{ willChange: 'transform' }}
         >
           <AnimatedHeading
             words={headingWords}
@@ -300,7 +299,7 @@ const Contact = () => {
                 Direct Contact
               </p>
 
-              <div ref={ctaRef} className="inline-block" style={{ willChange: 'transform' }}>
+              <div ref={ctaRef} className="inline-block">
                 <button
                   type="button"
                   aria-label={`Copy ${site.email} to clipboard`}
