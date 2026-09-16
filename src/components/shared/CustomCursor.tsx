@@ -59,8 +59,10 @@ export default function CustomCursor() {
     });
 
     const tick = () => {
-      delayedMouse.current.x += (mouse.current.x - delayedMouse.current.x) * 0.15;
-      delayedMouse.current.y += (mouse.current.y - delayedMouse.current.y) * 0.15;
+      const dt = gsap.ticker.deltaRatio(60);
+      const factor = 1 - Math.pow(1 - 0.15, dt);
+      delayedMouse.current.x += (mouse.current.x - delayedMouse.current.x) * factor;
+      delayedMouse.current.y += (mouse.current.y - delayedMouse.current.y) * factor;
       gsap.set(cursorDot, { x: mouse.current.x, y: mouse.current.y });
       gsap.set([cursorOutline, cursorTextEl], {
         x: delayedMouse.current.x,

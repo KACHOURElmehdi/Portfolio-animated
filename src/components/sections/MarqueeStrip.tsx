@@ -36,9 +36,10 @@ export default function MarqueeStrip() {
     let currentSkew = 0;
 
     const onTick = () => {
-      currentVelocity += (targetVelocity - currentVelocity) * 0.08;
-      targetVelocity *= 0.93;
-      x -= baseSpeed + currentVelocity;
+      const dt = gsap.ticker.deltaRatio(60);
+      currentVelocity += (targetVelocity - currentVelocity) * (1 - Math.pow(1 - 0.08, dt));
+      targetVelocity *= Math.pow(0.93, dt);
+      x -= (baseSpeed + currentVelocity) * dt;
 
       if (halfWidth > 0) {
         if (x <= -halfWidth) {
@@ -49,7 +50,7 @@ export default function MarqueeStrip() {
       }
 
       const targetSkew = finePointer ? gsap.utils.clamp(-6, 6, currentVelocity * 0.45) : 0;
-      currentSkew += (targetSkew - currentSkew) * 0.1;
+      currentSkew += (targetSkew - currentSkew) * (1 - Math.pow(1 - 0.1, dt));
 
       if (track) {
         if (finePointer && Math.abs(currentSkew) > 0.01) {
@@ -115,14 +116,12 @@ export default function MarqueeStrip() {
   return (
     <div
       className="w-full relative z-20 overflow-hidden select-none border-t border-b border-border-dark"
-      style={{ willChange: 'transform' }}
       aria-hidden="true"
     >
       <div className="overflow-hidden bg-cream py-3">
         <div
           ref={track1Ref}
           className="inline-flex items-center gap-0 whitespace-nowrap"
-          style={{ willChange: 'transform' }}
         >
           {Array.from({ length: 8 }).map((_, i) => (
             <span key={i} className="inline-flex items-center gap-6 pr-6">
