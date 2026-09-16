@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 import { useTransitionState } from 'next-transition-router';
 import { useLenis } from '@/components/providers/SmoothScrollProvider';
@@ -158,95 +157,29 @@ interface LinkItem {
   menuOnly?: boolean;
 }
 
-const menuSlideVariants: Variants = {
-  initial: {
-    x: 'calc(100% + 100px)',
-  },
-  enter: {
-    x: '0%',
-    transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
-  },
-  exit: {
-    x: 'calc(100% + 100px)',
-    transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
-  },
-};
-
-const linkSlideVariants: Variants = {
-  initial: {
-    x: 80,
-    opacity: 0,
-  },
-  enter: (i: number) => ({
-    x: 0,
-    opacity: 1,
-    transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.05 * i },
-  }),
-  exit: (i: number) => ({
-    x: 80,
-    opacity: 0,
-    transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.05 * i },
-  }),
-};
-
-const lineTopVariants: Variants = {
-  initial: { scaleX: 0 },
-  enter: { scaleX: 1, transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1], delay: 0.1 } },
-  exit: { scaleX: 0, transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] } },
-};
-
-const lineBotVariants: Variants = {
-  initial: { scaleX: 0 },
-  enter: { scaleX: 1, transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1], delay: 0.15 } },
-  exit: { scaleX: 0, transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] } },
-};
-
-const metaVariants: Variants = {
-  initial: { y: 20, opacity: 0 },
-  enter: { y: 0, opacity: 1, transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1], delay: 0.25 } },
-  exit: { y: 20, opacity: 0, transition: { duration: 0.3, ease: 'easeIn' } },
-};
-
-const curveVariants: Variants = {
-  initial: {
-    d: 'M100 0 L200 0 L200 100 L100 100 Q-100 50 100 0',
-  },
-  enter: {
-    d: 'M100 0 L200 0 L200 100 L100 100 Q100 50 100 0',
-    transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
-  },
-  exit: {
-    d: 'M100 0 L200 0 L200 100 L100 100 Q-100 50 100 0',
-    transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
-  },
-};
-
-function MenuCurve() {
-  return (
-    <svg
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      className="absolute top-0 -left-[99px] h-full w-[100px] pointer-events-none fill-surface stroke-none overflow-visible will-change-transform"
-    >
-      <motion.path
-        variants={curveVariants}
-        initial="initial"
-        animate="enter"
-        exit="exit"
-        fill="#0d0d0c"
-      />
-    </svg>
-  );
-}
-
 interface FullscreenMenuProps {
+  isOpen: boolean;
   onClose: () => void;
   handleLinkClick: (href: string) => void;
   links: LinkItem[];
 }
 
-const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ onClose, handleLinkClick, links }) => {
+const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ isOpen, onClose, handleLinkClick, links }) => {
+  const [isRendered, setIsRendered] = useState(isOpen);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const curvePathRef = useRef<SVGPathElement>(null);
+  const lineTopRef = useRef<HTMLDivElement>(null);
+  const lineBotRef = useRef<HTMLDivElement>(null);
+  const metaRef = useRef<HTMLDivElement>(null);
+  const linkRowRefs = useRef<(HTMLDivElement | null)[]>([]);
   const magnetRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsRendered(true);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -255,6 +188,79 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ onClose, handleLinkClic
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
+
+  useEffect(() => {
+    if (!isRendered) return;
+
+    if (isOpen) {
+      const validLinks = linkRowRefs.current.filter(Boolean);
+
+      gsap.set(backdropRef.current, { opacity: 0 });
+      gsap.set(menuRef.current, { x: 'calc(100% + 100px)' });
+      if (curvePathRef.current) {
+        gsap.set(curvePathRef.current, {
+          attr: { d: 'M100 0 L200 0 L200 100 L100 100 Q-100 50 100 0' }
+        });
+      }
+      gsap.set(lineTopRef.current, { scaleX: 0, transformOrigin: 'left' });
+      gsap.set(lineBotRef.current, { scaleX: 0, transformOrigin: 'right' });
+      gsap.set(metaRef.current, { y: 20, opacity: 0 });
+      gsap.set(validLinks, { x: 80, opacity: 0 });
+
+      const tl = gsap.timeline();
+
+      tl.to(backdropRef.current, { opacity: 1, duration: 0.35, ease: 'power2.out' }, 0)
+        .to(menuRef.current, { x: '0%', duration: 0.8, ease: 'power4.out' }, 0)
+        .to(curvePathRef.current, {
+          attr: { d: 'M100 0 L200 0 L200 100 L100 100 Q100 50 100 0' },
+          duration: 0.8,
+          ease: 'power4.out'
+        }, 0)
+        .to(lineTopRef.current, { scaleX: 1, duration: 0.6, ease: 'power3.out' }, 0.1)
+        .to(lineBotRef.current, { scaleX: 1, duration: 0.6, ease: 'power3.out' }, 0.15)
+        .to(validLinks, {
+          x: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.05,
+          ease: 'power4.out'
+        }, 0.1)
+        .to(metaRef.current, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 0.25);
+
+      return () => {
+        tl.kill();
+      };
+    } else {
+      const validLinks = linkRowRefs.current.filter(Boolean);
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setIsRendered(false);
+        }
+      });
+
+      tl.to(validLinks, {
+        x: 80,
+        opacity: 0,
+        duration: 0.35,
+        stagger: 0.02,
+        ease: 'power3.in'
+      }, 0)
+        .to(metaRef.current, { y: 20, opacity: 0, duration: 0.3, ease: 'power2.in' }, 0)
+        .to(lineTopRef.current, { scaleX: 0, duration: 0.3, ease: 'power3.in' }, 0)
+        .to(lineBotRef.current, { scaleX: 0, duration: 0.3, ease: 'power3.in' }, 0)
+        .to(menuRef.current, { x: 'calc(100% + 100px)', duration: 0.7, ease: 'power4.inOut' }, 0.05)
+        .to(curvePathRef.current, {
+          attr: { d: 'M100 0 L200 0 L200 100 L100 100 Q-100 50 100 0' },
+          duration: 0.7,
+          ease: 'power4.inOut'
+        }, 0.05)
+        .to(backdropRef.current, { opacity: 0, duration: 0.35, ease: 'power2.inOut' }, 0.25);
+
+      return () => {
+        tl.kill();
+      };
+    }
+  }, [isOpen, isRendered]);
 
   const handleMagneticMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
     if (typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || !window.matchMedia('(hover: hover)').matches)) return;
@@ -273,35 +279,41 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ onClose, handleLinkClic
     gsap.to(el, { x: 0, y: 0, duration: 0.65, ease: 'elastic.out(1, 0.35)' });
   };
 
+  if (!isRendered) return null;
+
   return (
     <>
-      <motion.div
+      <div
+        ref={backdropRef}
         className="fixed inset-0 z-[9980] bg-black/65"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.35, ease: 'easeOut' }}
         onClick={onClose}
       />
 
-      <motion.div
-        variants={menuSlideVariants}
-        initial="initial"
-        animate="enter"
-        exit="exit"
-        className="fixed top-0 right-0 h-screen w-full md:w-[46%] lg:w-[45%] xl:w-[42%] z-[9981] bg-surface flex flex-col pointer-events-auto will-change-transform transform-gpu shadow-2xl"
+      <div
+        ref={menuRef}
+        className="fixed top-0 right-0 h-screen w-full md:w-[46%] lg:w-[45%] xl:w-[42%] z-[9981] bg-surface flex flex-col pointer-events-auto transform-gpu shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <MenuCurve />
+        <svg
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          className="absolute top-0 -left-[99px] h-full w-[100px] pointer-events-none fill-surface stroke-none overflow-visible"
+        >
+          <path
+            ref={curvePathRef}
+            d="M100 0 L200 0 L200 100 L100 100 Q-100 50 100 0"
+            fill="#0d0d0c"
+          />
+        </svg>
 
         <div className="relative w-full h-full flex flex-col overflow-hidden">
-          <motion.div
-            variants={lineTopVariants}
+          <div
+            ref={lineTopRef}
             style={{ transformOrigin: 'left' }}
             className="absolute top-[72px] left-0 right-0 h-px bg-border-subtler"
           />
-          <motion.div
-            variants={lineBotVariants}
+          <div
+            ref={lineBotRef}
             style={{ transformOrigin: 'right' }}
             className="absolute bottom-[170px] md:bottom-[100px] left-0 right-0 h-px bg-border-subtler"
           />
@@ -312,10 +324,9 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ onClose, handleLinkClic
 
           <nav className="absolute top-[80px] bottom-[170px] md:bottom-[100px] left-0 right-0 flex flex-col justify-center px-8 sm:px-10 md:px-14 gap-2 md:gap-3">
             {links.map((link, i) => (
-              <motion.div
+              <div
                 key={link.href}
-                custom={i}
-                variants={linkSlideVariants}
+                ref={(el) => { linkRowRefs.current[i] = el; }}
                 className="overflow-hidden py-1.5 md:py-2"
               >
                 <div
@@ -339,12 +350,12 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ onClose, handleLinkClic
                     </span>
                   </button>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </nav>
 
-          <motion.div
-            variants={metaVariants}
+          <div
+            ref={metaRef}
             className="absolute bottom-0 left-0 right-0 h-[170px] md:h-[100px] px-8 sm:px-10 md:px-14 pt-6 pb-6 md:pb-10 flex flex-col md:flex-row gap-4 md:gap-0 justify-between items-start md:items-end"
           >
             <div className="space-y-1 text-left">
@@ -375,9 +386,9 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ onClose, handleLinkClic
                 </Magnetic>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </>
   );
 };
@@ -633,15 +644,12 @@ const Navbar: React.FC<NavbarProps> = ({ hamburgerOnly = false }) => {
         <MagneticHamburgerButton isOpen={isMenuOpen} onClick={toggleMenu} />
       </div>
 
-      <AnimatePresence mode="wait">
-        {isMenuOpen && !isTransitioning && (
-          <FullscreenMenu
-            onClose={() => setIsMenuOpen(false)}
-            handleLinkClick={handleLinkClick}
-            links={links}
-          />
-        )}
-      </AnimatePresence>
+      <FullscreenMenu
+        isOpen={isMenuOpen && !isTransitioning}
+        onClose={() => setIsMenuOpen(false)}
+        handleLinkClick={handleLinkClick}
+        links={links}
+      />
     </>
   );
 };
