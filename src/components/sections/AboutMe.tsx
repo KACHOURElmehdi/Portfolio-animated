@@ -9,30 +9,28 @@ import FlowField from '@/components/canvas/FlowField';
 const CREDENTIALS = [
   {
     year: '2026',
-    title: 'Software Engineer Intern - MERN Stack',
-    organization: 'e-strats, Islamabad',
-    type: 'Industry',
+    title: 'Graphic Designer & Art Director',
+    organization: 'Visual identity, branding, print & digital design',
+    type: 'Practice',
   },
   {
-    year: '2026',
-    title: 'HEC National Skills Competency Test (NSCT)',
-    organization: 'HEC, PSEB & P@SHA',
-    stat: '95th Percentile, Top 5% nationwide',
-    type: 'Recognition',
+    year: '3 yrs',
+    title: 'Professional Experience',
+    organization: 'Design & art direction',
+    stat: '2,500+ design hours · 50+ clients · 3+ countries served',
+    type: 'Experience',
   },
   {
-    year: '2024-25',
-    title: 'Web and Mobile App Development',
-    organization: 'Saylani Mass IT Training (SMIT), Peshawar',
-    stat: 'Full-Stack MERN, TypeScript, Next.js & Hybrid Apps',
-    type: 'Certification',
+    year: '—',
+    title: 'Founder of Completo',
+    organization: 'Completo',
+    type: 'Founder',
   },
   {
-    year: '2022-26',
-    title: 'BS Computer Science',
-    organization: 'University of Peshawar',
-    stat: '3.60 / 4.00 GPA',
-    type: 'Education',
+    year: '01–06',
+    title: 'Portfolio Folios',
+    organization: 'Logo · Brand · Post · Amazon · Print · Product',
+    type: 'Portfolio',
   },
 ];
 
@@ -43,8 +41,8 @@ const About = () => {
     { t: 'i?' },
   ];
   const descriptionText =
-    'I am a software engineer driven by a passion for building clean, intuitive, and reliable digital experiences.';
-  const aboutMeText = `I build web applications that bridge thoughtful frontend interfaces with robust backend systems. To me, software is more than code on a screen; it is about making technology feel effortless and genuinely useful to real people.\n\nMy journey began with a simple curiosity for how things work under the hood. Over time, that curiosity evolved into a genuine passion for fluid interface animations, reliable backend architecture, and building user journeys that feel effortless and alive.\n\nWhether I am polishing micro-interactions or engineering full-stack systems, my core focus remains unchanged: creating software that brings people joy, solves real problems, and leaves a lasting positive impact.`;
+    'A Designer who Judges a book by its cover. Because if the cover does not impress you, what else can?';
+  const aboutMeText = `I'm a Graphic Designer and Art Director focused on building clear, distinctive, and purposeful visual communication. My work covers branding, visual identity, print design, digital content, typography, and AI-assisted visual creation.\n\nI enjoy turning ideas into visual systems that are not only visually strong, but also consistent and effective. I have experience working on both digital and print projects, adapting creative concepts to different audiences, formats, and production requirements.\n\nI'm continuously developing my skills in graphic design, art direction, branding, and visual communication, while building a portfolio focused on meaningful and professional creative work.`;
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -275,7 +273,7 @@ const About = () => {
                   ref={pathRef}
                   d="M32 0 C25 84 39 164 32 250 C25 334 39 416 32 500 C25 584 39 666 32 750 C25 834 39 916 32 1000"
                   fill="none"
-                  stroke="rgba(232, 228, 222, 0.28)"
+                  stroke="color-mix(in srgb, var(--green-50) 28%, transparent)"
                   strokeWidth="1.5"
                 />
               </svg>

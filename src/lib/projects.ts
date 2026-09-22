@@ -1,3 +1,5 @@
+import { theme } from '@/lib/theme';
+
 export interface ProjectStat {
   value: string;
   label: string;
@@ -26,211 +28,251 @@ export interface Project {
 const projects: Project[] = [
   {
     id: 1,
-    slug: 'c-study',
-    title: 'Collaborative Study Platform',
-    type: 'Real-time Learning Platform',
-    role: 'Full Stack Developer',
-    tech: ['React 19', 'Node.js', 'Express 5', 'Socket.io', 'MongoDB', 'LibreOffice', 'pdfjs-dist', 'Cloudinary', 'Firebase', 'Groq', 'Google Gemini'],
-    description:
-      'A real-time collaborative learning platform featuring interactive slide presentations, live canvas annotations, AI study assistance with token streaming, automated quiz generation, and draggable video calls.',
-    overview:
-      'A virtual classroom platform where teachers and students share lecture materials and interact in real time. Instead of relying on static file downloads, classrooms load documents directly onto synchronized canvases with live pen strokes, instant page flips, audio transcription, and an embedded AI study assistant.',
-    architecture:
-      'Instructors upload course files in PPTX, DOCX, or PDF format. The backend spawns a headless LibreOffice process to convert presentations into standardized PDF documents, with an in-memory pdf-lib generator handling plain text and fallback scenarios. Output buffers are saved directly to Cloudinary raw storage. On the client, pdfjs-dist renders pages onto HTML5 canvases with offscreen neighbor pre-rendering to keep transitions fluid. A coordinate-normalized overlay canvas captures drawing strokes, highlighters, and page changes, broadcasting them through Socket.io room hierarchies and persisting notes per user and page in MongoDB.',
-    implementation:
-      'The AI study assistant uses a dual-engine streaming architecture. It primarily streams responses from Groq using Llama models, automatically falling back to Google Gemini when rate limits or quotas are reached. Express delivers tokens via Server-Sent Events to the active user while simultaneously relaying chunks over Socket.io to peers. An automated quiz generator scans slide text directly in the browser, creates multiple-choice or short-answer assessments, and evaluates written student submissions with fractional grading against reference answers. Jitsi Meet runs inside a floating, draggable picture-in-picture frame so participants can talk over video without losing their place in the slides.',
-    stats: [
-      { value: '<200ms', label: 'Real-time sync latency' },
-      { value: '7+', label: 'File formats converted' },
-      { value: 'Dual-LLM', label: 'Groq & Gemini fallback' },
+    slug: 'petcrib',
+    title: 'PETCRIB',
+    type: 'Branding & Uniform Design',
+    role: 'Brand Designer',
+    tech: [
+      'Logo Design',
+      'Brand Identity',
+      'Color Palette',
+      'Typography',
+      'Uniform Design',
+      'Brand Applications',
     ],
-    accent: '#C45D3E',
+    description:
+      'Created a pet-friendly brand identity for a pet hotel and grooming store using soothing blues, dark orange, and soft greens.',
+    overview:
+      'Created a pet-friendly brand identity for a pet hotel and grooming store using soothing blues, dark orange, and soft greens. The logo combines playful typography with a cozy house icon, symbolizing a safe and welcoming environment for pets.',
+    architecture:
+      'The brand identity extends across visual applications, including signage, stationery, and staff uniforms, creating a friendly and professional appearance. Color choices prioritize calm, pet-friendly hues—soft blues, dark orange, and soft greens.',
+    implementation:
+      'The design brings together pet-focused visual communication and a welcoming aesthetic. Applications include logo presentation, brand color palette, typography, pet photography, exterior signage, and staff polo shirt mockups.',
+    stats: [
+      { value: 'Brand', label: 'Identity system' },
+      { value: 'Uniform', label: 'Staff applications' },
+      { value: 'Signage', label: 'Environmental mockups' },
+    ],
+    accent: theme.green600,
     myRole: [
-      'Built the real-time presentation engine using Express and Socket.io with dedicated room hierarchies for page flips and live pen coordinates.',
-      'Implemented the server-side document conversion pipeline using headless LibreOffice and in-memory pdf-lib for PPTX, DOCX, and PDF uploads.',
-      'Engineered the dual-model AI study assistant using Groq and Google Gemini with token streaming over Server-Sent Events and Socket.io.',
-      'Created the HTML5 canvas annotation overlay with coordinate normalization, highlighters, and per-user persistent MongoDB storage.',
-      'Built the AI quiz generator and semantic short-answer evaluation system with automatic scoring and class performance tracking.',
-      'Integrated Jitsi Meet inside a persistent floating picture-in-picture container to allow simultaneous video calls and slide navigation.',
+      'Designed the PETCRIB logo featuring a house icon with a dog silhouette.',
+      'Defined a pet-friendly color palette of cream, soft blue, sage green, teal, and dark orange.',
+      'Developed typography and brand applications for signage and stationery.',
+      'Created staff uniform mockups with logo placement on polo shirts.',
     ],
     images: [
-      '/Projects/c-study/02_CSP.webp',
-      '/Projects/c-study/01_CSP.webp',
-      '/Projects/c-study/03_CSP.webp',
-      '/Projects/c-study/04_CSP.webp',
-      '/Projects/c-study/06_CSP.webp',
+      '/Projects/petcrib/01_overview.webp',
+      '/Projects/petcrib/02_logo.webp',
+      '/Projects/petcrib/03_mockups.webp',
     ],
-    hoverImage: '/Projects/c-study/02_CSP.webp',
-    github: 'https://github.com/aitezazdev/collaborative-study-platform',
-    liveUrl: 'https://collaborative-study-platform-uni.vercel.app/',
+    hoverImage: '/Projects/petcrib/01_overview.webp',
+    github: '',
+    liveUrl: '',
   },
   {
     id: 2,
-    slug: 'hms',
-    title: 'Hospital Management System',
-    type: 'Full Stack Healthcare Platform',
-    role: 'Full Stack Developer',
-    tech: ['React 19', 'Vite', 'Node.js', 'Express 5', 'MongoDB', 'Mongoose', 'Google Gemini', 'Redux Toolkit', 'Tailwind CSS', 'Ant Design', 'Nodemailer'],
-    description:
-      'A full stack clinical platform featuring dedicated portals for patients, doctors, and administrators with automated appointment booking, schedule management, email confirmations, and AI clinical summaries.',
-    overview:
-      'A comprehensive medical workflow system called MediCore built to handle clinic administration, patient scheduling, and physician workflows. It separates responsibilities into three dedicated portals, giving patients an intuitive booking experience, doctors a structured appointment and schedule manager, and administrators complete oversight.',
-    architecture:
-      'Built with React 19 and Express using dual-token JWT authentication with short-lived access tokens and 7-day httpOnly refresh cookies. An Axios response interceptor queues concurrent requests during token renewal so sessions never drop mid-action. When new doctors sign up, their profiles remain unapproved and hidden from public search until administrators verify their qualifications in the admin dashboard. Doctors set their weekly schedule, slot durations, and daily patient quotas. Patients search by medical specialty, location, or consultation fee, and the backend verifies open capacity before confirming bookings to eliminate double-booking.',
-    implementation:
-      'Integrated an AI clinical assistant powered by Google Gemini with a 5-tier model fallback chain and an offline simulation mode. Patients can describe symptoms in plain language to get suggested specialist categories and self-care recommendations. For physicians, the system synthesizes patient medical history and current appointment notes into a concise pre-consultation brief, and suggests prescription drafts that cross-check recorded conditions. The backend includes security hardening with Helmet, response compression, and custom recursive NoSQL injection sanitizers that strip MongoDB operator characters from incoming requests.',
-    stats: [
-      { value: '3', label: 'Role-based portals' },
-      { value: '5-Tier', label: 'Gemini model fallback' },
-      { value: '0', label: 'Double-booking conflicts' },
+    slug: 'artisan',
+    title: 'Artisan',
+    type: 'Branding, Landing Page & Packaging',
+    role: 'Brand & Packaging Designer',
+    tech: [
+      'Brand Identity',
+      'Logo Design',
+      'Packaging Design',
+      'Web Design',
+      'Landing Page',
+      'Product Presentation',
     ],
-    accent: '#2E7D6B',
+    description:
+      'Natural, authentic brand identity for Artisan Soap Bar, spanning packaging, product presentation, and landing page design.',
+    overview:
+      'This project focused on creating a natural, authentic, and eco-conscious brand identity for Artisan Soap Bar, a handcrafted organic soap brand. The branding direction centers on earthy tones—primarily moss green, soft nude, and warm beige—reflecting the brand’s focus on natural ingredients and sustainability.',
+    architecture:
+      'The packaging concept uses minimalist layouts, botanical illustrations, and kraft-paper materials to communicate an artisanal aesthetic. The visual identity combines an elegant serif logo with natural textures and understated color combinations.',
+    implementation:
+      'The landing page extends this design system into a clean digital experience, using prominent product imagery, ingredient highlights, and sustainability messaging. Deliverables include logo, color palette, typography, soap packaging, product photography, packaging mockups, and landing page mockups.',
+    stats: [
+      { value: 'Packaging', label: 'Product systems' },
+      { value: 'Web', label: 'Landing page' },
+      { value: 'Identity', label: 'Brand toolkit' },
+    ],
+    accent: theme.green500,
     myRole: [
-      'Architected the three role-based portals for patients, doctors, and administrators using React 19, Tailwind CSS, and Ant Design.',
-      'Built the dual-token JWT authentication system with httpOnly cookies and an Axios concurrency queue for silent token refreshing.',
-      'Implemented the doctor availability engine with weekly schedule configuration, daily patient limits, and atomic slot validation.',
-      'Developed the AI clinical assistant using Google Gemini with sequential model fallbacks and an offline simulation mode.',
-      'Created automated transactional email workflows using Nodemailer for appointment confirmations, cancellations, and account approvals.',
-      'Implemented recursive NoSQL injection sanitization and role-based route guards across all Express API endpoints.',
+      'Designed the Artisan Soap Bar logo and secondary mark.',
+      'Built an earthy brand palette of moss green, soft nude, and warm beige.',
+      'Created packaging layouts with botanical line illustrations.',
+      'Extended the identity into landing page mockups and product presentations.',
     ],
     images: [
-      '/Projects/HMS/hospital-1.webp',
-      '/Projects/HMS/hospital-2.webp',
-      '/Projects/HMS/hospital-3.webp',
-      '/Projects/HMS/hospital-4.webp',
-      '/Projects/HMS/hospital-5.webp',
-      '/Projects/HMS/hospital-6.webp',
-      '/Projects/HMS/hospital-7.webp',
-      '/Projects/HMS/hospital-8.webp',
+      '/Projects/artisan/01_overview.webp',
+      '/Projects/artisan/02_identity.webp',
+      '/Projects/artisan/03_packaging.webp',
     ],
-    hoverImage: '/Projects/HMS/hospital-1.webp',
-    github: 'https://github.com/aitezazdev/Hospital-Mangment-System',
-    liveUrl: 'https://aitezazdev-medicore.vercel.app/',
+    hoverImage: '/Projects/artisan/01_overview.webp',
+    github: '',
+    liveUrl: '',
   },
   {
     id: 3,
-    slug: 'ecommerce',
-    title: 'E-Commerce Store',
-    type: 'SSR Commerce Application',
-    role: 'Full Stack Developer',
-    tech: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS', 'Redux Toolkit', 'Stripe', 'MongoDB', 'Mongoose', 'Zod'],
-    description:
-      'A high performance online storefront built on the Next.js App Router and React 19 featuring server-side catalog rendering, optimistic shopping cart updates, Stripe checkout sessions, and connection resilience guards.',
-    overview:
-      'A dark-themed modern retail storefront called Zaz Store engineered for fast catalog browsing and zero-delay shopping cart interactions. It pairs server-rendered category and product pages with client-side optimistic UI updates, ensuring the interface responds instantly to user clicks while maintaining strict database consistency.',
-    architecture:
-      'The catalog, category routes, and product detail pages are async Server Components that query MongoDB directly with URL-driven search parameters and price sorting. When customers modify quantities or add items to their cart, a custom React hook combines React 19 useOptimistic and startTransition with Redux Toolkit thunks. The interface updates locally with zero delay; if the network fails, the hook catches the rejection and rolls back to the last confirmed server state. Cart data persists to MongoDB per authenticated user, with handlers automatically cleaning up references if a product is removed from the catalog.',
-    implementation:
-      'Engineered a resilient database layer featuring connection pooling, a 10-second failure cooldown circuit breaker, and automatic fallback to an in-memory mock catalog. If MongoDB experiences an outage, the storefront continues serving catalog pages without throwing 500 error pages. Checkout security enforces prices strictly on the server: POST requests to the checkout endpoint pull verified amounts from the database, build Stripe Hosted Checkout Sessions, and log immutable order records upon return while clearing the active cart. Server-to-client session hydration decodes JWT cookies in the root layout to prevent unauthenticated layout flashes.',
-    stats: [
-      { value: '0ms', label: 'Optimistic cart latency' },
-      { value: 'SSR', label: 'Server-rendered catalog' },
-      { value: 'Stripe', label: 'Hosted checkout sessions' },
+    slug: 'soda-crave',
+    title: 'Soda Crave',
+    type: 'Logo Design & Product Design',
+    role: 'Brand & Product Designer',
+    tech: [
+      'Logo Design',
+      'Beverage Branding',
+      'Packaging Design',
+      'Product Identity',
+      'Product Mockups',
     ],
-    accent: '#C45D3E',
+    description:
+      'Bold, colorful brand identity for Soda Crave—a high-energy soda drink line built to stand out on crowded shelves.',
+    overview:
+      'This project involved creating a bold, colorful, and high-energy brand identity for Soda Crave, a new soda drink line targeting a youthful and fun-loving audience. The core design direction was to make the product stand out on crowded shelves through vibrant visuals and unconventional design elements.',
+    architecture:
+      'The logo features exaggerated, bubbly typography with dynamic motion lines, conveying fizz, fun, and excitement. Packaging incorporates full-wrap labels with flavor-themed patterns such as citrus slices, strawberries, and grapes.',
+    implementation:
+      'High-contrast color combinations and bold graphics were used to make the cans visually distinctive. Deliverables include the Soda Crave logo and flavor can mockups in purple, yellow citrus, and pink strawberry variants.',
+    stats: [
+      { value: 'Logo', label: 'Bubbly wordmark' },
+      { value: '3+', label: 'Flavor can designs' },
+      { value: 'Pack', label: 'Full-wrap labels' },
+    ],
+    accent: theme.green400,
     myRole: [
-      'Built the server-side catalog and product detail pages using Next.js App Router with dynamic category routes and URL search params.',
-      'Implemented optimistic cart mutations using React 19 useOptimistic and useTransition hooks backed by Redux Toolkit thunks.',
-      'Built the Stripe Checkout Session integration with server-enforced pricing and post-payment order verification.',
-      'Configured a resilient Mongoose connection pool with a 10-second failure cooldown circuit breaker and mock data fallbacks.',
-      'Designed server-to-client session hydration via HTTP-only JWT cookies to eliminate authentication layout flashes.',
-      'Created responsive zinc-dark loading skeletons and error boundaries with retry buttons across all core routes.',
+      'Designed the bubbly Soda Crave logo with dynamic motion accents.',
+      'Created flavor-themed can mockups for grape, citrus, and strawberry variants.',
+      'Developed high-contrast packaging graphics for shelf visibility.',
+      'Built a playful product identity system for a youth-focused beverage line.',
     ],
     images: [
-      '/Projects/ecommerce/1.webp',
-      '/Projects/ecommerce/2.webp',
-      '/Projects/ecommerce/3.webp',
-      '/Projects/ecommerce/4.webp',
-      '/Projects/ecommerce/5.webp',
-      '/Projects/ecommerce/6.webp',
+      '/Projects/soda-crave/01_overview.webp',
+      '/Projects/soda-crave/02_cans.webp',
+      '/Projects/soda-crave/03_flavors.webp',
     ],
-    hoverImage: '/Projects/ecommerce/1.webp',
-    github: 'https://github.com/aitezazdev/Next.js-Ecommerce',
-    liveUrl: 'https://aitezazdev-ecommerce.vercel.app/',
+    hoverImage: '/Projects/soda-crave/01_overview.webp',
+    github: '',
+    liveUrl: '',
   },
   {
     id: 4,
-    slug: 'finance',
-    title: 'Personal Finance Tracker',
-    type: 'Financial Analytics Dashboard',
-    role: 'Full Stack Developer',
-    tech: ['React 19', 'Vite', 'Tailwind CSS', 'Redux Toolkit', 'Recharts', 'Node.js', 'Express', 'MongoDB', 'Mongoose', 'JWT'],
+    slug: 'logo-folio',
+    title: 'Top Ten Logo',
+    type: 'Logo Folio',
+    role: 'Logo Designer',
+    tech: ['Logo Design', 'Identity Marks', 'Icon Design', 'Illustrator', 'Photoshop'],
     description:
-      'A personal finance tracking application featuring segregated income and expense management, inline transaction editing, duplicate entry prevention, and MongoDB aggregation pipelines powering Recharts visualizations.',
+      'A curated selection of ten logo designs spanning identity marks, icon systems, and brand symbols.',
     overview:
-      'A personal finance manager designed to give users clear visibility into daily cash flow and spending patterns. It combines quick transaction entry with interactive data visualizations, helping individuals track where their money goes through automated category breakdowns, monthly comparisons, and daily spending trendlines.',
+      'Logo Folio presents a selection titled Top Ten Logo—ten logo designs spanning monograms, icon marks, and brand symbols across multiple industries.',
     architecture:
-      'The frontend is built with React 19 and Redux Toolkit for authentication, communicating with an Express API through Axios request and response interceptors. The backend maintains separate MongoDB collections for expenses and incomes, linked to user documents. Users log transactions with amount, category, date, and description. A duplicate detection check queries existing records before saving to prevent accidental double-submits. The transaction ledger supports in-place inline row editing, allowing users to modify dates, categories, or amounts directly within the table view without opening modal dialogs.',
+      'Each mark is designed as a standalone identity asset, exploring silhouette, typography, and symbolic forms suited to different brand contexts.',
     implementation:
-      'Built three distinct MongoDB aggregation pipelines to convert raw transaction dates and amounts into actionable visualizations. Using toDate conversions and dateTrunc operators, the backend computes monthly spending totals, category distributions, and daily spending trendlines. The frontend renders these datasets using Recharts bar and line charts, complete with dynamic year filters, highest and lowest spending indicators, and average spending calculations. When a user requests account deletion, a cascading database routine purges the user profile alongside all associated income and expense records.',
+      'Presented as a curated logo grid from the Logo Folio section of the 2026 portfolio. High-resolution individual logo files are pending for better gallery clarity.',
     stats: [
-      { value: '3', label: 'Aggregation pipelines' },
-      { value: 'Recharts', label: 'Interactive analytics' },
-      { value: 'CRUD', label: 'Inline editable ledger' },
+      { value: '10', label: 'Logo marks' },
+      { value: '01', label: 'Logo Folio' },
+      { value: '2026', label: 'Portfolio year' },
     ],
-    accent: '#B08968',
+    accent: theme.green300,
     myRole: [
-      'Built the full stack ledger application using React 19, Tailwind CSS, Express, and MongoDB.',
-      'Designed MongoDB aggregation pipelines using toDate and dateTrunc to group transaction records for analytics.',
-      'Implemented interactive visual dashboards using Recharts with monthly bar charts, category distributions, and daily trendlines.',
-      'Created in-place inline editing for transaction rows and mobile-friendly card views.',
-      'Configured JWT authentication with Axios request interceptors and automatic session-expiry handling.',
-      'Implemented duplicate transaction detection and cascading account deletion across income and expense collections.',
+      'Designed a set of ten logo concepts and identity marks.',
+      'Explored monogram, icon, and pictorial logo approaches.',
+      'Prepared logo presentations for the Logo Folio section.',
     ],
     images: [
-      '/Projects/financeTracker/1.webp',
-      '/Projects/financeTracker/2.webp',
-      '/Projects/financeTracker/3.webp',
-      '/Projects/financeTracker/4.webp',
-      '/Projects/financeTracker/5.webp',
-      '/Projects/financeTracker/6.webp',
+      '/Projects/logo-folio/01_top-ten.webp',
+      '/Projects/logo-folio/02_brand-header.webp',
     ],
-    hoverImage: '/Projects/financeTracker/1.webp',
-    github: 'https://github.com/aitezazdev/Expense-Tracker_Mern',
-    liveUrl: 'https://aitezazdev-finance-tracker.vercel.app/',
+    hoverImage: '/Projects/logo-folio/01_top-ten.webp',
+    github: '',
+    liveUrl: '',
   },
   {
     id: 5,
-    slug: 'blog',
-    title: 'Modern Blog Space',
-    type: 'Content & Publishing Platform',
-    role: 'Full Stack Developer',
-    tech: ['React 19', 'Vite', 'Tailwind CSS', 'Redux Toolkit', 'React Router', 'Node.js', 'Express', 'MongoDB', 'Cloudinary', 'Docker', 'AWS EC2'],
-    description:
-      'A modern content publishing platform called ZazBlog featuring article authoring, Cloudinary media lifecycle management, in-place comments, bookmark reading lists, debounced search, and Dockerized AWS EC2 deployment.',
-    overview:
-      'A full-featured publishing web platform built for writers and readers. It offers a clean, typography-focused reading experience with article authoring, image uploads, categorized tag navigation, reader comments, personal bookmark reading lists, and a containerized deployment setup.',
-    architecture:
-      'Built with React 19 and Express with JWT authentication, using Redux Toolkit to manage authentication and saved post states. Authors publish articles with images handled through Multer disk storage and Cloudinary. The backend enforces strict filesystem hygiene: temporary local uploads are immediately unlinked upon completion or error, and replaced or deleted images are purged from Cloudinary using public IDs to prevent storage leaks. Readers can leave comments with in-place editing, toggle article likes, and manage a personal bookmarks list synchronized across views.',
-    implementation:
-      'Implemented article search using a MongoDB aggregation pipeline with lookup joining author profiles and regex filtering across titles, tags, and author names. The frontend search input includes a 500ms debounce handler to minimize server requests. Engineered relational cascade deletions: deleting an article automatically removes its comments, clears references from every user reading list, and deletes its Cloudinary asset; deleting an account cascades through all authored posts, comments, comments on authored posts, and likes. In the DevOps setup, Docker Compose orchestrates frontend and backend containers, with a multi-stage Alpine Nginx Dockerfile handling client-side SPA routing and GitHub Actions deploying to AWS EC2.',
-    stats: [
-      { value: 'NoSQL', label: 'Relational cascade cleanup' },
-      { value: 'Docker', label: 'Multi-stage Nginx container' },
-      { value: 'CDN', label: 'Cloudinary asset lifecycle' },
+    slug: 'post-folio',
+    title: 'Post Folio',
+    type: 'Print & Social Media Design',
+    role: 'Graphic Designer',
+    tech: [
+      'Print Design',
+      'Poster Design',
+      'Social Media Design',
+      'Promotional Graphics',
+      'Campaign Visuals',
     ],
-    accent: '#5B7DB1',
+    description:
+      'A collection of poster, print, and social media designs spanning promotional, editorial, and event visuals.',
+    overview:
+      'Post Folio gathers poster, flyer, and social media work including promotional advertising, healthcare and clinic graphics, real estate materials, fashion and streetwear visuals, restaurant posters, and event promotions.',
+    architecture:
+      'Designs are organized as a visual collection rather than individual client case studies. Artwork emphasizes bold typography, photography-led layouts, and campaign-ready compositions for print and digital channels.',
+    implementation:
+      'Includes social media posters such as Black Friday promotions, event flyers, food advertising, and floral promotional designs, alongside broader print folio work from the 2026 portfolio.',
+    stats: [
+      { value: '03', label: 'Post Folio' },
+      { value: 'Print', label: 'Poster & flyer work' },
+      { value: 'Social', label: 'Digital campaigns' },
+    ],
+    accent: theme.green200,
     myRole: [
-      'Built the full stack publishing application using React 19, Tailwind CSS, Express, and MongoDB.',
-      'Implemented full asset lifecycle management with Multer and Cloudinary, including local file unlinking and remote asset destruction.',
-      'Designed real-time article search using MongoDB aggregation pipelines with lookup across author profiles and debounced frontend input.',
-      'Built in-place comment editing and global bookmark state management using Redux Toolkit.',
-      'Engineered relational cascade deletions across posts, comments, bookmarks, likes, and user profiles.',
-      'Created Docker Compose configurations, multi-stage Alpine Nginx Dockerfiles, and GitHub Actions CI/CD for AWS EC2 deployment.',
+      'Designed promotional posters and print communication pieces.',
+      'Created social media campaign graphics and event visuals.',
+      'Developed food, fashion, and entertainment-oriented poster layouts.',
     ],
     images: [
-      '/Projects/blogsite/1.webp',
-      '/Projects/blogsite/2.webp',
-      '/Projects/blogsite/3.webp',
-      '/Projects/blogsite/4.webp',
-      '/Projects/blogsite/5.webp',
-      '/Projects/blogsite/6.webp',
+      '/Projects/post-folio/02_print-grid.webp',
+      '/Projects/post-folio/01_grid.webp',
+      '/Projects/post-folio/03_social.webp',
     ],
-    hoverImage: '/Projects/blogsite/1.webp',
-    github: 'https://github.com/aitezazdev/Blog-App-MERN',
-    liveUrl: 'https://aitezazdev-blog-app.vercel.app/',
+    hoverImage: '/Projects/post-folio/02_print-grid.webp',
+    github: '',
+    liveUrl: '',
+  },
+  {
+    id: 6,
+    slug: 'product-packaging',
+    title: 'Product Packaging',
+    type: 'Product & Packaging Design',
+    role: 'Packaging Designer',
+    tech: [
+      'Packaging Design',
+      'Product Identity',
+      'Label Design',
+      'Print Production',
+      'Pharmaceutical Packaging',
+    ],
+    description:
+      'Product packaging and pharmaceutical-style packaging examples, including Zofenil and Spasmomen design work.',
+    overview:
+      'Product Folio showcases packaging design examples, including pharmaceutical-style packaging labeled Zofenil and Spasmomen, presented as packaging design work from campaign and product identity projects.',
+    architecture:
+      'Designs focus on clear product hierarchy, dosage communication, and structured packaging layouts suitable for regulated product presentation.',
+    implementation:
+      'Gallery includes packaging mockups and related campaign flyer artwork. Presented as packaging design examples without medical endorsement or commercial outcome claims.',
+    stats: [
+      { value: '06', label: 'Product Folio' },
+      { value: 'Pack', label: 'Packaging systems' },
+      { value: 'Print', label: 'Production-ready' },
+    ],
+    accent: theme.green700,
+    myRole: [
+      'Designed pharmaceutical-style packaging layouts and product boxes.',
+      'Developed supporting campaign flyer artwork for packaging brands.',
+      'Structured product information hierarchies for packaging applications.',
+    ],
+    images: [
+      '/Projects/packaging/01_menarini.webp',
+      '/Projects/packaging/03_zofenil-plus.webp',
+      '/Projects/packaging/04_spasmomen-flyer.webp',
+      '/Projects/packaging/02_recent.webp',
+    ],
+    hoverImage: '/Projects/packaging/01_menarini.webp',
+    github: '',
+    liveUrl: '',
   },
 ];
+
 export function getAllProjects(): Project[] {
   return projects;
 }

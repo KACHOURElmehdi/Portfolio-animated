@@ -1,30 +1,35 @@
 import { Metadata } from 'next';
+import { site } from '@/lib/site';
+
+const description =
+  'Explore the portfolio of Aymen Rguig, a Graphic Designer and Art Director specializing in brand identity, logo design, packaging, print design, and creative visual communication.';
 
 export const siteMetadata: Metadata = {
   title: {
-    default: 'Aitezaz Sikandar - Full Stack Developer',
-    template: '%s | Aitezaz Sikandar',
+    default: 'Aymen Rguig — Graphic Designer & Art Director',
+    template: '%s | Aymen Rguig',
   },
-  description:
-    'Web developer specializing in React, Next.js, and MERN Stack development. Building fast, scalable, and user-focused web applications.',
+  description,
   keywords: [
-    'Aitezaz Sikandar',
-    'Web Developer',
-    'Frontend Developer',
-    'Full Stack Developer',
-    'Next.js',
-    'React',
-    'JavaScript',
-    'MERN Stack',
+    'Aymen Rguig',
+    'Graphic Designer',
+    'Art Director',
+    'Brand Identity',
+    'Logo Design',
+    'Packaging Design',
+    'Print Design',
+    'Social Media Design',
+    'Typography',
     'Portfolio',
+    'Completo',
   ],
   authors: [
     {
-      name: 'Aitezaz Sikandar Khan',
+      name: site.name,
     },
   ],
-  creator: 'Aitezaz Sikandar',
-  metadataBase: new URL('https://aitezazdev.vercel.app'),
+  creator: site.name,
+  metadataBase: new URL(site.url),
   alternates: {
     canonical: './',
   },
@@ -32,26 +37,24 @@ export const siteMetadata: Metadata = {
     icon: '/logo.webp',
   },
   openGraph: {
-    title: 'Aitezaz Sikandar - Full Stack Developer',
-    description:
-      'Portfolio of Aitezaz Sikandar, Full Stack Developer specializing in MERN stack, Next.js, and polished web experiences.',
-    url: 'https://aitezazdev.vercel.app',
-    siteName: 'Aitezaz Sikandar Portfolio',
+    title: 'Aymen Rguig — Graphic Designer & Art Director',
+    description,
+    url: site.url,
+    siteName: 'Aymen Rguig Portfolio',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Aitezaz Sikandar - Full Stack Developer',
+        alt: 'Aymen Rguig — Graphic Designer & Art Director',
       },
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Aitezaz Sikandar - Full Stack Developer',
-    description:
-      'Portfolio of Aitezaz Sikandar, Full Stack Developer specializing in MERN stack, Next.js, and polished web experiences.',
+    title: 'Aymen Rguig — Graphic Designer & Art Director',
+    description,
     images: ['/og-image.png'],
   },
   robots: {
@@ -59,4 +62,3 @@ export const siteMetadata: Metadata = {
     follow: true,
   },
 };
-

@@ -34,40 +34,40 @@ const Services = () => {
     { t: 'DO' },
   ];
   const descriptionText =
-    "I specialize in building full-stack web applications that are fast, reliable, and user-friendly. With a solid foundation in both frontend and backend technologies, I help bring ideas to life whether it's for a business, a startup, or a product team.";
+    'I specialize in clear, distinctive visual communication—building brand systems, packaging, print, and digital content that feel purposeful and consistent across every touchpoint.';
 
   const services = [
     {
       id: '01',
-      title: 'Full Stack Development',
+      title: 'Brand Identity & Logo Design',
       description:
-        'End-to-end development of modern web applications, covering everything from frontend interfaces to backend APIs. I build complete, maintainable, and scalable systems using the MERN stack and modern tooling.',
+        'Complete visual identity systems that give brands a clear voice—logos, color palettes, typography, and applications that stay consistent from stationery to signage.',
       items: [
-        'MERN Stack (MongoDB, Express.js, React, Node.js)',
-        'REST APIs & Integration',
-        'Authentication & Authorization',
+        'Logo Design & Identity Marks',
+        'Brand Color & Typography Systems',
+        'Brand Guidelines & Applications',
       ],
     },
     {
       id: '02',
-      title: 'Frontend Development',
+      title: 'Packaging & Product Design',
       description:
-        'Crafting responsive, accessible, and elegant interfaces that deliver exceptional user experiences. I focus on clarity, performance, and seamless interaction across devices.',
+        'Product packaging and labels designed to stand out on shelf while communicating quality, story, and brand character through form, materials, and graphic language.',
       items: [
-        'React, Next.js, TailwindCSS, GSAP',
-        'Optimized Rendering & Animations',
-        'Figma to Code Implementation',
+        'Packaging Systems & Labels',
+        'Product Mockups & Presentations',
+        'Artisanal & Commercial Packaging',
       ],
     },
     {
       id: '03',
-      title: 'Optimization & Performance',
+      title: 'Print & Digital Content',
       description:
-        'Optimizing codebases, APIs, and assets for speed, scalability, and maintainability. I ensure your applications run efficiently with best practices in caching, SEO, and deployment.',
+        'Posters, flyers, social media graphics, and campaign visuals crafted for impact across print production and digital platforms.',
       items: [
-        'Performance Tuning & Code Refactoring',
-        'SEO & Accessibility Optimization',
-        'Deployment (Vercel, AWS, Docker)',
+        'Poster & Print Design',
+        'Social Media & Campaign Graphics',
+        'Typography & AI-Assisted Visual Creation',
       ],
     },
   ];

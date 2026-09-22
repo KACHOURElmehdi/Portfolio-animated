@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, ElementType } from 'react';
 import { gsap } from '@/lib/gsap';
+import { getThemeColor, withAlpha } from '@/lib/theme';
 
 interface AnimatedButtonProps {
   onClick?: (e: React.MouseEvent<any>) => void;
@@ -30,40 +31,46 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
 
   const Component = as;
 
+  const ink = getThemeColor('--green-800');
+  const cream = getThemeColor('--green-50');
+  const primary = getThemeColor('--color-primary');
+  const primaryHover = getThemeColor('--color-primary-hover');
+  const elevated = getThemeColor('--green-700');
+
   let bgColor, textColor, borderColor, rippleColor, hoverBgColor, originalBgColor;
   switch (variant) {
     case 'light':
       bgColor = 'bg-transparent';
-      textColor = 'text-[#141516]';
-      borderColor = 'border-2 border-[#141516]';
-      rippleColor = 'rgba(20, 21, 22, 0.1)';
-      hoverBgColor = 'rgba(20, 21, 22, 0.06)';
+      textColor = 'text-ink';
+      borderColor = 'border-2 border-ink';
+      rippleColor = withAlpha(ink, 0.1);
+      hoverBgColor = withAlpha(ink, 0.06);
       originalBgColor = 'transparent';
       break;
     case 'primary':
       bgColor = 'bg-accent';
-      textColor = 'text-white';
-      borderColor = 'border border-[#C45D3E]';
-      rippleColor = 'rgba(255, 255, 255, 0.25)';
-      hoverBgColor = '#b85133';
-      originalBgColor = '#C45D3E';
+      textColor = 'text-ink';
+      borderColor = 'border border-accent';
+      rippleColor = withAlpha(cream, 0.35);
+      hoverBgColor = primaryHover;
+      originalBgColor = primary;
       break;
     case 'outline':
       bgColor = 'bg-transparent';
-      textColor = 'text-[#4a4744]';
-      borderColor = 'border border-[#141516]/25';
-      rippleColor = 'rgba(20, 21, 22, 0.08)';
-      hoverBgColor = 'rgba(20, 21, 22, 0.04)';
+      textColor = 'text-warm';
+      borderColor = 'border border-ink/25';
+      rippleColor = withAlpha(ink, 0.08);
+      hoverBgColor = withAlpha(ink, 0.04);
       originalBgColor = 'transparent';
       break;
     case 'dark':
     default:
-      bgColor = 'bg-[#141516]';
-      textColor = 'text-[#f0ede6]';
-      borderColor = 'border border-[#141516]';
-      rippleColor = 'rgba(255, 255, 255, 0.15)';
-      hoverBgColor = '#242422';
-      originalBgColor = '#141516';
+      bgColor = 'bg-ink';
+      textColor = 'text-cream';
+      borderColor = 'border border-ink';
+      rippleColor = withAlpha(cream, 0.15);
+      hoverBgColor = elevated;
+      originalBgColor = ink;
       break;
   }
 

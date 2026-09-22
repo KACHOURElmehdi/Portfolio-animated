@@ -6,7 +6,7 @@ import { useTransitionState } from 'next-transition-router';
 import { useLenis } from '@/components/providers/SmoothScrollProvider';
 import AnimatedLink from '@/components/ui/AnimateLink';
 import { useHandleLinkClick } from '@/lib/navigation';
-import { site, socials } from '@/lib/site';
+import { site, socialList } from '@/lib/site';
 import Link from 'next/link';
 import Lenis from 'lenis';
 import { Copyright } from 'lucide-react';
@@ -83,7 +83,7 @@ const MagneticHamburgerButton: React.FC<MagneticHamburgerButtonProps> = ({ isOpe
         onClick={onClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleButtonMouseLeave}
-        className="relative w-12 h-12 md:w-15 md:h-15 rounded-full overflow-hidden bg-[#141516] border border-white/15 outline-none flex items-center justify-center cursor-pointer shadow-xl group"
+        className="relative w-12 h-12 md:w-15 md:h-15 rounded-full overflow-hidden bg-ink border border-white/15 outline-none flex items-center justify-center cursor-pointer shadow-xl group"
         style={{ transformOrigin: 'center' }}
         aria-label="Toggle menu"
         aria-expanded={isOpen}
@@ -97,13 +97,13 @@ const MagneticHamburgerButton: React.FC<MagneticHamburgerButtonProps> = ({ isOpe
 
         <div className="relative z-10 w-5 h-3 flex items-center justify-center pointer-events-none">
           <span
-            className={`absolute w-full h-[2px] rounded-full bg-[#f0ede6] transition-all duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] ${
+            className={`absolute w-full h-[2px] rounded-full bg-cream transition-all duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] ${
               isOpen ? 'top-1/2 -translate-y-1/2 rotate-45' : 'top-0 rotate-0'
             }`}
             style={{ transformOrigin: 'center' }}
           />
           <span
-            className={`absolute w-full h-[2px] rounded-full bg-[#f0ede6] transition-all duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] ${
+            className={`absolute w-full h-[2px] rounded-full bg-cream transition-all duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] ${
               isOpen ? 'bottom-1/2 translate-y-1/2 -rotate-45' : 'bottom-0 rotate-0'
             }`}
             style={{ transformOrigin: 'center' }}
@@ -130,19 +130,19 @@ const NavbarBrand: React.FC<NavbarBrandProps> = ({ logoRef, handleLinkClick }) =
           handleLinkClick('/#top');
         }}
         className="group flex items-center cursor-pointer select-none py-1 text-warm"
-        aria-label="Aitezaz Sikandar Home"
+        aria-label="Aymen Rguig Home"
       >
         <div className="transition-transform duration-500 ease-in-expo group-hover:rotate-[360deg] flex items-center justify-center">
           <Copyright className="w-[18px] h-[18px]" />
         </div>
         <div className="relative ms-2 flex items-center whitespace-nowrap text-warm text-lg font-sans tracking-wide font-medium leading-none">
-          <span>aitezaz</span>
-          <span className="relative inline-flex items-center overflow-hidden transition-all duration-500 ease-in-expo w-[32px] group-hover:w-[86px]">
+          <span>aymen</span>
+          <span className="relative inline-flex items-center overflow-hidden transition-all duration-500 ease-in-expo w-[28px] group-hover:w-[72px]">
             <span className="transition-transform duration-500 ease-in-expo group-hover:-translate-x-full inline-block">
-              dev
+              .
             </span>
             <span className="absolute left-0 ps-1.5 transition-transform duration-500 ease-in-expo translate-x-full group-hover:translate-x-0 inline-block">
-              sikandar
+              rguig
             </span>
           </span>
         </div>
@@ -302,7 +302,7 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ isOpen, onClose, handle
           <path
             ref={curvePathRef}
             d="M100 0 L200 0 L200 100 L100 100 Q-100 50 100 0"
-            fill="#0d0d0c"
+            fill="var(--green-800)"
           />
         </svg>
 
@@ -372,12 +372,12 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ isOpen, onClose, handle
             </div>
 
             <div className="flex gap-4 md:gap-6 justify-start flex-wrap">
-              {[socials.github, socials.source, socials.linkedin].map((s) => (
+              {socialList.map((s) => (
                 <Magnetic key={s.label} strength={0.3}>
                   <a
                     href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target={s.href.startsWith('mailto:') ? undefined : '_blank'}
+                    rel={s.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                     className="group relative inline-block text-gray-mid hover:text-cream text-xs font-mono uppercase tracking-widest transition-colors duration-300 py-1"
                   >
                     <span>{s.label}</span>
@@ -385,6 +385,9 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ isOpen, onClose, handle
                   </a>
                 </Magnetic>
               ))}
+              <span className="text-gray-mid text-xs font-mono uppercase tracking-widest py-1">
+                @{site.handle}
+              </span>
             </div>
           </div>
         </div>

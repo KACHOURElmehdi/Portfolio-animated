@@ -3,6 +3,7 @@
 import React, { useRef } from 'react';
 import { gsap, useGSAP } from '@/lib/gsap';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { withAlpha, theme } from '@/lib/theme';
 
 interface ScrollWordRevealProps {
   text: string;
@@ -42,9 +43,9 @@ export const ScrollWordReveal: React.FC<ScrollWordRevealProps> = ({
   className = '',
   dimOpacity = 0.22,
   offset = ['start 0.99', 'end 0.85'],
-  highlightColor = '#f0ede6',
-  dimColor = 'rgba(240, 237, 230, 0.22)',
-  accentColor = '#E07A5F',
+  highlightColor = theme.green50,
+  dimColor = withAlpha(theme.green50, 0.22),
+  accentColor = theme.green300,
 }) => {
   const containerRef = useRef<HTMLParagraphElement>(null);
   const reduced = useReducedMotion();

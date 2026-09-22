@@ -7,6 +7,7 @@ import { gsap, useGSAP } from '@/lib/gsap';
 import { useRouter } from 'next/navigation';
 import AnimatedHeading from '@/components/ui/AnimateHeading';
 import { getAllProjects, Project } from '@/lib/projects';
+import { withAlpha, theme } from '@/lib/theme';
 
 const useHoverPreview = (containerRef?: React.RefObject<HTMLDivElement | null>) => {
   const floatingRef = useRef<HTMLDivElement | null>(null);
@@ -315,7 +316,7 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
             }}
             ref={(el) => { cardRefs.current[index] = el; }}
             className="overflow-hidden rounded-3xl block no-underline text-inherit"
-            style={{ background: '#111110', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
+            style={{ background: 'var(--green-800)', boxShadow: '0 8px 32px color-mix(in srgb, var(--green-800) 40%, transparent)' }}
           >
             <div className="p-3 pb-0">
               <div
@@ -343,7 +344,7 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
                   className="mc-num font-mono font-black leading-none"
                   style={{
                     fontSize: 'clamp(2rem, 9vw, 2.6rem)',
-                    color: '#C45D3E',
+                    color: 'var(--color-primary)',
                     letterSpacing: '-0.03em',
                   }}
                 >
@@ -386,7 +387,7 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
                   </span>
                   <span
                     className="flex items-center justify-center w-9 h-9 rounded-full text-white text-sm"
-                    style={{ background: '#C45D3E', boxShadow: '0 0 16px rgba(196, 93, 62, 0.35)' }}
+                    style={{ background: 'var(--color-primary)', boxShadow: '0 0 16px color-mix(in srgb, var(--green-400) 35%, transparent)' }}
                   >
                     →
                   </span>
@@ -572,7 +573,7 @@ export default function ProjectsPage() {
     const row = e.currentTarget;
     const line = row.querySelector('.hover-line-ref');
     if (line) gsap.to(line, { width: '100%', duration: 0.15, ease: 'power2.out' });
-    gsap.to(row, { backgroundColor: 'rgba(196, 93, 62, 0.04)', duration: 0.15, ease: 'power2.out' });
+    gsap.to(row, { backgroundColor: withAlpha(theme.green400, 0.08), duration: 0.15, ease: 'power2.out' });
     const scrollY = (window as any).__lenis
       ? Math.round((window as any).__lenis.scroll)
       : Math.round(window.scrollY);

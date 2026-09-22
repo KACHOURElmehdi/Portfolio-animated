@@ -172,15 +172,15 @@ const Contact = () => {
       <div ref={containerRef} className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16 w-full">
         <div
           ref={cardRef}
-          className="rounded-3xl bg-surface text-light p-8 sm:p-12 md:p-16 lg:p-20 border border-elevated-dark"
+          className="rounded-3xl bg-elevated-dark text-light p-8 sm:p-12 md:p-16 lg:p-20 border border-border-subtle"
         >
           <AnimatedHeading
             words={headingWords}
-            className="text-[clamp(2.5rem,7vw,6.5rem)] tracking-tight mb-6 text-light"
+            className="text-[clamp(2.5rem,7vw,6.5rem)] tracking-tight mb-6 text-cream"
           />
           <div className="max-w-2xl mb-12">
             <ScrollWordReveal
-              text="Have a project in mind or just want to say hello? Feel free to reach out."
+              text="Thanks for scrolling. Have a project in mind or just want to say hello? Feel free to reach out."
               offset={['start 0.95', 'end 0.7']}
               className="text-base sm:text-lg text-gray-soft font-sans leading-relaxed"
             />
@@ -188,11 +188,11 @@ const Contact = () => {
 
           <form
             onSubmit={handleSubmit}
-            className="max-w-2xl space-y-6 p-6 sm:p-8 rounded-2xl mx-auto bg-surface-mid border border-white/[0.04]"
+            className="max-w-2xl space-y-6 p-6 sm:p-8 rounded-2xl mx-auto bg-ink border border-border-subtle"
           >
             <div className="flex flex-col gap-2">
-              <label htmlFor="name" className="font-medium text-sm sm:text-base text-muted">
-                Your Name <span className="text-red-400">*</span>
+              <label htmlFor="name" className="font-medium text-sm sm:text-base text-cream">
+                Your Name <span className="text-accent">*</span>
               </label>
               <input
                 id="name"
@@ -204,7 +204,7 @@ const Contact = () => {
                 autoComplete="name"
                 aria-invalid={!!errors.name}
                 aria-describedby={errors.name ? 'name-error' : undefined}
-                className={`w-full px-4 py-3 text-sm sm:text-base border rounded-xl bg-surface text-cream placeholder-[#6a6a68] focus:outline-none transition-all duration-300 border-white/[0.08] focus:border-accent focus:ring-1 focus:ring-accent/30 ${
+                className={`w-full px-4 py-3 text-sm sm:text-base border rounded-xl bg-elevated-dark text-cream placeholder-muted focus:outline-none transition-all duration-300 border-border-subtle focus:border-accent focus:ring-1 focus:ring-accent/30 ${
                   errors.name ? 'border-red-500 focus:border-red-500' : ''
                 }`}
                 disabled={isDisabled}
@@ -213,8 +213,8 @@ const Contact = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="email" className="font-medium text-sm sm:text-base text-muted">
-                Your Email <span className="text-red-400">*</span>
+              <label htmlFor="email" className="font-medium text-sm sm:text-base text-cream">
+                Your Email <span className="text-accent">*</span>
               </label>
               <input
                 id="email"
@@ -226,7 +226,7 @@ const Contact = () => {
                 placeholder="you@example.com"
                 aria-invalid={!!errors.email}
                 aria-describedby={errors.email ? 'email-error' : undefined}
-                className={`w-full px-4 py-3 text-sm sm:text-base border rounded-xl bg-surface text-cream placeholder-[#6a6a68] focus:outline-none transition-all duration-300 border-white/[0.08] focus:border-accent focus:ring-1 focus:ring-accent/30 ${
+                className={`w-full px-4 py-3 text-sm sm:text-base border rounded-xl bg-elevated-dark text-cream placeholder-muted focus:outline-none transition-all duration-300 border-border-subtle focus:border-accent focus:ring-1 focus:ring-accent/30 ${
                   errors.email ? 'border-red-500 focus:border-red-500' : ''
                 }`}
                 disabled={isDisabled}
@@ -235,8 +235,8 @@ const Contact = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="message" className="font-medium text-sm sm:text-base text-muted">
-                Message <span className="text-red-400">*</span>
+              <label htmlFor="message" className="font-medium text-sm sm:text-base text-cream">
+                Message <span className="text-accent">*</span>
               </label>
               <textarea
                 id="message"
@@ -247,13 +247,13 @@ const Contact = () => {
                 placeholder="Write your message here..."
                 aria-invalid={!!errors.message}
                 aria-describedby={errors.message ? 'message-error' : undefined}
-                className={`w-full px-4 py-3 text-sm sm:text-base border rounded-xl bg-surface text-cream placeholder-[#6a6a68] resize-none focus:outline-none transition-all duration-300 border-white/[0.08] focus:border-accent focus:ring-1 focus:ring-accent/30 ${
+                className={`w-full px-4 py-3 text-sm sm:text-base border rounded-xl bg-elevated-dark text-cream placeholder-muted resize-none focus:outline-none transition-all duration-300 border-border-subtle focus:border-accent focus:ring-1 focus:ring-accent/30 ${
                   errors.message ? 'border-red-500 focus:border-red-500' : ''
                 }`}
                 disabled={isDisabled}
               />
               {errors.message && <p id="message-error" className="text-red-400 text-xs sm:text-sm">{errors.message}</p>}
-              <p className="text-xs text-gray-soft">{formData.message.length} / 30 minimum characters</p>
+              <p className="text-xs text-muted">{formData.message.length} / 30 minimum characters</p>
             </div>
 
             <div role="status" aria-live="polite">
@@ -264,8 +264,8 @@ const Contact = () => {
               )}
 
               {submitStatus === 'success' && (
-                <div className="p-4 bg-green-900/20 border border-green-600/40 rounded-xl mb-4">
-                  <p className="text-green-400 text-sm">{successMessage}</p>
+                <div className="p-4 bg-accent/15 border border-accent/40 rounded-xl mb-4">
+                  <p className="text-accent-light text-sm">{successMessage}</p>
                 </div>
               )}
 
@@ -293,9 +293,9 @@ const Contact = () => {
             </div>
           </form>
 
-          <div className="mt-16 pt-12 border-t border-elevated-dark flex flex-col items-center justify-center text-center w-full">
+          <div className="mt-16 pt-12 border-t border-border-subtle flex flex-col items-center justify-center text-center w-full">
             <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center text-center">
-              <p className="text-xs uppercase tracking-widest text-warm mb-3 font-mono text-center">
+              <p className="text-xs uppercase tracking-widest text-accent-light mb-3 font-mono text-center">
                 Direct Contact
               </p>
 
@@ -307,7 +307,7 @@ const Contact = () => {
                     navigator.clipboard.writeText(site.email);
                     setCopiedToast(true);
                   }}
-                  className="group relative inline-flex items-center justify-center cursor-pointer text-light font-display font-black uppercase leading-tight hover:text-accent transition-colors duration-300 max-w-full text-center"
+                  className="group relative inline-flex items-center justify-center cursor-pointer text-cream font-display font-black uppercase leading-tight hover:text-accent transition-colors duration-300 max-w-full text-center"
                   style={{
                     fontSize: 'clamp(1.1rem, 4.2vw, 3rem)',
                   }}
@@ -317,9 +317,23 @@ const Contact = () => {
                 </button>
               </div>
 
-              <span className="font-mono text-[11px] text-warm/70 uppercase tracking-widest mt-2 block text-center">
+              <span className="font-mono text-[11px] text-muted uppercase tracking-widest mt-2 block text-center">
                 Click to copy email address
               </span>
+
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+                <a
+                  href={site.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-xs uppercase tracking-widest text-cream hover:text-accent transition-colors"
+                >
+                  WhatsApp · {site.whatsapp}
+                </a>
+                <span className="font-mono text-xs uppercase tracking-widest text-muted">
+                  Social · @{site.handle}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -332,8 +346,8 @@ const Contact = () => {
           copiedToast ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
         }`}
         style={{
-          background: '#C45D3E',
-          color: 'white',
+          background: 'var(--color-primary)',
+          color: 'var(--green-800)',
           fontFamily: 'monospace',
           fontSize: '0.75rem',
           letterSpacing: '0.1em',

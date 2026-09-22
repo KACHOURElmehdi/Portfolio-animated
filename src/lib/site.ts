@@ -1,38 +1,47 @@
 export const site = {
-  name: 'Aitezaz Sikandar',
-  firstName: 'Aitezaz',
-  lastName: 'Sikandar',
-  handle: 'aitezazdev',
-  brand: 'aitezaz.dev',
-  email: 'aitezazsikandar@gmail.com',
-  location: 'Pakistan',
-  timeZone: 'Asia/Karachi',
-  timeZoneLabel: 'PKT',
-  url: 'https://aitezazdev.vercel.app',
-  tagline: 'Full Stack Developer crafting fast, expressive web experiences.',
+  name: 'Aymen Rguig',
+  firstName: 'Aymen',
+  lastName: 'Rguig',
+  handle: 'apex_visuals',
+  brand: 'Aymen Rguig',
+  email: 'aymeenrguig@gmail.com',
+  whatsapp: '+212 7 05 26 94 15',
+  whatsappUrl: 'https://wa.me/212705269415',
+  location: 'Morocco',
+  timeZone: 'Africa/Casablanca',
+  timeZoneLabel: 'GMT+1',
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  tagline: 'A Designer who Judges a book by its cover.',
+  taglineSupport: 'Because if the cover does not impress you, what else can?',
+  title: 'Graphic Designer & Art Director',
+  shortTitle: 'Graphic Designer',
+  founderOf: 'Completo',
+  portfolioYear: '2026',
   roles: [
-    'Full Stack Developer',
-    'React & Next.js Engineer',
-    'MERN Stack Developer',
-    'Open to Work Worldwide',
+    'Graphic Designer',
+    'Art Director',
+    'Brand Identity Design',
+    'Logo Design',
+    'Packaging Design',
+    'Print Design',
+    'Social Media Design',
+    'Typography',
+    'AI-Assisted Visual Creation',
   ],
-} as const;
+};
 
-export type SocialKey = 'github' | 'linkedin' | 'instagram' | 'source';
+export type SocialKey = 'whatsapp' | 'email' | 'instagram';
 
 export const socials: Record<SocialKey, { label: string; href: string }> = {
-  github: { label: 'GitHub', href: 'https://github.com/aitezazdev' },
-  linkedin: { label: 'Linkedin', href: 'https://linkedin.com/in/aitezaz-sikandar' },
-  instagram: { label: 'Instagram', href: 'https://instagram.com/ur_zaz' },
-  source: { label: 'Source Code', href: 'https://github.com/aitezazdev/Portfolio' },
+  whatsapp: { label: 'WhatsApp', href: site.whatsappUrl },
+  email: { label: 'Email', href: `mailto:${site.email}` },
+  instagram: { label: '@apex_visuals', href: '' },
 };
 
 export const socialList: Array<{ label: string; href: string }> = [
-  socials.linkedin,
-  socials.instagram,
-  socials.github,
-  socials.source,
-];
+  socials.whatsapp,
+  socials.email,
+].filter((s) => Boolean(s.href));
 
 export const navLinks = [
   { name: 'Home', href: '/#top', menuOnly: true },
@@ -40,4 +49,20 @@ export const navLinks = [
   { name: 'Services', href: '/#services' },
   { name: 'Work', href: '/#projects' },
   { name: 'Contact', href: '/#contact' },
+] as const;
+
+export const stats = [
+  { value: '2500', suffix: '+', label: 'Design Hours' },
+  { value: '50', suffix: '+', label: 'Clients' },
+  { value: '3', suffix: '', label: 'Years of Experience' },
+  { value: '3', suffix: '+', label: 'Countries Served' },
+] as const;
+
+export const portfolioCategories = [
+  { id: '01', name: 'Logo Folio' },
+  { id: '02', name: 'Brand Folio' },
+  { id: '03', name: 'Post Folio' },
+  { id: '04', name: 'Amazon Folio' },
+  { id: '05', name: 'Print Folio' },
+  { id: '06', name: 'Product Folio' },
 ] as const;

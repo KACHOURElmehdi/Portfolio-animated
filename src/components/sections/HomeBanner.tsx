@@ -78,7 +78,7 @@ const StampBadge = ({ onClick }: { onClick: () => void }) => (
           style={{ fontSize: '15.5px', letterSpacing: '0.305em' }}
         >
           <textPath href="#stamp-circle">
-            AVAILABLE FOR WORK • LET&apos;S BUILD • 
+            AVAILABLE FOR WORK • LET&apos;S CREATE • 
           </textPath>
         </text>
       </svg>
@@ -262,7 +262,7 @@ const HomeBanner = () => {
           ref={spotlightRef}
           className="absolute inset-0 pointer-events-none z-[1] opacity-0"
           style={{
-            background: 'radial-gradient(400px circle at var(--x, 0px) var(--y, 0px), rgba(196, 93, 62, 0.07), transparent 85%)',
+            background: 'radial-gradient(400px circle at var(--x, 0px) var(--y, 0px), color-mix(in srgb, var(--green-400) 12%, transparent), transparent 85%)',
             willChange: 'opacity',
           }}
         />
@@ -280,13 +280,13 @@ const HomeBanner = () => {
                 data-hero-line
                 className="block font-display font-black uppercase text-hero tracking-tight"
               >
-                AITEZAZ
+                AYMEN
               </span>
               <span
                 data-hero-line
                 className="serif-accent block text-hero-sm leading-[0.85] md:ml-[14vw]"
               >
-                sikandar
+                rguig
               </span>
             </span>
           </h1>
@@ -302,7 +302,7 @@ const HomeBanner = () => {
               ref={paragraphRef}
               className="text-warm font-sans text-base sm:text-lg md:text-xl leading-relaxed mb-8 md:mb-10 text-center mx-auto"
             >
-              Full-stack engineer building fast, scalable, and reliable web applications.
+              {site.tagline} {site.taglineSupport}
             </p>
 
             <div ref={tickerRef} className="w-full flex justify-center">
@@ -324,11 +324,11 @@ const HomeBanner = () => {
               />
               <AnimatedButton
                 as="a"
-                href="/01_aitezaz_resume.pdf"
+                href={site.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                topText="RESUME"
-                bottomText="DOWNLOAD →"
+                topText="WHATSAPP"
+                bottomText="MESSAGE →"
                 variant="outline"
               />
             </div>

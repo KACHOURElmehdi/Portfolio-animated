@@ -68,7 +68,7 @@ export async function runTier4Tests() {
       expect(appPathManifest['/projects/[slug]/page']).toBe('/projects/[slug]');
     });
 
-    const projectSlugs = ['c-study', 'hms', 'ecommerce', 'finance', 'blog'];
+    const projectSlugs = ['petcrib', 'artisan', 'soda-crave', 'logo-folio', 'post-folio', 'product-packaging'];
     const projectDynamicPageContent = fs.readFileSync(path.join(ROOT_DIR, 'src/app/projects/[slug]/page.tsx'), 'utf8');
 
     for (const slug of projectSlugs) {
@@ -194,8 +194,8 @@ export async function runTier4Tests() {
     const projectsTsPath = path.join(ROOT_DIR, 'src/lib/projects.ts');
     const projectsContent = fs.readFileSync(projectsTsPath, 'utf8');
 
-    it('lib/projects.ts defines exactly 5 featured projects with complete metadata', () => {
-      const slugs = ['c-study', 'hms', 'ecommerce', 'finance', 'blog'];
+    it('lib/projects.ts defines featured projects with complete metadata', () => {
+      const slugs = ['petcrib', 'artisan', 'soda-crave', 'logo-folio', 'post-folio', 'product-packaging'];
       for (const slug of slugs) {
         expect(projectsContent.includes(`slug: '${slug}'`)).toBe(true);
       }
@@ -203,7 +203,7 @@ export async function runTier4Tests() {
 
     it('All projects contain 3 key metric statistics', () => {
       const statsMatches = projectsContent.match(/stats:\s*\[[\s\S]*?\]/g) || [];
-      expect(statsMatches.length).toBe(5);
+      expect(statsMatches.length).toBe(6);
       for (const statBlock of statsMatches) {
         const valueMatches = statBlock.match(/value:\s*['"][^'"]+['"]/g) || [];
         expect(valueMatches.length).toBe(3);
@@ -236,10 +236,10 @@ export async function runTier4Tests() {
       expect(robotsContent).toMatch(/sitemap:\s*`\$\{site\.url\}\/sitemap\.xml`/);
     });
 
-    it('manifest.ts specifies standalone display, editorial background #0F0E0C, and theme #C45D3E', () => {
+    it('manifest.ts specifies standalone display, green background, and primary theme color', () => {
       expect(manifestContent).toMatch(/display:\s*['"]standalone['"]/);
-      expect(manifestContent).toMatch(/background_color:\s*['"]#0F0E0C['"]/);
-      expect(manifestContent).toMatch(/theme_color:\s*['"]#C45D3E['"]/);
+      expect(manifestContent).toMatch(/background_color:\s*theme\.green800/);
+      expect(manifestContent).toMatch(/theme_color:\s*theme\.green400/);
     });
 
     it('Contact API route implements rate limiting and email validation guards', () => {

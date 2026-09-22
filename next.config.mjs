@@ -1,10 +1,9 @@
 /**
  * @license
- * Copyright (c) 2026 Aitezaz Sikandar. All rights reserved.
+ * Copyright (c) 2026 Aymen Rguig. All rights reserved.
  * Licensed under the MIT License. See LICENSE in the project root for license information.
  * Project: Portfolio
- * Author: Aitezaz Sikandar (aitezazdev)
- * Website: https://aitezazdev.vercel.app
+ * Author: Aymen Rguig (@apex_visuals)
  */
 
 const nextConfig = {

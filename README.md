@@ -1,8 +1,6 @@
 # Portfolio
 
-The personal portfolio of [**Aitezaz Sikandar**](https://github.com/aitezazdev). Built with Next.js 15, GSAP, and Lenis, it features scroll-driven animations, animated page transitions, smooth scrolling, and a working contact form.
-
-**Live Site:** [aitezazdev.vercel.app](https://aitezazdev.vercel.app)
+The personal portfolio of **Aymen Rguig** — Graphic Designer & Art Director. Built with Next.js 15, GSAP, and Lenis, it features scroll-driven animations, animated page transitions, smooth scrolling, and a working contact form.
 
 ## Features
 
@@ -20,8 +18,6 @@ The personal portfolio of [**Aitezaz Sikandar**](https://github.com/aitezazdev).
 **Prerequisites:** Node.js 18+ and npm.
 
 ```bash
-git clone https://github.com/aitezazdev/Portfolio.git
-cd Portfolio
 npm install
 ```
 
@@ -30,6 +26,7 @@ Create a `.env.local` file in the root:
 ```env
 GMAIL_APP_PASSWORD=your_gmail_app_password
 NEXT_PUBLIC_GA_ID=your_google_analytics_id
+NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ```
 
 Start the development server:

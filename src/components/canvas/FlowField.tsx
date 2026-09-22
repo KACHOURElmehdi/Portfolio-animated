@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { withAlpha, theme } from '@/lib/theme';
 
 interface Particle {
   x: number;
@@ -76,7 +77,7 @@ export default function FlowField() {
         return p;
       });
 
-      ctx.fillStyle = '#0d0d0c';
+      ctx.fillStyle = theme.green800;
       ctx.fillRect(0, 0, width, height);
       if (reduced) renderStatic();
     };
@@ -119,7 +120,7 @@ export default function FlowField() {
     };
 
     const drawFrame = () => {
-      ctx.fillStyle = 'rgba(13, 13, 12, 0.045)';
+      ctx.fillStyle = withAlpha(theme.green800, 0.045);
       ctx.fillRect(0, 0, width, height);
 
       ctx.lineWidth = 1.15;
@@ -129,9 +130,9 @@ export default function FlowField() {
 
         const fadeEdge = Math.sin((p.life / p.maxLife) * Math.PI);
         if (p.hueMix === 0) {
-          ctx.strokeStyle = `rgba(196, 93, 62, ${0.34 + fadeEdge * 0.4})`;
+          ctx.strokeStyle = withAlpha(theme.green400, 0.34 + fadeEdge * 0.4);
         } else {
-          ctx.strokeStyle = `rgba(232, 228, 222, ${0.12 + fadeEdge * 0.2})`;
+          ctx.strokeStyle = withAlpha(theme.green50, 0.12 + fadeEdge * 0.2);
         }
         ctx.beginPath();
         ctx.moveTo(p.px, p.py);
@@ -212,7 +213,7 @@ export default function FlowField() {
   }, []);
 
   return (
-      <div ref={containerRef} className="absolute inset-0 overflow-hidden bg-[#0d0d0c]">
+      <div ref={containerRef} className="absolute inset-0 overflow-hidden bg-ink">
         <canvas ref={canvasRef} className="w-full h-full" aria-hidden="true" />
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
       </div>

@@ -179,7 +179,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
 
         <div className="flex flex-col md:grid md:grid-cols-12 gap-2 sm:gap-3 md:gap-8 mb-8 sm:mb-12 md:mb-20">
           <div className="md:col-span-4">
-            <p className="font-mono text-xs uppercase tracking-widest text-accent md:text-warm-light">(Architecture)</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-accent md:text-warm-light">(Design Direction)</p>
           </div>
           <div className="md:col-span-8">
             <ScrollWordReveal
@@ -192,7 +192,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
 
         <div className="flex flex-col md:grid md:grid-cols-12 gap-2 sm:gap-3 md:gap-8 mb-10 sm:mb-14 md:mb-20">
           <div className="md:col-span-4">
-            <p className="font-mono text-xs uppercase tracking-widest text-accent md:text-warm-light">(Engineering)</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-accent md:text-warm-light">(Approach)</p>
           </div>
           <div className="md:col-span-8">
             <ScrollWordReveal
@@ -271,7 +271,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
         )}
 
         <div className="mb-12 sm:mb-16 md:mb-20">
-          <p className="font-mono text-xs uppercase tracking-widest text-warm-light mb-3 sm:mb-5">Built with</p>
+          <p className="font-mono text-xs uppercase tracking-widest text-warm-light mb-3 sm:mb-5">Disciplines</p>
           <div className="flex flex-wrap gap-2">
             {project.tech?.map((t) => (
               <span
@@ -383,7 +383,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
             />
             <a
               href={`mailto:${site.email}`}
-              className="text-lg sm:text-xl font-semibold text-[#bab6b3] hover:text-[#d4d2d0] transition"
+              className="text-lg sm:text-xl font-semibold text-muted hover:text-light transition"
             >
               {site.email}
             </a>

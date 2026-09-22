@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from '@/lib/gsap';
+import { withAlpha, theme } from '@/lib/theme';
 import { usePathname } from 'next/navigation';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 
@@ -95,12 +96,12 @@ export default function CustomCursor() {
         setCursorText(type.toUpperCase());
         gsap.to(cursorOutline, {
           scale: type === 'drag' ? 4 : type === 'copy' ? 3 : 2,
-          backgroundColor: 'rgba(97,92,86,0.1)',
+          backgroundColor: withAlpha(theme.green600, 0.1),
           duration: 0.4,
         });
         gsap.to(cursorTextEl, { opacity: 1, duration: 0.2 });
       } else {
-        gsap.to(cursorOutline, { scale: 2, backgroundColor: 'rgba(97,92,86,0.15)', duration: 0.4 });
+        gsap.to(cursorOutline, { scale: 2, backgroundColor: withAlpha(theme.green600, 0.15), duration: 0.4 });
       }
 
       gsap.to(cursorDot, { scale: 0, duration: 0.3 });
@@ -185,14 +186,14 @@ export default function CustomCursor() {
 
       <div
         ref={cursorOutlineRef}
-        className="pointer-events-none fixed top-0 left-0 z-[10000] w-12 h-12 border-2 border-[#C45D3E] rounded-full"
+        className="pointer-events-none fixed top-0 left-0 z-[10000] w-12 h-12 border-2 border-accent rounded-full"
       />
 
       <div
         ref={cursorTextRef}
         className="pointer-events-none fixed top-0 left-0 z-[10001] opacity-0"
       >
-        <span className="text-[#E07A5F] text-[11px] font-bold tracking-[0.15em]">
+        <span className="text-accent-light text-[11px] font-bold tracking-[0.15em]">
           {cursorText}
         </span>
       </div>

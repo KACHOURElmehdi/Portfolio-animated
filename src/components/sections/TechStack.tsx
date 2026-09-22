@@ -1,15 +1,37 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, type ComponentType } from 'react';
 import Image from 'next/image';
 import { gsap, useGSAP } from '@/lib/gsap';
 import AnimatedHeading from '@/components/ui/AnimateHeading';
 import ScrollWordReveal from '@/components/ui/ScrollWordReveal';
+import {
+  SiAdobeillustrator,
+  SiAdobeindesign,
+  SiAdobephotoshop,
+  SiCanva,
+} from 'react-icons/si';
+import { MdMovieEdit, MdTableChart } from 'react-icons/md';
+import { HiOutlineSparkles } from 'react-icons/hi2';
+import {
+  FiAperture,
+  FiEdit3,
+  FiGrid,
+  FiImage,
+  FiLayers,
+  FiPackage,
+  FiPenTool,
+  FiShare2,
+  FiType,
+} from 'react-icons/fi';
+
+type IconComponent = ComponentType<{ className?: string }>;
 
 export interface TechItem {
   name: string;
-  category: 'frontend' | 'backend' | 'database' | 'devops' | 'tools';
-  icon: string;
+  category: 'skills' | 'software';
+  icon?: string;
+  Icon?: IconComponent;
   level?: string;
   description?: string;
 }
@@ -24,61 +46,32 @@ export interface StackCategory {
 
 export const STACK_SECTIONS: StackCategory[] = [
   {
-    id: 'frontend',
-    title: 'FRONTEND',
+    id: 'skills',
+    title: 'CORE SKILLS',
     technologies: [
-      { name: 'JavaScript', category: 'frontend', icon: '/Services/js.png' },
-      { name: 'TypeScript', category: 'frontend', icon: '/Services/typescript.svg' },
-      { name: 'React', category: 'frontend', icon: '/Services/react.png' },
-      { name: 'Next.js', category: 'frontend', icon: '/Services/next.webp' },
-      { name: 'Redux Toolkit', category: 'frontend', icon: '/Services/reduxtoolkit.svg' },
-      { name: 'Tailwind CSS', category: 'frontend', icon: '/Services/tailwind.png' },
-      { name: 'Bootstrap', category: 'frontend', icon: '/Services/bootstrap.svg' },
-      { name: 'GSAP', category: 'frontend', icon: '/Services/gsap.png' },
+      { name: 'Graphic Design', category: 'skills', Icon: FiPenTool },
+      { name: 'Art Direction', category: 'skills', Icon: FiAperture },
+      { name: 'Brand Identity', category: 'skills', Icon: FiLayers },
+      { name: 'Logo Design', category: 'skills', Icon: FiEdit3 },
+      { name: 'Packaging Design', category: 'skills', Icon: FiPackage },
+      { name: 'Print Design', category: 'skills', Icon: FiImage },
+      { name: 'Typography', category: 'skills', Icon: FiType },
+      { name: 'Social Media Design', category: 'skills', Icon: FiShare2 },
+      { name: 'Digital Content', category: 'skills', Icon: FiGrid },
+      { name: 'AI-Assisted Visuals', category: 'skills', Icon: HiOutlineSparkles },
     ],
   },
   {
-    id: 'backend',
-    title: 'BACKEND & REAL-TIME',
+    id: 'software',
+    title: 'SOFTWARE',
     technologies: [
-      { name: 'Node.js', category: 'backend', icon: '/Services/node.png' },
-      { name: 'Express.js', category: 'backend', icon: '/Services/express.png' },
-      { name: 'Socket.io', category: 'backend', icon: '/Services/socketio.svg' },
-      { name: 'Firebase', category: 'backend', icon: '/Services/firebase.svg' },
-    ],
-  },
-  {
-    id: 'database',
-    title: 'DATABASE & ORM',
-    technologies: [
-      { name: 'MongoDB', category: 'database', icon: '/Services/mongodb.svg' },
-      { name: 'Mongoose', category: 'database', icon: '/Services/mongoose.svg' },
-      { name: 'MySQL', category: 'database', icon: '/Services/mysql.svg' },
-    ],
-  },
-  {
-    id: 'devops',
-    title: 'DEVOPS & CLOUD',
-    technologies: [
-      { name: 'Docker', category: 'devops', icon: '/Services/docker.svg' },
-      { name: 'GitHub Actions', category: 'devops', icon: '/Services/githubactions.svg' },
-      { name: 'AWS', category: 'devops', icon: '/Services/aws.webp' },
-      { name: 'Nginx', category: 'devops', icon: '/Services/nginx.svg' },
-      { name: 'Linux', category: 'devops', icon: '/Services/linux.svg' },
-    ],
-  },
-  {
-    id: 'tools',
-    title: 'AI, TESTING & TOOLS',
-    technologies: [
-      { name: 'Gemini AI', category: 'tools', icon: '/Services/geminiai.svg' },
-      { name: 'Jest', category: 'tools', icon: '/Services/jest.svg' },
-      { name: 'Zod', category: 'tools', icon: '/Services/zod.svg' },
-      { name: 'Stripe', category: 'tools', icon: '/Services/stripe.svg' },
-      { name: 'Cloudinary', category: 'tools', icon: '/Services/cloudinary.svg' },
-      { name: 'Git', category: 'tools', icon: '/Services/git.png' },
-      { name: 'Postman', category: 'tools', icon: '/Services/postman-icon.svg' },
-      { name: 'Figma', category: 'tools', icon: '/Services/figma.png' },
+      { name: 'Adobe Illustrator', category: 'software', Icon: SiAdobeillustrator },
+      { name: 'Adobe Photoshop', category: 'software', Icon: SiAdobephotoshop },
+      { name: 'Adobe InDesign', category: 'software', Icon: SiAdobeindesign },
+      { name: 'Figma', category: 'software', icon: '/Services/figma.png' },
+      { name: 'Canva', category: 'software', Icon: SiCanva },
+      { name: 'CapCut', category: 'software', Icon: MdMovieEdit },
+      { name: 'Microsoft Excel', category: 'software', Icon: MdTableChart },
     ],
   },
 ];
@@ -91,19 +84,16 @@ const TechStack = () => {
 
   const headingWords = [
     { t: 'MY' },
-    { t: 'TECH' },
+    { t: 'SKILLS' },
     { t: 'stack', serif: true },
   ];
   const descriptionText =
-    'A selection of technologies I use to design, build, and deploy full-stack web applications.';
+    'Creative disciplines and software I use to design brands, packaging, print, and digital visuals.';
 
   const filterOptions = [
     { id: 'all', label: 'All Categories' },
-    { id: 'frontend', label: 'Frontend' },
-    { id: 'backend', label: 'Backend & Real-Time' },
-    { id: 'database', label: 'Database & ORM' },
-    { id: 'devops', label: 'DevOps & Cloud' },
-    { id: 'tools', label: 'AI, Testing & Tools' },
+    { id: 'skills', label: 'Core Skills' },
+    { id: 'software', label: 'Software' },
   ];
 
   const visibleSections =
@@ -169,9 +159,9 @@ const TechStack = () => {
     ) {
       return;
     }
-    const img = e.currentTarget.querySelector('img');
-    if (!img) return;
-    gsap.to(img, { rotation: 360, scale: 1.1, duration: 0.6, ease: 'power2.out' });
+    const target = e.currentTarget.querySelector('.tech-icon');
+    if (!target) return;
+    gsap.to(target, { rotation: 360, scale: 1.1, duration: 0.6, ease: 'power2.out' });
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -182,9 +172,9 @@ const TechStack = () => {
     ) {
       return;
     }
-    const img = e.currentTarget.querySelector('img');
-    if (!img) return;
-    gsap.to(img, { rotation: 0, scale: 1, duration: 0.5, ease: 'power2.inOut' });
+    const target = e.currentTarget.querySelector('.tech-icon');
+    if (!target) return;
+    gsap.to(target, { rotation: 0, scale: 1, duration: 0.5, ease: 'power2.inOut' });
   };
 
   return (
@@ -252,32 +242,40 @@ const TechStack = () => {
                   {stack.title}
                 </h3>
                 <span className="font-mono text-xs text-warm tracking-widest uppercase block mt-2">
-                  {stack.technologies.length} Technologies
+                  {stack.technologies.length}{' '}
+                  {stack.id === 'software' ? 'Applications' : 'Skills'}
                 </span>
               </div>
 
               <div className="md:w-2/3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {stack.technologies.map((tech, i) => (
-                  <div
-                    key={i}
-                    className="tech-item flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-elevated-dark/60 border border-white/[0.04] hover:border-accent/30 bg-surface/50"
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <div className="w-10 h-10 flex items-center justify-center relative flex-shrink-0">
-                      <Image
-                        src={tech.icon}
-                        alt={tech.name}
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-contain"
-                      />
+                {stack.technologies.map((tech, i) => {
+                  const Icon = tech.Icon;
+                  return (
+                    <div
+                      key={i}
+                      className="tech-item flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-elevated-dark/60 border border-white/[0.04] hover:border-accent/30 bg-surface/50"
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <div className="tech-icon w-10 h-10 flex items-center justify-center relative flex-shrink-0 text-cream">
+                        {tech.icon ? (
+                          <Image
+                            src={tech.icon}
+                            alt={tech.name}
+                            width={40}
+                            height={40}
+                            className="w-full h-full object-contain"
+                          />
+                        ) : Icon ? (
+                          <Icon className="w-7 h-7" />
+                        ) : null}
+                      </div>
+                      <p className="text-xs sm:text-sm font-mono font-bold text-cream break-words">
+                        {tech.name}
+                      </p>
                     </div>
-                    <p className="text-xs sm:text-sm font-mono font-bold text-cream break-words">
-                      {tech.name}
-                    </p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}

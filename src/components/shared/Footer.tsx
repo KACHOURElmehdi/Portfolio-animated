@@ -91,11 +91,18 @@ const Footer = () => {
             <ul className="flex flex-col gap-3 sm:gap-4 text-gray-soft text-xs sm:text-sm font-sans font-medium uppercase tracking-wide">
               {socialList.map((s) => (
                 <AnimatedLink key={s.label}>
-                  <a href={s.href} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={s.href}
+                    target={s.href.startsWith('mailto:') ? undefined : '_blank'}
+                    rel={s.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                  >
                     {s.label}
                   </a>
                 </AnimatedLink>
               ))}
+              <span className="text-gray-soft text-xs sm:text-sm font-sans font-medium uppercase tracking-wide">
+                @{site.handle}
+              </span>
             </ul>
           </div>
 

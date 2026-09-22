@@ -1,10 +1,9 @@
 /**
  * @license
- * Copyright (c) 2026 Aitezaz Sikandar. All rights reserved.
+ * Copyright (c) 2026 Aymen Rguig. All rights reserved.
  * Licensed under the MIT License. See LICENSE in the project root for license information.
  * Project: Portfolio
- * Author: Aitezaz Sikandar (aitezazdev)
- * Website: https://aitezazdev.vercel.app
+ * Author: Aymen Rguig (@apex_visuals)
  */
 
 import HomeBanner from '@/components/sections/HomeBanner';
@@ -25,12 +24,12 @@ export default function Home() {
         banner={<HomeBanner />}
         about={<About />}
       >
-        <CurvedSectionDivider curveColor="#0F0E0C" bottomColor="#E8E4DE" />
+        <CurvedSectionDivider curveColor="var(--green-800)" bottomColor="var(--green-50)" />
         <section className="relative z-20 bg-cream">
           <Projects />
         </section>
         <MarqueeStrip />
-        <CurvedSectionDivider curveColor="#E8E4DE" bottomColor="#0F0E0C" />
+        <CurvedSectionDivider curveColor="var(--green-50)" bottomColor="var(--green-800)" />
         <div className="relative z-25 bg-ink overflow-hidden">
           <Contact />
           <Footer />
