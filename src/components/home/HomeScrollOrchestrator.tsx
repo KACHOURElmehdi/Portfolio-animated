@@ -2,7 +2,7 @@
 
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 import React, { useEffect, useRef } from 'react';
-import { scrollToSection } from '@/lib/navigation';
+import { getSectionElement, scrollToSection } from '@/lib/navigation';
 
 interface HomeScrollOrchestratorProps {
   banner: React.ReactNode;
@@ -75,20 +75,48 @@ export default function HomeScrollOrchestrator({
   }, []);
 
   useEffect(() => {
+    let target = '';
+    try {
+      // Keep the key until scroll runs — React Strict Mode remounts would otherwise drop it.
+      target = sessionStorage.getItem('nav_target_section') || '';
+    } catch {}
+
+    if (!target && typeof window !== 'undefined' && window.location.hash) {
+      target = window.location.hash.replace(/^#/, '');
+    }
+
     if (typeof window !== 'undefined' && window.location.hash) {
       window.history.replaceState(null, '', window.location.pathname);
     }
 
-    try {
-      const target = sessionStorage.getItem('nav_target_section');
-      if (target) {
+    if (!target) return;
+
+    const clearTarget = () => {
+      try {
         sessionStorage.removeItem('nav_target_section');
-        const timer = setTimeout(() => {
-          scrollToSection(target);
-        }, 350);
-        return () => clearTimeout(timer);
+      } catch {}
+    };
+
+    const tryScroll = () => {
+      const el = getSectionElement(target);
+      if (el) {
+        const top = el.getBoundingClientRect().top;
+        // Scroll restore from a project page may already have us near this section.
+        if (Math.abs(top) < window.innerHeight * 0.55) {
+          clearTarget();
+          return true;
+        }
       }
-    } catch {}
+      const lenis = typeof window !== 'undefined' ? window.__lenis : null;
+      if (lenis) lenis.start();
+      scrollToSection(target, lenis);
+      clearTarget();
+      return false;
+    };
+
+    // Wait for page-transition curtain + Lenis to settle before scrolling.
+    const timers = [1200, 2000].map((delay) => setTimeout(tryScroll, delay));
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   return (

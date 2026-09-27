@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import AnimatedHeading from '@/components/ui/AnimateHeading';
 import ScrollWordReveal from '@/components/ui/ScrollWordReveal';
 import AnimatedButton from '@/components/ui/AnimatedButton';
 import { gsap, useGSAP } from '@/lib/gsap';
 import { EASE } from '@/lib/motion';
 import { site } from '@/lib/site';
+import { media } from '@/lib/media';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 
 const Contact = () => {
@@ -294,6 +296,15 @@ const Contact = () => {
           </form>
 
           <div className="mt-16 pt-12 border-t border-border-subtle flex flex-col items-center justify-center text-center w-full">
+            <div className="relative w-full max-w-xs sm:max-w-sm aspect-[4/5] mb-12 mx-auto">
+              <Image
+                src={media('thank-you', 'hero')}
+                alt="Thank you"
+                fill
+                sizes="(max-width: 640px) 320px, 384px"
+                className="object-contain object-center"
+              />
+            </div>
             <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center text-center">
               <p className="text-xs uppercase tracking-widest text-accent-light mb-3 font-mono text-center">
                 Direct Contact

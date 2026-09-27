@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import AnimatedHeading from '@/components/ui/AnimateHeading';
 import { getAllProjects, Project } from '@/lib/projects';
 import { withAlpha, theme } from '@/lib/theme';
+import { isSvgSrc } from '@/lib/media';
 
 const useHoverPreview = (containerRef?: React.RefObject<HTMLDivElement | null>) => {
   const floatingRef = useRef<HTMLDivElement | null>(null);
@@ -329,7 +330,8 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
                   fill
                   sizes="(max-width: 767px) calc(100vw - 32px)"
                   priority={index < 2}
-                  className="mc-img object-cover object-top"
+                  unoptimized={isSvgSrc(project.hoverImage || project.images[0])}
+                  className="mc-img object-contain object-center bg-ink"
                 />
                 <div
                   className="absolute inset-0 pointer-events-none"
@@ -699,7 +701,8 @@ export default function ProjectsPage() {
                         fill
                         sizes="480px"
                         priority={idx < 2}
-                        className="object-cover object-top"
+                        unoptimized={isSvgSrc(imgUrl)}
+                        className="object-contain object-center bg-ink"
                       />
                     </div>
                   );

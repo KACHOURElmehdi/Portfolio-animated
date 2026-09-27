@@ -103,9 +103,10 @@ export async function runTier1Tests() {
       expect(/Judges a book by its cover/i.test(aboutContent)).toBe(true);
     });
 
-    it('AboutMe embeds FlowField canvas simulation in visual wrapper', () => {
-      expect(aboutContent.includes('<FlowField')).toBe(true);
-      expect(aboutContent.includes("from '@/components/canvas/FlowField'")).toBe(true);
+    it('AboutMe embeds real avatar portrait in visual wrapper', () => {
+      expect(aboutContent.includes('next/image')).toBe(true);
+      expect(aboutContent.includes("from '@/lib/media'")).toBe(true);
+      expect(aboutContent.includes("media('avatar'")).toBe(true);
     });
 
     it('AboutMe includes editorial typography styling with AnimatedHeading & ScrollWordReveal', () => {

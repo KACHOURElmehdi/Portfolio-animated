@@ -44,4 +44,9 @@ next-env.d.ts
 # misc
 .claude/
 messages.txt
+.tmp/
+scripts/__pycache__/
+
+# Source photography / design masters (optimize into public/optimized)
+/public/Media/
 

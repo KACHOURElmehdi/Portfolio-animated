@@ -1,9 +1,17 @@
 import { theme } from '@/lib/theme';
+import { logoSvg, media } from '@/lib/media';
 
 export interface ProjectStat {
   value: string;
   label: string;
 }
+
+export type GalleryBlock =
+  | { type: 'feature'; src: string; caption?: string }
+  | { type: 'pair'; sources: [string, string] }
+  | { type: 'grid'; sources: string[]; columns?: 2 | 3 }
+  | { type: 'asymmetric'; primary: string; secondary: string }
+  | { type: 'fullBleed'; src: string };
 
 export interface Project {
   id: number;
@@ -11,6 +19,7 @@ export interface Project {
   title: string;
   type: string;
   role: string;
+  year?: string;
   tech: string[];
   description: string;
   overview: string;
@@ -23,6 +32,10 @@ export interface Project {
   hoverImage: string;
   github: string;
   liveUrl: string;
+  /** Controls auto gallery composition when galleryLayout is omitted. */
+  galleryKind?: 'logos' | 'posters' | 'packaging' | 'default';
+  /** Optional explicit editorial blocks. */
+  galleryLayout?: GalleryBlock[];
 }
 
 const projects: Project[] = [
@@ -32,6 +45,8 @@ const projects: Project[] = [
     title: 'PETCRIB',
     type: 'Branding & Uniform Design',
     role: 'Brand Designer',
+    year: '2025',
+    galleryKind: 'default',
     tech: [
       'Logo Design',
       'Brand Identity',
@@ -60,12 +75,8 @@ const projects: Project[] = [
       'Developed typography and brand applications for signage and stationery.',
       'Created staff uniform mockups with logo placement on polo shirts.',
     ],
-    images: [
-      '/Projects/petcrib/01_overview.webp',
-      '/Projects/petcrib/02_logo.webp',
-      '/Projects/petcrib/03_mockups.webp',
-    ],
-    hoverImage: '/Projects/petcrib/01_overview.webp',
+    images: [media('brand-folio/petcrib-brand', 'gallery')],
+    hoverImage: media('brand-folio/petcrib-brand', 'hero'),
     github: '',
     liveUrl: '',
   },
@@ -75,6 +86,8 @@ const projects: Project[] = [
     title: 'Artisan',
     type: 'Branding, Landing Page & Packaging',
     role: 'Brand & Packaging Designer',
+    year: '2025',
+    galleryKind: 'default',
     tech: [
       'Brand Identity',
       'Logo Design',
@@ -103,12 +116,8 @@ const projects: Project[] = [
       'Created packaging layouts with botanical line illustrations.',
       'Extended the identity into landing page mockups and product presentations.',
     ],
-    images: [
-      '/Projects/artisan/01_overview.webp',
-      '/Projects/artisan/02_identity.webp',
-      '/Projects/artisan/03_packaging.webp',
-    ],
-    hoverImage: '/Projects/artisan/01_overview.webp',
+    images: [media('brand-folio/artisan-brand', 'gallery')],
+    hoverImage: media('brand-folio/artisan-brand', 'hero'),
     github: '',
     liveUrl: '',
   },
@@ -118,6 +127,8 @@ const projects: Project[] = [
     title: 'Soda Crave',
     type: 'Logo Design & Product Design',
     role: 'Brand & Product Designer',
+    year: '2025',
+    galleryKind: 'default',
     tech: [
       'Logo Design',
       'Beverage Branding',
@@ -145,12 +156,8 @@ const projects: Project[] = [
       'Developed high-contrast packaging graphics for shelf visibility.',
       'Built a playful product identity system for a youth-focused beverage line.',
     ],
-    images: [
-      '/Projects/soda-crave/01_overview.webp',
-      '/Projects/soda-crave/02_cans.webp',
-      '/Projects/soda-crave/03_flavors.webp',
-    ],
-    hoverImage: '/Projects/soda-crave/01_overview.webp',
+    images: [media('brand-folio/soda-crave', 'gallery')],
+    hoverImage: media('brand-folio/soda-crave', 'hero'),
     github: '',
     liveUrl: '',
   },
@@ -160,6 +167,8 @@ const projects: Project[] = [
     title: 'Top Ten Logo',
     type: 'Logo Folio',
     role: 'Logo Designer',
+    year: '2026',
+    galleryKind: 'logos',
     tech: ['Logo Design', 'Identity Marks', 'Icon Design', 'Illustrator', 'Photoshop'],
     description:
       'A curated selection of ten logo designs spanning identity marks, icon systems, and brand symbols.',
@@ -168,7 +177,7 @@ const projects: Project[] = [
     architecture:
       'Each mark is designed as a standalone identity asset, exploring silhouette, typography, and symbolic forms suited to different brand contexts.',
     implementation:
-      'Presented as a curated logo grid from the Logo Folio section of the 2026 portfolio. High-resolution individual logo files are pending for better gallery clarity.',
+      'Presented as individual logo marks from the Logo Folio: Apex, barber, beauty, car wash, delivery, fashion, moto, phone, tailor, and ZOFI.',
     stats: [
       { value: '10', label: 'Logo marks' },
       { value: '01', label: 'Logo Folio' },
@@ -181,10 +190,18 @@ const projects: Project[] = [
       'Prepared logo presentations for the Logo Folio section.',
     ],
     images: [
-      '/Projects/logo-folio/01_top-ten.webp',
-      '/Projects/logo-folio/02_brand-header.webp',
+      logoSvg('apex-logo'),
+      logoSvg('barber'),
+      logoSvg('beauty'),
+      logoSvg('car-wash'),
+      logoSvg('delivery'),
+      logoSvg('girl'),
+      logoSvg('moto'),
+      logoSvg('phone'),
+      logoSvg('taylor'),
+      media('logos/zofi-logo', 'gallery'),
     ],
-    hoverImage: '/Projects/logo-folio/01_top-ten.webp',
+    hoverImage: media('logos/zofi-logo', 'hero'),
     github: '',
     liveUrl: '',
   },
@@ -194,6 +211,8 @@ const projects: Project[] = [
     title: 'Post Folio',
     type: 'Print & Social Media Design',
     role: 'Graphic Designer',
+    year: '2026',
+    galleryKind: 'posters',
     tech: [
       'Print Design',
       'Poster Design',
@@ -204,13 +223,13 @@ const projects: Project[] = [
     description:
       'A collection of poster, print, and social media designs spanning promotional, editorial, and event visuals.',
     overview:
-      'Post Folio gathers poster, flyer, and social media work including promotional advertising, healthcare and clinic graphics, real estate materials, fashion and streetwear visuals, restaurant posters, and event promotions.',
+      'Post Folio gathers poster mockups and campaign visuals—from typographic statements and portrait treatments to automotive, sports, and cultural pieces—alongside print and social media work for restaurants, events, and promotions.',
     architecture:
       'Designs are organized as a visual collection rather than individual client case studies. Artwork emphasizes bold typography, photography-led layouts, and campaign-ready compositions for print and digital channels.',
     implementation:
-      'Includes social media posters such as Black Friday promotions, event flyers, food advertising, and floral promotional designs, alongside broader print folio work from the 2026 portfolio.',
+      'Presented as four connected chapters: Overview, Collection I, Collection II, and Selected Works—so each set of posters, print pieces, and campaign graphics can be browsed with intention.',
     stats: [
-      { value: '03', label: 'Post Folio' },
+      { value: '04', label: 'Chapters' },
       { value: 'Print', label: 'Poster & flyer work' },
       { value: 'Social', label: 'Digital campaigns' },
     ],
@@ -220,12 +239,9 @@ const projects: Project[] = [
       'Created social media campaign graphics and event visuals.',
       'Developed food, fashion, and entertainment-oriented poster layouts.',
     ],
-    images: [
-      '/Projects/post-folio/02_print-grid.webp',
-      '/Projects/post-folio/01_grid.webp',
-      '/Projects/post-folio/03_social.webp',
-    ],
-    hoverImage: '/Projects/post-folio/02_print-grid.webp',
+    // Home card / metadata only — chapter pages load their own curated media.
+    images: [media('post-folio/art', 'gallery')],
+    hoverImage: media('post-folio/art', 'hero'),
     github: '',
     liveUrl: '',
   },
@@ -235,6 +251,8 @@ const projects: Project[] = [
     title: 'Product Packaging',
     type: 'Product & Packaging Design',
     role: 'Packaging Designer',
+    year: '2025',
+    galleryKind: 'packaging',
     tech: [
       'Packaging Design',
       'Product Identity',
@@ -243,13 +261,13 @@ const projects: Project[] = [
       'Pharmaceutical Packaging',
     ],
     description:
-      'Product packaging and pharmaceutical-style packaging examples, including Zofenil and Spasmomen design work.',
+      'Product packaging and brand identity work spanning coffee branding, food packaging, and pharmaceutical-style packaging including Zofenil and Spasmomen.',
     overview:
-      'Product Folio showcases packaging design examples, including pharmaceutical-style packaging labeled Zofenil and Spasmomen, presented as packaging design work from campaign and product identity projects.',
+      'Product Folio showcases packaging and product identity work—including Maiani Coffee brand applications, food packaging (Joie de Pistache, LEAMIDO), and pharmaceutical-style packaging for Zofenil and Spasmomen.',
     architecture:
-      'Designs focus on clear product hierarchy, dosage communication, and structured packaging layouts suitable for regulated product presentation.',
+      'Designs focus on clear product hierarchy, brand storytelling, and structured packaging layouts suitable for retail and regulated product presentation.',
     implementation:
-      'Gallery includes packaging mockups and related campaign flyer artwork. Presented as packaging design examples without medical endorsement or commercial outcome claims.',
+      'Gallery includes brand boards, 3D packaging mockups, and pharmaceutical box designs. Presented as packaging design examples without medical endorsement or commercial outcome claims.',
     stats: [
       { value: '06', label: 'Product Folio' },
       { value: 'Pack', label: 'Packaging systems' },
@@ -258,16 +276,20 @@ const projects: Project[] = [
     accent: theme.green700,
     myRole: [
       'Designed pharmaceutical-style packaging layouts and product boxes.',
-      'Developed supporting campaign flyer artwork for packaging brands.',
+      'Developed food and coffee brand packaging applications.',
       'Structured product information hierarchies for packaging applications.',
     ],
     images: [
-      '/Projects/packaging/01_menarini.webp',
-      '/Projects/packaging/03_zofenil-plus.webp',
-      '/Projects/packaging/04_spasmomen-flyer.webp',
-      '/Projects/packaging/02_recent.webp',
+      media('brand-folio/marani-brand', 'gallery'),
+      media('packaging/cls', 'gallery'),
+      media('packaging/pack', 'gallery'),
+      media('packaging/zofi', 'gallery'),
+      media('packaging/zoffi', 'gallery'),
+      media('packaging/zofffi', 'gallery'),
+      media('packaging/spass', 'gallery'),
+      media('logos/zofi-logo', 'gallery'),
     ],
-    hoverImage: '/Projects/packaging/01_menarini.webp',
+    hoverImage: media('brand-folio/marani-brand', 'hero'),
     github: '',
     liveUrl: '',
   },

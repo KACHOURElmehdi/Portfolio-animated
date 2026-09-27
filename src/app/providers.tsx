@@ -148,8 +148,14 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       leave={(next: () => void, _from?: string, to?: string) => {
         if (lenis?.current) lenis.current.stop();
         const isGoingToProject = to ? to.startsWith('/projects/') : false;
+        const isHomeTarget =
+          !to ||
+          to === '/' ||
+          to === '' ||
+          to.startsWith('/#') ||
+          to.startsWith('/?');
         const savedScroll = safeSessionStorage.getItem('projects-scroll');
-        const isReturningHome = (to === '/' || to === '' || !to) && savedScroll && !isGoingToProject;
+        const isReturningHome = isHomeTarget && !!savedScroll && !isGoingToProject;
         if (isGoingToProject) safeSessionStorage.setItem('navigating-to-project', 'true');
         scrollTargetRef.current = isReturningHome ? parseInt(savedScroll, 10) : 0;
 
