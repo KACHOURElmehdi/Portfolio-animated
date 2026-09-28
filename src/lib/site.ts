@@ -13,10 +13,15 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   tagline: 'A Designer who Judges a book by its cover.',
   taglineSupport: 'Because if the cover does not impress you, what else can?',
+  /** Clear first-screen specialization — grounded in shipped work. */
+  specialization:
+    'Graphic designer & art director focused on brand identity, packaging, print, and social visuals.',
   title: 'Graphic Designer & Art Director',
   shortTitle: 'Graphic Designer',
   founderOf: 'Completo',
   portfolioYear: '2026',
+  contactLead:
+    'Have a project, collaboration, or opportunity in mind? Get in touch.',
   roles: [
     'Graphic Designer',
     'Art Director',
@@ -30,14 +35,14 @@ export const site = {
   ],
 };
 
-export type SocialKey = 'whatsapp' | 'email' | 'instagram';
+export type SocialKey = 'whatsapp' | 'email';
 
 export const socials: Record<SocialKey, { label: string; href: string }> = {
   whatsapp: { label: 'WhatsApp', href: site.whatsappUrl },
   email: { label: 'Email', href: `mailto:${site.email}` },
-  instagram: { label: '@apex_visuals', href: '' },
 };
 
+/** Only links with real hrefs — no dead social placeholders. */
 export const socialList: Array<{ label: string; href: string }> = [
   socials.whatsapp,
   socials.email,
@@ -58,11 +63,10 @@ export const stats = [
   { value: '3', suffix: '+', label: 'Countries Served' },
 ] as const;
 
+/** Categories that match publicly shipped projects (Print lives inside Post Folio). */
 export const portfolioCategories = [
   { id: '01', name: 'Logo Folio' },
   { id: '02', name: 'Brand Folio' },
   { id: '03', name: 'Post Folio' },
-  { id: '04', name: 'Amazon Folio' },
-  { id: '05', name: 'Print Folio' },
-  { id: '06', name: 'Product Folio' },
+  { id: '04', name: 'Product Folio' },
 ] as const;

@@ -102,9 +102,17 @@ export const ScrollWordReveal: React.FC<ScrollWordRevealProps> = ({
   );
 
   return (
-    <p ref={containerRef} className={`flex flex-wrap ${className}`}>
+    <p
+      ref={containerRef}
+      className={`flex flex-wrap ${className}`}
+      aria-label={text.replace(/\*/g, '')}
+    >
       {tokens.map((tok, i) => (
-        <span key={`${tok.t}-${i}`} className="relative inline-block mr-[0.28em] my-[0.04em]">
+        <span
+          key={`${tok.t}-${i}`}
+          aria-hidden="true"
+          className="relative inline-block mr-[0.28em] my-[0.04em]"
+        >
           <span
             className={`swr-word inline-block ${
               tok.accent ? 'serif-accent normal-case text-[1.12em]' : ''

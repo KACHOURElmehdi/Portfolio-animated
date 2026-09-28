@@ -10,28 +10,32 @@ import { site } from '@/lib/site';
 
 const CREDENTIALS = [
   {
-    year: '2026',
+    year: '2023–26',
     title: 'Graphic Designer & Art Director',
-    organization: 'Visual identity, branding, print & digital design',
+    organization:
+      'Independent practice across brand identity, packaging, print, and social visuals for clients in Morocco and abroad.',
     type: 'Practice',
   },
   {
     year: '3 yrs',
-    title: 'Professional Experience',
-    organization: 'Design & art direction',
+    title: 'Client & Studio Work',
+    organization:
+      'End-to-end design delivery—from logo systems and packaging to environmental applications and campaign graphics.',
     stat: '2,500+ design hours · 50+ clients · 3+ countries served',
     type: 'Experience',
   },
   {
-    year: '—',
+    year: 'Founded',
     title: 'Founder of Completo',
-    organization: 'Completo',
+    organization:
+      'Completo — design practice focused on clear visual systems for brands, products, and print/digital campaigns.',
     type: 'Founder',
   },
   {
     year: '01–06',
-    title: 'Portfolio Folios',
-    organization: 'Logo · Brand · Post · Amazon · Print · Product',
+    title: 'Selected Portfolio',
+    organization:
+      'Four curated folios: Logo, Brand, Post, and Product—shipped case studies shown on this site.',
     type: 'Portfolio',
   },
 ];
@@ -42,9 +46,8 @@ const About = () => {
     { t: 'am', serif: true },
     { t: 'i?' },
   ];
-  const descriptionText =
-    'A Designer who Judges a book by its cover. Because if the cover does not impress you, what else can?';
-  const aboutMeText = `I'm a Graphic Designer and Art Director focused on building clear, distinctive, and purposeful visual communication. My work covers branding, visual identity, print design, digital content, typography, and AI-assisted visual creation.\n\nI enjoy turning ideas into visual systems that are not only visually strong, but also consistent and effective. I have experience working on both digital and print projects, adapting creative concepts to different audiences, formats, and production requirements.\n\nI'm continuously developing my skills in graphic design, art direction, branding, and visual communication, while building a portfolio focused on meaningful and professional creative work.`;
+  const descriptionText = site.specialization;
+  const aboutMeText = `I'm a Graphic Designer and Art Director based in ${site.location}. I build brand systems that stay consistent from logo and packaging to signage, uniforms, posters, and social campaigns.\n\nMy process balances concept, craft, and production—so work holds up on shelf, in print, and on screen.\n\nThis site collects selected branding, logo, poster, and packaging projects from recent client and studio work.`;
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -217,10 +220,10 @@ const About = () => {
       <section
         ref={sectionRef}
         id="about"
-        className="min-h-screen bg-ink text-light pt-24 pb-20 md:pt-32 md:pb-28 rounded-t-4xl overflow-hidden"
+        className="bg-ink text-light pt-14 pb-10 md:min-h-screen md:pt-32 md:pb-28 rounded-t-4xl overflow-hidden"
       >
         <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16">
-          <div className="mb-10 md:mb-20">
+          <div className="mb-8 md:mb-20">
             <AnimatedHeading
               words={headingWords}
               className="text-[clamp(2.5rem,7vw,6.5rem)] tracking-tight mb-4"
@@ -232,7 +235,7 @@ const About = () => {
             />
           </div>
 
-          <div className="grid grid-cols-12 gap-6 md:gap-8 pb-16 md:pb-24 items-center">
+          <div className="grid grid-cols-12 gap-5 md:gap-8 pb-10 md:pb-24 items-center">
             <div className="col-span-12 md:col-span-5 lg:col-span-5 flex items-center justify-center">
               <div className="about-image-wrapper relative group w-full max-w-[350px] md:max-w-[380px] aspect-square md:aspect-[4/5] bg-elevated-dark rounded-2xl overflow-hidden border border-border-subtler shadow-2xl">
                 <Image
@@ -246,7 +249,7 @@ const About = () => {
               </div>
             </div>
 
-            <div className="col-span-12 md:col-span-7 lg:col-span-6 md:col-start-6 lg:col-start-7 flex flex-col justify-center space-y-8">
+            <div className="col-span-12 md:col-span-7 lg:col-span-6 md:col-start-6 lg:col-start-7 flex flex-col justify-center space-y-6 md:space-y-8">
               <span className="about-label font-mono text-sm sm:text-base md:text-base text-warm uppercase tracking-[0.3em] font-medium text-center md:text-left inline-block">
                 (About Me)
               </span>
@@ -263,8 +266,8 @@ const About = () => {
             </div>
           </div>
 
-          <div ref={tableRef} className="pt-12 md:pt-20 border-t border-white/10">
-            <div className="mb-12 text-center md:mb-20">
+          <div ref={tableRef} className="pt-8 md:pt-20 border-t border-white/10">
+            <div className="mb-8 text-center md:mb-20">
               <span className="cred-section-label font-mono text-sm sm:text-base md:text-base text-warm uppercase tracking-[0.3em] font-medium inline-block opacity-0">
                 (Experience)
               </span>
@@ -286,7 +289,7 @@ const About = () => {
                   strokeWidth="1.5"
                 />
               </svg>
-              <div className="flex flex-col gap-12 md:gap-20">
+              <div className="flex flex-col gap-8 md:gap-20">
                 {CREDENTIALS.map((item, idx) => {
                   const isLeft = idx % 2 === 0;
                   return (

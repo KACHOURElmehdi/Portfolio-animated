@@ -56,13 +56,13 @@ const projects: Project[] = [
       'Brand Applications',
     ],
     description:
-      'Created a pet-friendly brand identity for a pet hotel and grooming store using soothing blues, dark orange, and soft greens.',
+      'Brand identity for a pet hotel and grooming store—logo, palette, environmental signage, and staff uniforms.',
     overview:
-      'Created a pet-friendly brand identity for a pet hotel and grooming store using soothing blues, dark orange, and soft greens. The logo combines playful typography with a cozy house icon, symbolizing a safe and welcoming environment for pets.',
+      'PETCRIB needed a friendly, trustworthy identity for a pet hotel and grooming business. The mark pairs a house icon with dog and cat silhouettes, set in a calm palette of cream, soft blue, sage, teal, and dark orange—readable at large signage scale and on staff uniforms.',
     architecture:
-      'The brand identity extends across visual applications, including signage, stationery, and staff uniforms, creating a friendly and professional appearance. Color choices prioritize calm, pet-friendly hues—soft blues, dark orange, and soft greens.',
+      'The system is built to travel: logo and typography lockups feed wall graphics, exterior signage, and polo applications so guests meet the same brand indoors and out.',
     implementation:
-      'The design brings together pet-focused visual communication and a welcoming aesthetic. Applications include logo presentation, brand color palette, typography, pet photography, exterior signage, and staff polo shirt mockups.',
+      'Deliverables shown: brand system board, interior logo application, exterior signage, and front/back staff polo mockups cropped from the original presentation board.',
     stats: [
       { value: 'Brand', label: 'Identity system' },
       { value: 'Uniform', label: 'Staff applications' },
@@ -70,12 +70,27 @@ const projects: Project[] = [
     ],
     accent: theme.green600,
     myRole: [
-      'Designed the PETCRIB logo featuring a house icon with a dog silhouette.',
+      'Designed the PETCRIB logo featuring a house icon with dog and cat silhouettes.',
       'Defined a pet-friendly color palette of cream, soft blue, sage green, teal, and dark orange.',
-      'Developed typography and brand applications for signage and stationery.',
+      'Developed typography and brand applications for signage.',
       'Created staff uniform mockups with logo placement on polo shirts.',
     ],
-    images: [media('brand-folio/petcrib-brand', 'gallery')],
+    images: [
+      media('brand-folio/petcrib-brand', 'gallery'),
+      media('brand-folio/petcrib-system', 'gallery'),
+      media('brand-folio/petcrib-wall', 'gallery'),
+      media('brand-folio/petcrib-exterior', 'gallery'),
+      media('brand-folio/petcrib-uniforms', 'gallery'),
+    ],
+    galleryLayout: [
+      { type: 'feature', src: media('brand-folio/petcrib-system', 'gallery'), caption: 'Brand system' },
+      {
+        type: 'asymmetric',
+        primary: media('brand-folio/petcrib-wall', 'gallery'),
+        secondary: media('brand-folio/petcrib-exterior', 'gallery'),
+      },
+      { type: 'feature', src: media('brand-folio/petcrib-uniforms', 'gallery'), caption: 'Staff uniforms' },
+    ],
     hoverImage: media('brand-folio/petcrib-brand', 'hero'),
     github: '',
     liveUrl: '',
@@ -97,13 +112,13 @@ const projects: Project[] = [
       'Product Presentation',
     ],
     description:
-      'Natural, authentic brand identity for Artisan Soap Bar, spanning packaging, product presentation, and landing page design.',
+      'Earthy identity for Artisan Soap Bar—logo system, botanical packaging, and landing page presentation.',
     overview:
-      'This project focused on creating a natural, authentic, and eco-conscious brand identity for Artisan Soap Bar, a handcrafted organic soap brand. The branding direction centers on earthy tones—primarily moss green, soft nude, and warm beige—reflecting the brand’s focus on natural ingredients and sustainability.',
+      'Artisan Soap Bar is a handcrafted organic soap brand. The identity uses moss green, soft nude, and warm beige with an elegant serif wordmark and a circular “A” sub-mark—positioning the product as quiet, natural, and premium on shelf.',
     architecture:
-      'The packaging concept uses minimalist layouts, botanical illustrations, and kraft-paper materials to communicate an artisanal aesthetic. The visual identity combines an elegant serif logo with natural textures and understated color combinations.',
+      'Packaging leans on kraft and deep-green cartons with botanical line illustration. The same visual language carries into a clean digital landing page built around product photography and the primary lockup.',
     implementation:
-      'The landing page extends this design system into a clean digital experience, using prominent product imagery, ingredient highlights, and sustainability messaging. Deliverables include logo, color palette, typography, soap packaging, product photography, packaging mockups, and landing page mockups.',
+      'Gallery crops from the original board: brand system, logo treatment, desktop/laptop website mockup, and dual soap-box packaging.',
     stats: [
       { value: 'Packaging', label: 'Product systems' },
       { value: 'Web', label: 'Landing page' },
@@ -116,7 +131,28 @@ const projects: Project[] = [
       'Created packaging layouts with botanical line illustrations.',
       'Extended the identity into landing page mockups and product presentations.',
     ],
-    images: [media('brand-folio/artisan-brand', 'gallery')],
+    images: [
+      media('brand-folio/artisan-brand', 'gallery'),
+      media('brand-folio/artisan-system', 'gallery'),
+      media('brand-folio/artisan-logo', 'gallery'),
+      media('brand-folio/artisan-web', 'gallery'),
+      media('brand-folio/artisan-packaging', 'gallery'),
+    ],
+    galleryLayout: [
+      { type: 'feature', src: media('brand-folio/artisan-system', 'gallery'), caption: 'Brand system' },
+      {
+        type: 'pair',
+        sources: [
+          media('brand-folio/artisan-logo', 'gallery'),
+          media('brand-folio/artisan-web', 'gallery'),
+        ],
+      },
+      {
+        type: 'feature',
+        src: media('brand-folio/artisan-packaging', 'gallery'),
+        caption: 'Packaging',
+      },
+    ],
     hoverImage: media('brand-folio/artisan-brand', 'hero'),
     github: '',
     liveUrl: '',
@@ -137,17 +173,17 @@ const projects: Project[] = [
       'Product Mockups',
     ],
     description:
-      'Bold, colorful brand identity for Soda Crave—a high-energy soda drink line built to stand out on crowded shelves.',
+      'High-energy beverage identity for Soda Crave—bubbly wordmark plus grape, citrus, and strawberry can designs.',
     overview:
-      'This project involved creating a bold, colorful, and high-energy brand identity for Soda Crave, a new soda drink line targeting a youthful and fun-loving audience. The core design direction was to make the product stand out on crowded shelves through vibrant visuals and unconventional design elements.',
+      'Soda Crave is a youth-focused soda line designed to cut through crowded shelves with bold color, condensation-led product shots, and flavor-specific illustration—each SKU stays distinct while sharing one bubbly wordmark.',
     architecture:
-      'The logo features exaggerated, bubbly typography with dynamic motion lines, conveying fizz, fun, and excitement. Packaging incorporates full-wrap labels with flavor-themed patterns such as citrus slices, strawberries, and grapes.',
+      'A single bubbly lockup anchors three flavor cans (grape, citrus, strawberry). Backgrounds, line-art fruit motifs, and can graphics shift per flavor without breaking the parent brand.',
     implementation:
-      'High-contrast color combinations and bold graphics were used to make the cans visually distinctive. Deliverables include the Soda Crave logo and flavor can mockups in purple, yellow citrus, and pink strawberry variants.',
+      'Gallery crops from the original flavor board: logo lockup and three can mockups presented as an editorial sequence.',
     stats: [
       { value: 'Logo', label: 'Bubbly wordmark' },
-      { value: '3+', label: 'Flavor can designs' },
-      { value: 'Pack', label: 'Full-wrap labels' },
+      { value: '3', label: 'Flavor can designs' },
+      { value: 'Pack', label: 'Can graphics' },
     ],
     accent: theme.green400,
     myRole: [
@@ -156,7 +192,25 @@ const projects: Project[] = [
       'Developed high-contrast packaging graphics for shelf visibility.',
       'Built a playful product identity system for a youth-focused beverage line.',
     ],
-    images: [media('brand-folio/soda-crave', 'gallery')],
+    images: [
+      media('brand-folio/soda-crave', 'gallery'),
+      media('brand-folio/soda-logo', 'gallery'),
+      media('brand-folio/soda-grape', 'gallery'),
+      media('brand-folio/soda-citrus', 'gallery'),
+      media('brand-folio/soda-strawberry', 'gallery'),
+    ],
+    galleryLayout: [
+      { type: 'feature', src: media('brand-folio/soda-logo', 'gallery'), caption: 'Wordmark' },
+      {
+        type: 'grid',
+        sources: [
+          media('brand-folio/soda-grape', 'gallery'),
+          media('brand-folio/soda-citrus', 'gallery'),
+          media('brand-folio/soda-strawberry', 'gallery'),
+        ],
+        columns: 3,
+      },
+    ],
     hoverImage: media('brand-folio/soda-crave', 'hero'),
     github: '',
     liveUrl: '',
@@ -177,7 +231,7 @@ const projects: Project[] = [
     architecture:
       'Each mark is designed as a standalone identity asset, exploring silhouette, typography, and symbolic forms suited to different brand contexts.',
     implementation:
-      'Presented as individual logo marks from the Logo Folio: Apex, barber, beauty, car wash, delivery, fashion, moto, phone, tailor, and ZOFI.',
+      'Presented as individual logo marks from the Logo Folio: Apex, barber, beauty, car wash, delivery, fashion, moto, phone, Taylor, and ZOFI.',
     stats: [
       { value: '10', label: 'Logo marks' },
       { value: '01', label: 'Logo Folio' },
@@ -261,13 +315,13 @@ const projects: Project[] = [
       'Pharmaceutical Packaging',
     ],
     description:
-      'Product packaging and brand identity work spanning coffee branding, food packaging, and pharmaceutical-style packaging including Zofenil and Spasmomen.',
+      'Packaging and product identity—Marani Coffee, food packs, and curated pharmaceutical-style systems for Zofenil and Spasmomen.',
     overview:
-      'Product Folio showcases packaging and product identity work—including Maiani Coffee brand applications, food packaging (Joie de Pistache, LEAMIDO), and pharmaceutical-style packaging for Zofenil and Spasmomen.',
+      'Product Folio gathers packaging work including Marani Coffee brand applications, food packaging, and pharmaceutical-style boxes for Zofenil and Spasmomen—each system prioritizes clear hierarchy and production-ready layouts.',
     architecture:
-      'Designs focus on clear product hierarchy, brand storytelling, and structured packaging layouts suitable for retail and regulated product presentation.',
+      'Layouts balance brand storytelling with readable product information suitable for retail shelves and regulated presentation, using consistent type scales and panel structure across SKUs.',
     implementation:
-      'Gallery includes brand boards, 3D packaging mockups, and pharmaceutical box designs. Presented as packaging design examples without medical endorsement or commercial outcome claims.',
+      'Curated gallery: Marani board, selected food packs, one strongest Zofenil system, and Spasmomen—without near-duplicate Zofenil variants.',
     stats: [
       { value: '06', label: 'Product Folio' },
       { value: 'Pack', label: 'Packaging systems' },
@@ -281,13 +335,18 @@ const projects: Project[] = [
     ],
     images: [
       media('brand-folio/marani-brand', 'gallery'),
-      media('packaging/cls', 'gallery'),
       media('packaging/pack', 'gallery'),
+      media('packaging/cls', 'gallery'),
       media('packaging/zofi', 'gallery'),
-      media('packaging/zoffi', 'gallery'),
-      media('packaging/zofffi', 'gallery'),
       media('packaging/spass', 'gallery'),
-      media('logos/zofi-logo', 'gallery'),
+    ],
+    galleryLayout: [
+      {
+        type: 'pair',
+        sources: [media('packaging/pack', 'gallery'), media('packaging/cls', 'gallery')],
+      },
+      { type: 'feature', src: media('packaging/zofi', 'gallery'), caption: 'Zofenil' },
+      { type: 'feature', src: media('packaging/spass', 'gallery'), caption: 'Spasmomen' },
     ],
     hoverImage: media('brand-folio/marani-brand', 'hero'),
     github: '',

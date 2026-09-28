@@ -41,7 +41,7 @@ function Card({
       </div>
       <div className="min-w-0 flex-1">
         <p
-          className={`font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-muted mb-1.5 flex items-center gap-2 ${
+          className={`font-mono text-xs uppercase tracking-widest text-muted mb-1.5 flex items-center gap-2 ${
             isPrev ? '' : 'justify-end'
           }`}
         >
@@ -60,7 +60,7 @@ function Card({
         <p className="font-display font-black uppercase tracking-tight leading-none text-[clamp(1.15rem,2.8vw,1.85rem)] text-light/70 group-hover:text-accent transition-colors truncate">
           {project.title}
         </p>
-        <p className="mt-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-muted truncate">
+        <p className="mt-1.5 font-mono text-xs uppercase tracking-widest text-muted truncate">
           {project.type}
         </p>
       </div>

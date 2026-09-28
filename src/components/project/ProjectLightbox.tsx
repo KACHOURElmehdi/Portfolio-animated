@@ -71,7 +71,7 @@ export default function ProjectLightbox({
           <button
             type="button"
             aria-label="Previous image"
-            className="absolute left-2 sm:left-4 z-10 w-10 h-10 rounded-full border border-white/20 text-cream hover:border-accent hover:text-accent"
+            className="absolute left-2 sm:left-4 z-10 w-11 h-11 rounded-full border border-white/20 text-cream hover:border-accent hover:text-accent"
             onClick={(e) => {
               e.stopPropagation();
               go(-1);
@@ -82,7 +82,7 @@ export default function ProjectLightbox({
           <button
             type="button"
             aria-label="Next image"
-            className="absolute right-2 sm:right-4 z-10 w-10 h-10 rounded-full border border-white/20 text-cream hover:border-accent hover:text-accent"
+            className="absolute right-2 sm:right-4 z-10 w-11 h-11 rounded-full border border-white/20 text-cream hover:border-accent hover:text-accent"
             onClick={(e) => {
               e.stopPropagation();
               go(1);

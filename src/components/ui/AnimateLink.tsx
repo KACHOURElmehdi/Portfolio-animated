@@ -21,31 +21,38 @@ const AnimatedLink: React.FC<AnimatedLinkProps> = ({
   if (React.isValidElement(children) && children.type === 'a') {
     const { href, children: text, onClick: childOnClick, target, rel, className: childClassName, ...rest } = children.props as any;
 
+    const label = typeof text === 'string' || typeof text === 'number' ? String(text) : undefined;
+
     const linkContent = (
       <a
         href={href}
         onClick={childOnClick || onClick}
         target={target}
         rel={rel}
-        className={`${childClassName || ''} relative z-10 overflow-hidden h-[1.25em] group cursor-pointer inline-flex items-center`.trim()}
+        aria-label={label}
+        className={`${childClassName || ''} relative z-10 group cursor-pointer inline-flex items-center min-h-11 min-w-11 px-1 py-2`.trim()}
         {...rest}
       >
-        <span
-          className="block transition-transform duration-300 ease-in-out group-hover:-translate-y-full h-full flex items-center"
-        >
-          {text}
-        </span>
-        <span
-          aria-hidden="true"
-          className="block absolute top-full left-0 transition-transform duration-300 ease-in-out group-hover:-translate-y-full pointer-events-none h-full flex items-center"
-        >
-          {text}
+        <span aria-hidden="true" className="relative overflow-hidden h-[1.25em] inline-flex items-center">
+          <span
+            className="block transition-transform duration-300 ease-in-out group-hover:-translate-y-full h-full flex items-center"
+          >
+            {text}
+          </span>
+          <span
+            className="block absolute top-full left-0 transition-transform duration-300 ease-in-out group-hover:-translate-y-full pointer-events-none h-full flex items-center"
+          >
+            {text}
+          </span>
         </span>
       </a>
     );
 
     return (
-      <Wrapper className={`${className} ${Wrapper === 'li' ? 'list-none' : ''}`.trim()}>
+      <Wrapper
+        className={`${className} ${Wrapper === 'li' ? 'list-none' : ''}`.trim()}
+        {...(Wrapper === 'li' && label ? { 'aria-label': label } : {})}
+      >
         {magnetic ? (
           <Magnetic strength={strength}>
             {linkContent}
@@ -59,19 +66,21 @@ const AnimatedLink: React.FC<AnimatedLinkProps> = ({
 
   const spanContent = (
     <span
-      className="relative z-10 overflow-hidden h-[1.25em] group cursor-pointer inline-flex items-center"
+      className="relative z-10 group cursor-pointer inline-flex items-center min-h-11 py-2"
       onClick={onClick}
     >
-      <span
-        className="block transition-transform duration-300 ease-in-out group-hover:-translate-y-full h-full flex items-center"
-      >
-        {children}
-      </span>
-      <span
-        aria-hidden="true"
-        className="block absolute top-full left-0 transition-transform duration-300 ease-in-out group-hover:-translate-y-full pointer-events-none h-full flex items-center"
-      >
-        {children}
+      <span className="relative overflow-hidden h-[1.25em] inline-flex items-center">
+        <span
+          className="block transition-transform duration-300 ease-in-out group-hover:-translate-y-full h-full flex items-center"
+        >
+          {children}
+        </span>
+        <span
+          aria-hidden="true"
+          className="block absolute top-full left-0 transition-transform duration-300 ease-in-out group-hover:-translate-y-full pointer-events-none h-full flex items-center"
+        >
+          {children}
+        </span>
       </span>
     </span>
   );

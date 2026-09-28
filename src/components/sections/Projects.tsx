@@ -1,14 +1,26 @@
 'use client';
 
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import Image from 'next/image';
 import { Link } from 'next-transition-router';
 import { gsap, useGSAP } from '@/lib/gsap';
-import { useRouter } from 'next/navigation';
 import AnimatedHeading from '@/components/ui/AnimateHeading';
 import { getAllProjects, Project } from '@/lib/projects';
 import { withAlpha, theme } from '@/lib/theme';
 import { isSvgSrc } from '@/lib/media';
+import { useReducedMotion } from '@/lib/useReducedMotion';
+
+function useBreakpointMode(): 'unknown' | 'mobile' | 'desktop' {
+  const [mode, setMode] = useState<'unknown' | 'mobile' | 'desktop'>('unknown');
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const sync = () => setMode(mq.matches ? 'desktop' : 'mobile');
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+  return mode;
+}
 
 const useHoverPreview = (containerRef?: React.RefObject<HTMLDivElement | null>) => {
   const floatingRef = useRef<HTMLDivElement | null>(null);
@@ -178,6 +190,8 @@ const useHoverPreview = (containerRef?: React.RefObject<HTMLDivElement | null>) 
     const targetX = clientX ?? mouse.current.x;
     const targetY = clientY ?? mouse.current.y;
 
+    el.style.visibility = 'visible';
+
     if (!isHovering.current) {
       if (targetX !== 0 && targetY !== 0) {
         delayedMouse.current.x = targetX;
@@ -230,12 +244,13 @@ const useHoverPreview = (containerRef?: React.RefObject<HTMLDivElement | null>) 
 
 interface MobileSnapProjectsProps {
   projects: Project[];
-  router: ReturnType<typeof useRouter>;
+  inactive?: boolean;
 }
 
-function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
+function MobileSnapProjects({ projects, inactive = false }: MobileSnapProjectsProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const reduced = useReducedMotion();
 
   useGSAP(
     () => {
@@ -252,13 +267,26 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
           const title = card.querySelector('.mc-title');
           const cta = card.querySelector('.mc-cta');
 
+          // Reduced motion / fail-open: final visible state immediately (CTA never depends on ST).
+          if (reduced) {
+            gsap.set(card, { opacity: 1, y: 0, clearProps: 'transform' });
+            if (imgWrap) gsap.set(imgWrap, { clipPath: 'inset(0% 0 0 0 round 14px)' });
+            if (img) gsap.set(img, { scale: 1 });
+            if (num) gsap.set(num, { opacity: 1, y: 0 });
+            if (tags.length) gsap.set(tags, { opacity: 1, y: 0 });
+            if (title) gsap.set(title, { opacity: 1, y: 0 });
+            if (cta) gsap.set(cta, { opacity: 1, y: 0 });
+            return;
+          }
+
           gsap.set(card, { opacity: 0, y: 52 });
           if (imgWrap) gsap.set(imgWrap, { clipPath: 'inset(100% 0 0 0 round 14px)' });
           if (img) gsap.set(img, { scale: 1.12 });
           if (num) gsap.set(num, { opacity: 0, y: 16 });
           if (tags.length) gsap.set(tags, { opacity: 0, y: 12 });
           if (title) gsap.set(title, { opacity: 0, y: 22 });
-          if (cta) gsap.set(cta, { opacity: 0, y: 14 });
+          // CTA stays opacity 1 in the DOM; only nudge vertically so affordance never vanishes.
+          if (cta) gsap.set(cta, { y: 10 });
 
           const tl = gsap.timeline({
             scrollTrigger: { trigger: card, start: 'top 90%', once: true },
@@ -283,31 +311,36 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
             tl.to(title, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, 0.62);
           }
           if (cta) {
-            tl.to(cta, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, 0.82);
+            tl.to(cta, { y: 0, duration: 0.45, ease: 'power3.out' }, 0.82);
           }
         });
       });
 
       return () => mm.revert();
     },
-    { scope: sectionRef, dependencies: [projects] },
+    { scope: sectionRef, dependencies: [projects, reduced] },
   );
 
   return (
-    <div ref={sectionRef} className="md:hidden bg-cream pb-12">
-      <div className="px-6 pt-16 pb-8">
+    <div
+      ref={sectionRef}
+      className="md:hidden bg-cream pb-8"
+      aria-hidden={inactive || undefined}
+      inert={inactive ? true : undefined}
+    >
+      <div className="px-6 pt-12 pb-6">
         <AnimatedHeading
           words={[{ t: 'SELECTED' }, { t: 'works', serif: true }]}
           className="text-[clamp(3rem,14vw,5rem)] leading-none text-charcoal"
         />
       </div>
 
-      <div className="flex flex-col gap-4 px-4">
+      <div className="flex flex-col gap-3 px-4">
         {projects.map((project, index) => (
           <Link
             key={project.id}
             href={`/projects/${project.slug}`}
-            onTouchStart={() => router.prefetch(`/projects/${project.slug}`)}
+            prefetch={false}
             onClick={() => {
               const scrollY = (window as any).__lenis
                 ? Math.round((window as any).__lenis.scroll)
@@ -354,15 +387,16 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
                 </span>
               </div>
 
-              <div className="flex flex-wrap gap-1.5 mb-3">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {project.tech.slice(0, 3).map((t) => (
                   <span
                     key={t}
-                    className="mc-tag font-mono uppercase tracking-widest px-2.5 py-1 rounded-full"
+                    className="mc-tag font-mono uppercase tracking-wider px-2.5 py-1 rounded-full"
                     style={{
-                      fontSize: 9,
+                      fontSize: 11,
+                      lineHeight: 1.3,
                       background: 'rgba(255,255,255,0.08)',
-                      color: 'rgba(255,255,255,0.85)',
+                      color: 'rgba(255,255,255,0.9)',
                       border: '1px solid rgba(255,255,255,0.15)',
                     }}
                   >
@@ -378,7 +412,7 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
                 {project.title}
               </h3>
 
-              <div className="mc-cta" style={{ opacity: 0 }}>
+              <div className="mc-cta">
                 <div className="h-px w-full mb-4" style={{ background: 'rgba(255,255,255,0.07)' }} />
                 <div className="flex items-center justify-between">
                   <span
@@ -404,11 +438,15 @@ function MobileSnapProjects({ projects, router }: MobileSnapProjectsProps) {
 }
 
 export default function ProjectsPage() {
-  const router = useRouter();
   const projects = getAllProjects();
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderReelRef = useRef<HTMLDivElement>(null);
   const activeIndexRef = useRef<number>(-1);
+  const mode = useBreakpointMode();
+  const isMdUp = mode === 'desktop';
+  // Until breakpoint is known, keep both trees for CSS layout; once known, mount only the active one (clean a11y tree).
+  const showDesktop = mode !== 'mobile';
+  const showMobile = mode !== 'desktop';
 
   const {
     setFloatingRef,
@@ -453,8 +491,6 @@ export default function ProjectsPage() {
       }
       activeIndexRef.current = index;
 
-      router.prefetch(`/projects/${projects[index]?.slug || ''}`);
-
       const rows = containerRef.current.querySelectorAll<HTMLAnchorElement>('.project-row-desktop');
       rows.forEach((row, idx) => {
         const line = row.querySelector('.hover-line-ref');
@@ -479,7 +515,7 @@ export default function ProjectsPage() {
 
       show(clientX, clientY);
     },
-    [projects, router, show],
+    [projects, show],
   );
 
   const deactivateAll = useCallback(
@@ -590,7 +626,12 @@ export default function ProjectsPage() {
       onMouseLeave={handleTableMouseLeave}
       className="relative w-full bg-cream text-charcoal overflow-hidden"
     >
-      <div className="hidden md:block pt-16 pb-20 md:pt-20 md:pb-24 px-6 sm:px-8 md:px-12 lg:px-16 max-w-7xl mx-auto">
+      {showDesktop && (
+      <div
+        className="hidden md:block pt-16 pb-20 md:pt-20 md:pb-24 px-6 sm:px-8 md:px-12 lg:px-16 max-w-7xl mx-auto"
+        aria-hidden={mode !== 'desktop' || undefined}
+        inert={mode !== 'desktop' ? true : undefined}
+      >
         <div className="mb-12">
           <AnimatedHeading
             words={[{ t: 'SELECTED' }, { t: 'works', serif: true }]}
@@ -604,6 +645,7 @@ export default function ProjectsPage() {
             <Link
               key={project.id}
               href={`/projects/${project.slug}`}
+              prefetch={false}
               className="project-row-desktop relative flex items-stretch border-b border-border py-8 min-h-[120px] group cursor-pointer no-underline"
               onMouseEnter={(e) => {
                 mouse.current.x = e.clientX;
@@ -623,9 +665,15 @@ export default function ProjectsPage() {
               </div>
 
               <div className="flex-1 pr-8">
-                <h3 className="relative text-[clamp(2rem,4vw,3.5rem)] font-extrabold uppercase leading-none tracking-tight overflow-hidden">
-                  <span className="block text-charcoal select-none">{project.title}</span>
+                <h3
+                  className="relative text-[clamp(2rem,4vw,3.5rem)] font-extrabold uppercase leading-none tracking-tight overflow-hidden"
+                  aria-label={project.title}
+                >
+                  <span aria-hidden="true" className="block text-charcoal select-none">
+                    {project.title}
+                  </span>
                   <span
+                    aria-hidden="true"
                     className="title-reveal-overlay block text-accent absolute inset-0 select-none"
                     style={{
                       clipPath: 'inset(0 100% 0 0)',
@@ -636,9 +684,20 @@ export default function ProjectsPage() {
                   </span>
                 </h3>
 
-                <div className="mt-3 flex flex-wrap gap-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
-                  {project.tech.map((t) => (
-                    <span key={t} className="px-3 py-1 rounded-full bg-transparent border border-gray-300 text-warm text-xs font-medium">
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {project.tech.slice(0, 2).map((t) => (
+                    <span
+                      key={t}
+                      className="px-3 py-1 rounded-full bg-transparent border border-gray-300 text-warm text-xs font-medium"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                  {project.tech.slice(2).map((t) => (
+                    <span
+                      key={t}
+                      className="px-3 py-1 rounded-full bg-transparent border border-gray-300 text-warm text-xs font-medium opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out"
+                    >
                       {t}
                     </span>
                   ))}
@@ -665,8 +724,12 @@ export default function ProjectsPage() {
           style={{
             top: 0,
             left: 0,
+            opacity: 0,
+            visibility: 'hidden',
+            transform: 'scale(0)',
             willChange: 'transform, opacity',
           }}
+          aria-hidden="true"
         >
           <div
             ref={setInnerRef}
@@ -712,8 +775,11 @@ export default function ProjectsPage() {
           </div>
         </div>
       </div>
+      )}
 
-      <MobileSnapProjects projects={projects} router={router} />
+      {showMobile && (
+        <MobileSnapProjects projects={projects} inactive={mode === 'desktop'} />
+      )}
     </section>
   );
 }

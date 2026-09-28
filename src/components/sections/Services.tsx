@@ -76,10 +76,10 @@ const Services = () => {
     <section
       id="services"
       ref={sectionRef}
-      className="min-h-screen bg-ink text-light pt-24 pb-16 md:pt-32 md:pb-20 px-6 sm:px-8 md:px-12 lg:px-16 overflow-hidden"
+      className="bg-ink text-light pt-14 pb-10 md:min-h-screen md:pt-32 md:pb-20 px-6 sm:px-8 md:px-12 lg:px-16 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 md:mb-20">
+        <div className="mb-8 md:mb-20">
           <AnimatedHeading
             words={headingWords}
             className="text-[clamp(2.5rem,7vw,6.5rem)] tracking-tight mb-4"
@@ -100,14 +100,14 @@ const Services = () => {
           </div>
         </div>
 
-        <div className="relative pb-8 md:pb-24">
+        <div className="relative pb-6 md:pb-24">
           {services.map((service, index) => (
             <div
               key={service.id}
               ref={(el) => {
                 servicesRef.current[index] = el;
               }}
-              className="bg-ink pb-12 md:pb-20"
+              className="bg-ink pb-8 md:pb-20"
               style={{ zIndex: index + 1 }}
             >
               <div className="grid md:grid-cols-12 gap-4 items-center py-4 md:py-8 border-t border-border-subtle">

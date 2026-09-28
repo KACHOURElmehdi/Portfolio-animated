@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useLayoutEffect, useState, useCallback } from 'react';
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
 import GlobalPreloader from '@/components/shared/GlobalPreloader';
 import CustomCursor from '@/components/shared/CustomCursor';
@@ -14,10 +14,49 @@ declare global {
   }
 }
 
+/** Skip only for rapid remounts (HMR) — not forever for the whole tab session. */
+const HMR_SKIP_MS = 4000;
+
+function recentlyCompletedPreloader(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const at = sessionStorage.getItem('preloader-done-at');
+    if (at && Date.now() - Number(at) < HMR_SKIP_MS) return true;
+  } catch {}
+  return false;
+}
+
+function markPreloaderDone() {
+  try {
+    sessionStorage.setItem('preloader-done-at', String(Date.now()));
+    sessionStorage.setItem('preloader-seen', '1');
+  } catch {}
+  if (typeof window !== 'undefined') {
+    window.__preloaderDone = true;
+    document.body.classList.remove('preloader-active');
+  }
+}
+
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [instantDone, setInstantDone] = useState(false);
+  // Mount after layout effect so we never SSR a stuck overlay.
+  // Fresh page loads (and reloads after a few seconds) show Bonjour again.
+  const [showLoader, setShowLoader] = useState(false);
   const [showCursor, setShowCursor] = useState(false);
+
+  useLayoutEffect(() => {
+    if (recentlyCompletedPreloader()) {
+      markPreloaderDone();
+      setShowLoader(false);
+      setShowCursor(true);
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new CustomEvent('preloaderComplete'));
+      });
+      return;
+    }
+    // Real page start — play the greeting intro.
+    window.__preloaderDone = false;
+    setShowLoader(true);
+  }, []);
 
   useEffect(() => {
     console.log(
@@ -25,30 +64,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       `background: ${theme.green800}; color: ${theme.green50}; padding: 4px 8px; border-radius: 4px 0 0 4px; font-family: monospace; font-weight: bold;`,
       `background: ${theme.green50}; color: ${theme.green800}; padding: 4px 8px; border-radius: 0 4px 4px 0; font-family: monospace; font-weight: bold; border: 1px solid ${theme.green800};`
     );
-
-    let seen = false;
-    try {
-      seen = sessionStorage.getItem('preloader-seen') === '1';
-    } catch {}
-
-    if (seen) {
-      window.__preloaderDone = true;
-      document.body.classList.remove('preloader-active');
-      setInstantDone(true);
-      setIsLoading(false);
-      setShowCursor(true);
-      requestAnimationFrame(() => {
-        window.dispatchEvent(new CustomEvent('preloaderComplete'));
-      });
-    }
   }, []);
 
   const handleExitComplete = useCallback(() => {
-    setIsLoading(false);
-    document.body.classList.remove('preloader-active');
+    markPreloaderDone();
+    setShowLoader(false);
     window.scrollTo(0, 0);
     setShowCursor(true);
-    window.__preloaderDone = true;
     window.dispatchEvent(new CustomEvent('preloaderComplete'));
   }, []);
 
@@ -57,9 +79,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <div className="film-grain pointer-events-none" aria-hidden="true" />
       {showCursor && <CustomCursor />}
 
-      {!instantDone && isLoading && (
-        <GlobalPreloader onComplete={handleExitComplete} />
-      )}
+      {showLoader ? <GlobalPreloader onComplete={handleExitComplete} /> : null}
 
       <SmoothScrollProvider>
         <Providers>{children}</Providers>

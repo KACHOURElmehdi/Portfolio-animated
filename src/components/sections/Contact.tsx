@@ -182,7 +182,7 @@ const Contact = () => {
           />
           <div className="max-w-2xl mb-12">
             <ScrollWordReveal
-              text="Thanks for scrolling. Have a project in mind or just want to say hello? Feel free to reach out."
+              text={site.contactLead}
               offset={['start 0.95', 'end 0.7']}
               className="text-base sm:text-lg text-gray-soft font-sans leading-relaxed"
             />
@@ -318,7 +318,7 @@ const Contact = () => {
                     navigator.clipboard.writeText(site.email);
                     setCopiedToast(true);
                   }}
-                  className="group relative inline-flex items-center justify-center cursor-pointer text-cream font-display font-black uppercase leading-tight hover:text-accent transition-colors duration-300 max-w-full text-center"
+                  className="group relative inline-flex items-center justify-center min-h-11 py-3 cursor-pointer text-cream font-display font-black uppercase leading-tight hover:text-accent transition-colors duration-300 max-w-full text-center"
                   style={{
                     fontSize: 'clamp(1.1rem, 4.2vw, 3rem)',
                   }}
@@ -332,17 +332,17 @@ const Contact = () => {
                 Click to copy email address
               </span>
 
-              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-8">
                 <a
                   href={site.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-xs uppercase tracking-widest text-cream hover:text-accent transition-colors"
+                  className="inline-flex items-center justify-center min-h-11 py-3 font-mono text-xs uppercase tracking-widest text-cream hover:text-accent transition-colors"
                 >
                   WhatsApp · {site.whatsapp}
                 </a>
                 <span className="font-mono text-xs uppercase tracking-widest text-muted">
-                  Social · @{site.handle}
+                  Based in {site.location}
                 </span>
               </div>
             </div>

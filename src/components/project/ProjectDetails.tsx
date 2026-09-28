@@ -97,12 +97,12 @@ export default function ProjectDetails({ project }: { project: Project }) {
                 }
               } catch {}
             }}
-            className="inline-flex items-center gap-2 text-muted hover:text-white transition-colors duration-200 group"
+            className="inline-flex items-center gap-2 min-h-11 py-3 -my-1 text-muted hover:text-white transition-colors duration-200 group"
           >
             <span className="text-base sm:text-lg transform group-hover:-translate-x-1 transition-transform duration-200">
               ←
             </span>
-            <span className="font-mono text-xs uppercase tracking-widest">Back to Work</span>
+            <span className="font-mono text-xs sm:text-sm uppercase tracking-widest">Back to Work</span>
           </Link>
         </div>
 
@@ -118,7 +118,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
             </span>
           </h1>
 
-          <p className="pd-reveal font-mono text-xs sm:text-sm uppercase tracking-[0.18em] text-accent mb-5 sm:mb-6">
+          <p className="pd-reveal font-mono text-[13px] sm:text-sm uppercase tracking-[0.16em] text-accent mb-5 sm:mb-6">
             {metaLine}
           </p>
 
@@ -131,7 +131,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
           <button
             type="button"
             onClick={() => openLightbox(hero)}
-            className="pd-reveal relative w-full aspect-[4/5] sm:aspect-[16/10] rounded-xl sm:rounded-2xl overflow-hidden bg-surface-card border border-surface-border mb-10 sm:mb-14 md:mb-16 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="pd-reveal relative w-full aspect-[5/4] sm:aspect-[16/10] rounded-xl sm:rounded-2xl overflow-hidden bg-surface-card border border-surface-border mb-10 sm:mb-14 md:mb-16 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label={`View ${project.title} hero artwork`}
           >
             <Image
@@ -158,6 +158,20 @@ export default function ProjectDetails({ project }: { project: Project }) {
               <p className="text-base sm:text-lg md:text-[1.35rem] text-light font-sans leading-relaxed max-w-3xl">
                 {project.overview}
               </p>
+              {project.stats?.length > 0 && (
+                <ul className="mt-6 sm:mt-8 grid grid-cols-3 gap-3 sm:gap-6 max-w-xl list-none p-0 m-0">
+                  {project.stats.map((stat) => (
+                    <li key={stat.label} className="min-w-0">
+                      <p className="font-display font-black text-lg sm:text-2xl text-cream leading-none tracking-tight">
+                        {stat.value}
+                      </p>
+                      <p className="mt-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-muted leading-snug">
+                        {stat.label}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </section>
@@ -199,7 +213,7 @@ export default function ProjectDetails({ project }: { project: Project }) {
             <ul className="divide-y divide-white/[0.06] border-t border-b border-white/[0.06]">
               {project.myRole.map((role, i) => (
                 <li key={i} className="py-3.5 sm:py-4 flex items-start gap-3 sm:gap-5">
-                  <span className="font-mono text-xs text-accent mt-1 shrink-0 w-6 sm:w-8">
+                  <span aria-hidden="true" className="font-mono text-xs text-accent mt-1 shrink-0 w-6 sm:w-8">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <p className="text-sm sm:text-base text-light/85 font-sans leading-relaxed">
@@ -215,14 +229,19 @@ export default function ProjectDetails({ project }: { project: Project }) {
         {galleryBlocks.length > 0 && (
           <section className="mb-12 sm:mb-16 md:mb-20">
             <div className="mb-5 sm:mb-8 flex items-end justify-between gap-4">
-              <h2 className="font-display font-black uppercase tracking-tight text-[clamp(1.6rem,3.5vw,2.6rem)]">
+              <h2 className="font-display font-black uppercase tracking-tight text-[clamp(1.75rem,4.5vw,3.2rem)]">
                 Gallery
               </h2>
               <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-muted">
                 {lightboxSources.length} pieces · tap to expand
               </p>
             </div>
-            <ProjectGallery blocks={galleryBlocks} title={project.title} onOpen={openLightbox} />
+            <ProjectGallery
+              blocks={galleryBlocks}
+              title={project.title}
+              onOpen={openLightbox}
+              kind={project.galleryKind}
+            />
           </section>
         )}
 
@@ -248,18 +267,26 @@ export default function ProjectDetails({ project }: { project: Project }) {
         <ProjectNav prev={prev} next={next} />
 
         <div className="relative flex justify-center py-8 sm:py-10">
-          <div className="text-center flex flex-col items-center">
-            <p className="text-muted text-base sm:text-lg mb-1">Have a project in mind?</p>
+          <div className="text-center flex flex-col items-center max-w-md px-4">
+            <p className="text-muted text-sm sm:text-base mb-2">{site.contactLead}</p>
             <a
               href={`mailto:${site.email}`}
-              className="text-lg sm:text-xl font-semibold text-muted hover:text-light transition"
+              className="inline-flex items-center justify-center min-h-11 py-3 text-lg sm:text-xl font-semibold text-muted hover:text-light transition break-all"
             >
               {site.email}
+            </a>
+            <a
+              href={site.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center min-h-11 py-3 font-mono text-xs uppercase tracking-widest text-accent hover:text-cream transition"
+            >
+              WhatsApp · {site.whatsapp}
             </a>
           </div>
           <button
             onClick={scrollToTop}
-            className="absolute right-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-elevated-dark border border-border-subtler flex items-center justify-center text-muted hover:text-accent hover:border-accent hover:bg-accent/10 transition-all duration-300 focus:outline-none"
+            className="absolute right-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-elevated-dark border border-border-subtler flex items-center justify-center text-muted hover:text-accent hover:border-accent hover:bg-accent/10 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label="Scroll to top"
           >
             <FaArrowUp className="w-4 h-4 sm:w-5 sm:h-5" />

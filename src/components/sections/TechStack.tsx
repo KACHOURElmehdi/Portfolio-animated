@@ -5,13 +5,6 @@ import Image from 'next/image';
 import { gsap, useGSAP } from '@/lib/gsap';
 import AnimatedHeading from '@/components/ui/AnimateHeading';
 import ScrollWordReveal from '@/components/ui/ScrollWordReveal';
-import {
-  SiAdobeillustrator,
-  SiAdobeindesign,
-  SiAdobephotoshop,
-  SiCanva,
-} from 'react-icons/si';
-import { MdMovieEdit, MdTableChart } from 'react-icons/md';
 import { HiOutlineSparkles } from 'react-icons/hi2';
 import {
   FiAperture,
@@ -65,13 +58,14 @@ export const STACK_SECTIONS: StackCategory[] = [
     id: 'software',
     title: 'SOFTWARE',
     technologies: [
-      { name: 'Adobe Illustrator', category: 'software', Icon: SiAdobeillustrator },
-      { name: 'Adobe Photoshop', category: 'software', Icon: SiAdobephotoshop },
-      { name: 'Adobe InDesign', category: 'software', Icon: SiAdobeindesign },
+      { name: 'Adobe Illustrator', category: 'software', icon: '/Services/illustrator.png' },
+      { name: 'Adobe Photoshop', category: 'software', icon: '/Services/photoshop.png' },
+      { name: 'Adobe InDesign', category: 'software', icon: '/Services/indesign.png' },
       { name: 'Figma', category: 'software', icon: '/Services/figma.png' },
-      { name: 'Canva', category: 'software', Icon: SiCanva },
-      { name: 'CapCut', category: 'software', Icon: MdMovieEdit },
-      { name: 'Microsoft Excel', category: 'software', Icon: MdTableChart },
+      { name: 'Canva', category: 'software', icon: '/Services/canva.png' },
+      { name: 'CapCut', category: 'software', icon: '/Services/capcut-icon.svg' },
+      { name: 'Microsoft Word', category: 'software', icon: '/Services/microsoft-word.svg' },
+      { name: 'Microsoft Excel', category: 'software', icon: '/Services/excel.png' },
     ],
   },
 ];
@@ -82,11 +76,6 @@ const TechStack = () => {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const titleRefs = useRef<(HTMLHeadingElement | null)[]>([]);
 
-  const headingWords = [
-    { t: 'MY' },
-    { t: 'SKILLS' },
-    { t: 'stack', serif: true },
-  ];
   const descriptionText =
     'Creative disciplines and software I use to design brands, packaging, print, and digital visuals.';
 
@@ -181,25 +170,18 @@ const TechStack = () => {
     <section
       ref={containerRef}
       id="tech-stack"
-      className="bg-ink text-light pt-24 pb-16 md:pt-32 md:pb-20 rounded-b-4xl overflow-hidden"
+      className="bg-ink text-light pt-14 pb-10 md:pt-32 md:pb-20 rounded-b-4xl overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16">
-        <div className="mb-10 md:mb-14 hidden md:block">
+        <div className="mb-8 md:mb-14">
           <AnimatedHeading
-            words={headingWords}
+            words={[{ t: 'MY' }, { t: 'stack', serif: true }]}
             className="text-[clamp(2.5rem,7vw,6.5rem)] tracking-tight mb-4"
           />
           <ScrollWordReveal
             text={descriptionText}
             offset={['start 0.95', 'end 0.7']}
-            className="text-base sm:text-lg md:text-xl text-gray-soft font-sans leading-relaxed"
-          />
-        </div>
-
-        <div className="mb-8 md:hidden">
-          <AnimatedHeading
-            words={[{ t: 'MY' }, { t: 'stack', serif: true }]}
-            className="text-[clamp(2.5rem,7vw,6.5rem)] tracking-tight mb-4"
+            className="text-base sm:text-lg md:text-xl text-gray-soft font-sans leading-relaxed max-w-3xl"
           />
         </div>
 
@@ -223,7 +205,7 @@ const TechStack = () => {
           })}
         </div>
 
-        <div className="space-y-16 md:space-y-24">
+        <div className="space-y-10 md:space-y-24">
           {visibleSections.map((stack, index) => (
             <div
               key={stack.id}
@@ -257,13 +239,14 @@ const TechStack = () => {
                       onMouseEnter={handleMouseEnter}
                       onMouseLeave={handleMouseLeave}
                     >
-                      <div className="tech-icon w-10 h-10 flex items-center justify-center relative flex-shrink-0 text-cream">
+                      <div className="tech-icon w-10 h-10 flex items-center justify-center relative flex-shrink-0 text-cream overflow-hidden rounded-md">
                         {tech.icon ? (
                           <Image
                             src={tech.icon}
-                            alt={tech.name}
+                            alt={`${tech.name} logo`}
                             width={40}
                             height={40}
+                            unoptimized={tech.icon.endsWith('.svg')}
                             className="w-full h-full object-contain"
                           />
                         ) : Icon ? (

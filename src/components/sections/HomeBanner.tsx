@@ -11,6 +11,7 @@ import { useReducedMotion } from '@/lib/useReducedMotion';
 
 const AmbientGeometry = dynamic(() => import('@/components/canvas/AmbientGeometry'), {
   ssr: false,
+  loading: () => null,
 });
 
 const RoleTicker = () => {
@@ -45,10 +46,10 @@ const RoleTicker = () => {
 
   const nextIdx = (currentIdx + 1) % roles.length;
   return (
-    <div className="h-6 overflow-hidden mb-8 flex justify-center items-center select-none">
+    <div className="h-6 overflow-hidden mb-6 md:mb-8 flex justify-center items-center select-none">
       <div
         ref={containerRef}
-        className="relative h-6 w-80 text-center font-mono text-sm uppercase tracking-widest text-accent"
+        className="relative h-6 w-80 text-center font-mono text-sm uppercase tracking-widest text-warm"
       >
         <div className="ticker-word-current absolute inset-0 flex items-center justify-center">
           {roles[currentIdx]}
@@ -102,6 +103,7 @@ const HomeBanner = () => {
   const spotlightRef = useRef<HTMLDivElement>(null);
   const splitsRef = useRef<SplitText[]>([]);
   const hasPlayedRef = useRef(false);
+  const [geoReady, setGeoReady] = useState(false);
   const reduced = useReducedMotion();
 
   const playIntro = useCallback(() => {
@@ -202,6 +204,23 @@ const HomeBanner = () => {
 
   useEffect(() => {
     if (reduced) return;
+    const section = sectionRef.current;
+    if (!section) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setGeoReady(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '120px' },
+    );
+    io.observe(section);
+    return () => io.disconnect();
+  }, [reduced]);
+
+  useEffect(() => {
+    if (reduced) return;
     const handleMouseMove = (e: MouseEvent) => {
       if (!spotlightRef.current || !sectionRef.current) return;
       const rect = sectionRef.current.getBoundingClientRect();
@@ -255,7 +274,7 @@ const HomeBanner = () => {
       ref={sectionRef}
       className="min-h-[100dvh] md:min-h-screen px-6 sm:px-8 md:px-12 lg:px-16 pt-28 pb-8 md:pt-20 md:pb-0 bg-cream flex items-center relative overflow-hidden"
     >
-      <AmbientGeometry />
+      {geoReady && !reduced ? <AmbientGeometry /> : null}
 
       {!reduced && (
         <div
@@ -300,35 +319,29 @@ const HomeBanner = () => {
           <div className="max-w-xl w-full text-center mx-auto">
             <p
               ref={paragraphRef}
-              className="text-warm font-sans text-base sm:text-lg md:text-xl leading-relaxed mb-8 md:mb-10 text-center mx-auto"
+              className="text-warm font-sans text-base sm:text-lg md:text-xl leading-relaxed mb-6 md:mb-8 text-center mx-auto"
             >
               {site.tagline} {site.taglineSupport}
             </p>
 
-            <div ref={tickerRef} className="w-full flex justify-center">
+            <div ref={tickerRef} className="w-full flex justify-center mb-2">
               <RoleTicker />
             </div>
 
-            <div ref={buttonsRef} className="flex flex-row justify-center items-center gap-2.5 sm:gap-4 flex-wrap w-full max-w-full mx-auto px-2">
+            <div
+              ref={buttonsRef}
+              className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 w-full max-w-full mx-auto px-2"
+            >
               <AnimatedButton
                 onClick={() => handleScroll('projects')}
-                topText="PROJECTS"
-                bottomText="VIEW WORK →"
+                topText="SELECTED WORK"
+                bottomText="VIEW PROJECTS →"
                 variant="primary"
               />
               <AnimatedButton
                 onClick={() => handleScroll('contact')}
-                topText="CONTACT"
-                bottomText="GET IN TOUCH →"
-                variant="light"
-              />
-              <AnimatedButton
-                as="a"
-                href={site.whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                topText="WHATSAPP"
-                bottomText="MESSAGE →"
+                topText="GET IN TOUCH"
+                bottomText="CONTACT →"
                 variant="outline"
               />
             </div>

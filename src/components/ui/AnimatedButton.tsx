@@ -140,7 +140,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleButtonMouseLeave}
         disabled={disabled}
-        className={`relative text-xs md:text-sm outline-none overflow-hidden h-10 md:h-12 px-4 sm:px-6 md:px-8 rounded-full ${bgColor} ${textColor} ${borderColor} group cursor-pointer font-medium inline-flex items-center justify-center ${className}`}
+        className={`relative text-xs md:text-sm outline-none overflow-hidden h-11 md:h-12 px-4 sm:px-6 md:px-8 rounded-full ${bgColor} ${textColor} ${borderColor} group cursor-pointer font-medium inline-flex items-center justify-center ${className}`}
         style={{ transformOrigin: 'center' }}
         {...props}
       >

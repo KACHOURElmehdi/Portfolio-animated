@@ -4,17 +4,41 @@ import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from '@/lib/gsap';
 
 export const preloaderWords = [
+  'Bonjour',
   'السلام علیکم',
   'नमस्ते',
   'Hola',
   'مرحباً',
-  'په خیر راغلي',
   'Welcome',
 ];
 
-const MIN_DISPLAY_MS = 1400;
-const HARD_CAP_MS = 3200;
+const MIN_DISPLAY_MS = 700;
+const HARD_CAP_MS = 1500;
+/** Absolute ceiling — always reveal, even if exit animation hangs. */
+const ABSOLUTE_MAX_MS = 2200;
 
+function alreadySeen(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const at = sessionStorage.getItem('preloader-done-at');
+    // Only treat as "already done" for rapid remounts (HMR), not the whole session.
+    if (at && Date.now() - Number(at) < 4000) return true;
+  } catch {}
+  return false;
+}
+
+function markSeen() {
+  try {
+    sessionStorage.setItem('preloader-done-at', String(Date.now()));
+    sessionStorage.setItem('preloader-seen', '1');
+  } catch {}
+  if (typeof window !== 'undefined') window.__preloaderDone = true;
+}
+
+/**
+ * Only mounted client-side after ClientLayout decides this session needs it.
+ * Never SSR'd — avoids hydration leaving a stuck overlay in the DOM.
+ */
 export default function GlobalPreloader({ onComplete }: { onComplete?: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const curvePathRef = useRef<SVGPathElement>(null);
@@ -30,14 +54,36 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
   const fontsResolvedRef = useRef(false);
   const loadedRef = useRef(false);
   const startedAtRef = useRef(0);
-  const finishedRef = useRef(false);
+  const exitStartedRef = useRef(false);
+  const revealedRef = useRef(false);
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
 
-  const playExitAnimation = useRef(() => {});
-  playExitAnimation.current = () => {
-    if (!containerRef.current || !curvePathRef.current) {
+  const reveal = useRef((animated: boolean) => {});
+  reveal.current = (animated: boolean) => {
+    if (revealedRef.current) return;
+    revealedRef.current = true;
+    markSeen();
+
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
       onCompleteRef.current?.();
+    };
+
+    if (!animated || !containerRef.current) {
+      finish();
+      return;
+    }
+
+    const el = containerRef.current;
+    const path = curvePathRef.current;
+    if (!path) {
+      el.style.pointerEvents = 'none';
+      el.style.visibility = 'hidden';
+      el.style.opacity = '0';
+      finish();
       return;
     }
 
@@ -45,29 +91,43 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
       dimension.width / 2
     } ${dimension.height} 0 ${dimension.height} L0 0`;
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        onCompleteRef.current?.();
-      },
-    });
+    gsap
+      .timeline({ onComplete: finish })
+      .to(path, {
+        attr: { d: targetD },
+        duration: 0.55,
+        ease: 'power3.inOut',
+      })
+      .to(
+        el,
+        {
+          yPercent: -100,
+          duration: 0.65,
+          ease: 'power4.inOut',
+        },
+        '<',
+      );
 
-    tl.to(curvePathRef.current, {
-      attr: { d: targetD },
-      duration: 0.7,
-      ease: 'power3.inOut',
-      delay: 0.15,
-    }).to(
-      containerRef.current,
-      {
-        yPercent: -100,
-        duration: 0.8,
-        ease: 'power4.inOut',
-      },
-      '<',
-    );
+    setTimeout(() => {
+      el.style.pointerEvents = 'none';
+      el.style.visibility = 'hidden';
+      el.style.opacity = '0';
+      finish();
+    }, 1600);
   };
 
   useEffect(() => {
+    if (alreadySeen()) {
+      reveal.current(false);
+      return;
+    }
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      reveal.current(false);
+      return;
+    }
+
     startedAtRef.current = performance.now();
     document.fonts?.ready.then(() => {
       fontsResolvedRef.current = true;
@@ -81,17 +141,31 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
     const capTimer = setTimeout(() => {
       fontsResolvedRef.current = true;
       loadedRef.current = true;
-    }, HARD_CAP_MS - MIN_DISPLAY_MS);
+    }, Math.max(0, HARD_CAP_MS - MIN_DISPLAY_MS));
+
+    const absolute = setTimeout(() => {
+      fontsResolvedRef.current = true;
+      loadedRef.current = true;
+      setProgress(100);
+      reveal.current(false);
+      if (containerRef.current) {
+        containerRef.current.style.pointerEvents = 'none';
+        containerRef.current.style.visibility = 'hidden';
+        containerRef.current.style.opacity = '0';
+      }
+    }, ABSOLUTE_MAX_MS);
 
     return () => {
       window.removeEventListener('load', onLoad);
       clearTimeout(capTimer);
+      clearTimeout(absolute);
     };
   }, []);
 
   useEffect(() => {
     let rafId: number;
     const tick = () => {
+      if (revealedRef.current) return;
       const elapsed = performance.now() - startedAtRef.current;
 
       let target = Math.min(90, (elapsed / MIN_DISPLAY_MS) * 88);
@@ -102,16 +176,14 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
       }
 
       targetRef.current = target;
-      displayedRef.current += (targetRef.current - displayedRef.current) * 0.09;
-      const shown = displayedRef.current >= 99.5 ? 100 : displayedRef.current;
+      displayedRef.current += (targetRef.current - displayedRef.current) * 0.12;
+      const shown = displayedRef.current >= 99.2 ? 100 : displayedRef.current;
       setProgress(shown);
 
-      if (shown === 100 && !finishedRef.current) {
-        finishedRef.current = true;
-        try {
-          sessionStorage.setItem('preloader-seen', '1');
-        } catch {}
-        setTimeout(() => playExitAnimation.current(), 180);
+      if (shown === 100 && !exitStartedRef.current) {
+        exitStartedRef.current = true;
+        markSeen();
+        setTimeout(() => reveal.current(true), 120);
         return;
       }
       rafId = requestAnimationFrame(tick);
@@ -133,12 +205,10 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
   }, []);
 
   useEffect(() => {
-    if (finishedRef.current) return;
+    if (revealedRef.current) return;
     if (index === preloaderWords.length - 1) return;
     const timeout = setTimeout(
-      () => {
-        setIndex((prev) => prev + 1);
-      },
+      () => setIndex((prev) => prev + 1),
       index === 0 ? 380 : 280,
     );
     return () => clearTimeout(timeout);
@@ -153,10 +223,10 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
       ref={containerRef}
       className="fixed inset-0 z-[99999] flex items-center justify-center bg-ink cursor-wait text-cream select-none pointer-events-auto"
       style={{ willChange: 'transform' }}
+      aria-busy="true"
+      aria-live="polite"
     >
-      <div
-        className="flex items-center text-3xl sm:text-4xl md:text-5xl font-display font-medium text-cream z-10 transition-opacity duration-700 opacity-90"
-      >
+      <div className="flex items-center text-3xl sm:text-4xl md:text-5xl font-display font-medium text-cream z-10 opacity-90">
         <p className="tracking-wide">{preloaderWords[index]}</p>
       </div>
 
@@ -172,11 +242,7 @@ export default function GlobalPreloader({ onComplete }: { onComplete?: () => voi
       />
 
       <svg className="absolute top-0 -z-10 h-[calc(100%+300px)] w-full pointer-events-none">
-        <path
-          ref={curvePathRef}
-          className="fill-ink"
-          d={initialPath}
-        />
+        <path ref={curvePathRef} className="fill-ink" d={initialPath} />
       </svg>
     </div>
   );

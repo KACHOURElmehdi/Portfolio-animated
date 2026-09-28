@@ -98,10 +98,10 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
                 }
               } catch {}
             }}
-            className="inline-flex items-center gap-2 text-muted hover:text-white transition-colors duration-200 group"
+            className="inline-flex items-center gap-2 min-h-11 py-3 -my-1 text-muted hover:text-white transition-colors duration-200 group"
           >
             <span className="text-base transform group-hover:-translate-x-1 transition-transform">←</span>
-            <span className="font-mono text-xs uppercase tracking-widest">Back to Work</span>
+            <span className="font-mono text-xs sm:text-sm uppercase tracking-widest">Back to Work</span>
           </Link>
         </div>
 
@@ -118,7 +118,7 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
                 {project.title}
               </span>
             </h1>
-            <p className="font-mono text-xs sm:text-sm uppercase tracking-[0.18em] text-accent mb-5">
+            <p className="font-mono text-[13px] sm:text-sm uppercase tracking-[0.16em] text-accent mb-5">
               {metaLine}
             </p>
             <p className="max-w-2xl text-base sm:text-lg md:text-xl text-light/85 font-sans leading-relaxed">
@@ -136,8 +136,8 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
             >
               <span className="pd-title-text block">{chapter.title}</span>
             </h1>
-            <p className="font-mono text-xs uppercase tracking-widest text-accent">
-              {String(chapter.index).padStart(2, '0')} / 04 · {chapter.subtitle}
+            <p className="font-mono text-xs uppercase tracking-widest text-muted">
+              {chapter.subtitle}
             </p>
           </header>
         )}
@@ -208,7 +208,7 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
                 <ul className="divide-y divide-white/[0.06] border-t border-b border-white/[0.06]">
                   {project.myRole.map((role, i) => (
                     <li key={i} className="py-3.5 sm:py-4 flex items-start gap-3 sm:gap-5">
-                      <span className="font-mono text-xs text-accent mt-1 shrink-0 w-6 sm:w-8">
+                      <span aria-hidden="true" className="font-mono text-xs text-accent mt-1 shrink-0 w-6 sm:w-8">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <p className="text-sm sm:text-base text-light/85 font-sans leading-relaxed">
@@ -221,7 +221,7 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
             )}
 
             <div className="mb-5 sm:mb-8 flex items-end justify-between gap-4">
-              <h2 className="font-display font-black uppercase tracking-tight text-[clamp(1.5rem,3.2vw,2.3rem)]">
+              <h2 className="font-display font-black uppercase tracking-tight text-[clamp(1.75rem,4.5vw,3.2rem)]">
                 Selected Highlights
               </h2>
               <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-muted">
@@ -233,7 +233,9 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
 
         {!isOverview && (
           <div className="mb-5 sm:mb-7 flex items-end justify-between gap-4">
-            <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">Gallery</h2>
+            <h2 className="font-display font-black uppercase tracking-tight text-[clamp(1.75rem,4.5vw,3.2rem)]">
+              Gallery
+            </h2>
             <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-muted">
               {lightboxSources.length} pieces · tap to expand
             </p>
@@ -245,6 +247,7 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
             blocks={chapter.blocks}
             title={`${project.title} — ${chapter.title}`}
             onOpen={openLightbox}
+            kind="posters"
           />
         </div>
 
@@ -257,13 +260,20 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
             <Link
               href={prevChapter.href}
               prefetch={false}
+              aria-label={`Previous chapter: ${prevChapter.label}`}
               className="group py-6 sm:py-8 sm:pr-6 no-underline border-b sm:border-b-0 sm:border-r border-white/[0.08]"
             >
-              <p className="font-mono text-[10px] uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
+              <p
+                aria-hidden="true"
+                className="font-mono text-[10px] uppercase tracking-widest text-muted mb-2 flex items-center gap-2"
+              >
                 <span className="transition-transform group-hover:-translate-x-1">←</span>
                 {String(prevChapter.index).padStart(2, '0')} {prevChapter.label}
               </p>
-              <p className="font-display font-black uppercase tracking-tight text-lg sm:text-xl text-light/70 group-hover:text-accent transition-colors">
+              <p
+                aria-hidden="true"
+                className="font-display font-black uppercase tracking-tight text-lg sm:text-xl text-light/70 group-hover:text-accent transition-colors"
+              >
                 {prevChapter.title}
               </p>
             </Link>
@@ -275,13 +285,20 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
             <Link
               href={nextChapter.href}
               prefetch={false}
+              aria-label={`Next chapter: ${nextChapter.label}`}
               className="group py-6 sm:py-8 sm:pl-6 no-underline text-right"
             >
-              <p className="font-mono text-[10px] uppercase tracking-widest text-muted mb-2 flex items-center justify-end gap-2">
+              <p
+                aria-hidden="true"
+                className="font-mono text-[10px] uppercase tracking-widest text-muted mb-2 flex items-center justify-end gap-2"
+              >
                 Continue the project
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </p>
-              <p className="font-display font-black uppercase tracking-tight text-lg sm:text-xl text-light/70 group-hover:text-accent transition-colors">
+              <p
+                aria-hidden="true"
+                className="font-display font-black uppercase tracking-tight text-lg sm:text-xl text-light/70 group-hover:text-accent transition-colors"
+              >
                 {String(nextChapter.index).padStart(2, '0')} {nextChapter.label}
               </p>
             </Link>
@@ -325,18 +342,26 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
         )}
 
         <div className="relative flex justify-center py-8">
-          <div className="text-center">
-            <p className="text-muted text-base mb-1">Have a project in mind?</p>
+          <div className="text-center max-w-md px-4">
+            <p className="text-muted text-sm sm:text-base mb-2">{site.contactLead}</p>
             <a
               href={`mailto:${site.email}`}
-              className="text-lg font-semibold text-muted hover:text-light transition"
+              className="inline-flex items-center justify-center min-h-11 py-3 text-lg font-semibold text-muted hover:text-light transition break-all"
             >
               {site.email}
+            </a>
+            <a
+              href={site.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center min-h-11 py-3 font-mono text-xs uppercase tracking-widest text-accent hover:text-cream transition"
+            >
+              WhatsApp · {site.whatsapp}
             </a>
           </div>
           <button
             onClick={scrollToTop}
-            className="absolute right-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-elevated-dark border border-border-subtler flex items-center justify-center text-muted hover:text-accent hover:border-accent transition-all"
+            className="absolute right-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-elevated-dark border border-border-subtler flex items-center justify-center text-muted hover:text-accent hover:border-accent transition-all focus-visible:ring-2 focus-visible:ring-accent"
             aria-label="Scroll to top"
           >
             <FaArrowUp className="w-4 h-4" />
