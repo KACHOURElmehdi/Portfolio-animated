@@ -7,6 +7,7 @@ import ScrollWordReveal from '@/components/ui/ScrollWordReveal';
 import AnimatedHeading from '@/components/ui/AnimateHeading';
 import { media } from '@/lib/media';
 import { site } from '@/lib/site';
+import CvDownloadLink from '@/components/shared/CvDownloadLink';
 
 const CREDENTIALS = [
   {
@@ -32,10 +33,10 @@ const CREDENTIALS = [
     type: 'Founder',
   },
   {
-    year: '01–06',
+    year: '01–07',
     title: 'Selected Portfolio',
     organization:
-      'Four curated folios: Logo, Brand, Post, and Product—shipped case studies shown on this site.',
+      'Curated folios across logo, brand, post, product, and recent campaign work—shipped case studies shown on this site.',
     type: 'Portfolio',
   },
 ];
@@ -262,6 +263,9 @@ const About = () => {
                     className="text-base sm:text-lg md:text-lg leading-relaxed font-sans"
                   />
                 ))}
+              </div>
+              <div className="pt-2 flex justify-center md:justify-start">
+                <CvDownloadLink />
               </div>
             </div>
           </div>

@@ -7,10 +7,13 @@ import { useLenis } from '@/components/providers/SmoothScrollProvider';
 import AnimatedLink from '@/components/ui/AnimateLink';
 import { useHandleLinkClick } from '@/lib/navigation';
 import { site, socialList } from '@/lib/site';
+import SocialIconLinks from '@/components/shared/SocialIconLinks';
+import CvDownloadLink from '@/components/shared/CvDownloadLink';
 import Link from 'next/link';
+import Image from 'next/image';
 import Lenis from 'lenis';
-import { Copyright } from 'lucide-react';
 import Magnetic from '@/components/ui/Magnetic';
+import { media } from '@/lib/media';
 
 interface MagneticHamburgerButtonProps {
   isOpen: boolean;
@@ -130,12 +133,19 @@ const NavbarBrand: React.FC<NavbarBrandProps> = ({ logoRef, handleLinkClick }) =
           handleLinkClick('/#top');
         }}
         className="group flex items-center cursor-pointer select-none py-1 text-warm"
-        aria-label="Aymen Rguig Home"
+        aria-label={`${site.name} Home`}
       >
-        <div className="transition-transform duration-500 ease-in-expo group-hover:rotate-[360deg] flex items-center justify-center">
-          <Copyright className="w-[18px] h-[18px]" />
+        <div className="relative h-8 w-8 sm:h-9 sm:w-9 shrink-0 overflow-hidden rounded-md transition-transform duration-500 ease-in-expo group-hover:rotate-[360deg]">
+          <Image
+            src={media('brand/site-logo', 'thumb')}
+            alt=""
+            fill
+            sizes="36px"
+            className="object-contain object-center"
+            priority
+          />
         </div>
-        <div className="relative ms-2 flex items-center whitespace-nowrap text-warm text-lg font-sans tracking-wide font-medium leading-none">
+        <div className="relative ms-2.5 flex items-center whitespace-nowrap text-warm text-lg font-sans tracking-wide font-medium leading-none">
           <span>aymen</span>
           <span className="relative inline-flex items-center overflow-hidden transition-all duration-500 ease-in-expo w-[28px] group-hover:w-[72px]">
             <span className="transition-transform duration-500 ease-in-expo group-hover:-translate-x-full inline-block">
@@ -371,23 +381,32 @@ const FullscreenMenu: React.FC<FullscreenMenuProps> = ({ isOpen, onClose, handle
               </Magnetic>
             </div>
 
-            <div className="flex gap-4 md:gap-6 justify-start flex-wrap">
-              {socialList.map((s) => (
-                <Magnetic key={s.label} strength={0.3}>
-                  <a
-                    href={s.href}
-                    target={s.href.startsWith('mailto:') ? undefined : '_blank'}
-                    rel={s.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-                    className="group relative inline-block text-gray-mid hover:text-cream text-xs font-mono uppercase tracking-widest transition-colors duration-300 py-1"
-                  >
-                    <span>{s.label}</span>
-                    <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-accent origin-center scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out pointer-events-none block" />
-                  </a>
-                </Magnetic>
-              ))}
-              <span className="text-gray-mid text-xs font-mono uppercase tracking-widest py-1">
-                @{site.handle}
-              </span>
+            <div className="flex flex-col gap-4 justify-start">
+              <div className="flex flex-wrap items-center gap-3">
+                <SocialIconLinks
+                  iconOnly
+                  linkClassName="text-gray-mid hover:text-cream"
+                />
+                <CvDownloadLink variant="icon" />
+              </div>
+              <div className="flex gap-4 md:gap-6 justify-start flex-wrap">
+                {socialList.map((s) => (
+                  <Magnetic key={s.label} strength={0.3}>
+                    <a
+                      href={s.href}
+                      target={s.href.startsWith('mailto:') ? undefined : '_blank'}
+                      rel={s.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                      className="group relative inline-block text-gray-mid hover:text-cream text-xs font-mono uppercase tracking-widest transition-colors duration-300 py-1"
+                    >
+                      <span>{s.label}</span>
+                      <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-accent origin-center scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out pointer-events-none block" />
+                    </a>
+                  </Magnetic>
+                ))}
+                <span className="text-gray-mid text-xs font-mono uppercase tracking-widest py-1">
+                  @{site.handle}
+                </span>
+              </div>
             </div>
           </div>
         </div>

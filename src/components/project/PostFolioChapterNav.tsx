@@ -18,8 +18,8 @@ function mobileChapterLabel(chapter: PostFolioChapter): string {
       return 'Coll. I';
     case 'collection-2':
       return 'Coll. II';
-    case 'selected-works':
-      return 'Selected';
+    case 'collection-3':
+      return 'Coll. III';
     default:
       return chapter.shortLabel;
   }

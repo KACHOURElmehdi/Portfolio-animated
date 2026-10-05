@@ -60,7 +60,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     console.log(
-      '%c Portfolio %c by Aymen Rguig (@apex_visuals) ',
+      '%c Portfolio %c by Aymen Rguig (@4pexvisual) ',
       `background: ${theme.green800}; color: ${theme.green50}; padding: 4px 8px; border-radius: 4px 0 0 4px; font-family: monospace; font-weight: bold;`,
       `background: ${theme.green50}; color: ${theme.green800}; padding: 4px 8px; border-radius: 0 4px 4px 0; font-family: monospace; font-weight: bold; border: 1px solid ${theme.green800};`
     );

@@ -10,6 +10,8 @@ import { EASE } from '@/lib/motion';
 import { site } from '@/lib/site';
 import { media } from '@/lib/media';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import SocialIconLinks from '@/components/shared/SocialIconLinks';
+import CvDownloadLink from '@/components/shared/CvDownloadLink';
 
 const Contact = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -113,8 +115,7 @@ const Contact = () => {
     return words.length >= 5;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) newErrors.name = 'Name is required';
@@ -129,42 +130,44 @@ const Contact = () => {
     else if (!validateMessage(formData.message))
       newErrors.message = 'Please enter a meaningful message (at least 30 characters, 5 words)';
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const composedMessage = () => {
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const message = formData.message.trim();
+    return `Hello ${site.firstName},\n\nMy name is ${name}.\nEmail: ${email}\n\n${message}`;
+  };
+
+  /** Opens WhatsApp with the form content — no server / SMTP needed. */
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    const text = composedMessage();
+    const whatsappUrl = `${site.whatsappUrl}?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-      const data = await response.json();
-      if (response.ok && data.success) {
-        setSubmitStatus('success');
-        setSuccessMessage(data.message || 'Thank you! Your message has been sent successfully.');
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        setSubmitStatus('error');
-        if (data?.error) {
-          setErrors({ server: data.error });
-        }
-      }
-    } catch {
-      clearTimeout(timeoutId);
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
+    setSubmitStatus('success');
+    setSuccessMessage('WhatsApp is opening with your message. Send it there to reach me directly.');
+    setFormData({ name: '', email: '', message: '' });
+    setIsSubmitting(false);
+  };
+
+  const handleEmailCompose = () => {
+    if (!validateForm()) return;
+
+    const subject = encodeURIComponent(`Portfolio inquiry from ${formData.name.trim()}`);
+    const body = encodeURIComponent(composedMessage());
+    window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
+
+    setSubmitStatus('success');
+    setSuccessMessage('Your email app is opening with the message ready to send.');
   };
 
   const isDisabled = isSubmitting;
@@ -259,40 +262,39 @@ const Contact = () => {
             </div>
 
             <div role="status" aria-live="polite">
-              {errors.server && (
-                <div className="p-4 bg-red-900/20 border border-red-600/40 rounded-xl mb-4">
-                  <p className="text-red-400 text-sm">{errors.server}</p>
-                </div>
-              )}
-
               {submitStatus === 'success' && (
                 <div className="p-4 bg-accent/15 border border-accent/40 rounded-xl mb-4">
                   <p className="text-accent-light text-sm">{successMessage}</p>
                 </div>
               )}
-
-              {submitStatus === 'error' && !errors.server && (
-                <div className="p-4 bg-red-900/20 border border-red-600/40 rounded-xl mb-4">
-                  <p className="text-red-400 text-sm">Something went wrong. Please try again later.</p>
-                </div>
-              )}
             </div>
 
-            <div className="w-full flex justify-center md:justify-start">
+            <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-center md:justify-start gap-3 sm:gap-4">
               <button
                 type="submit"
                 disabled={isDisabled}
                 className="inline-block border-0 bg-transparent p-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <AnimatedButton
-                  topText={isDisabled ? 'PLEASE WAIT...' : 'SEND MESSAGE'}
-                  bottomText={isDisabled ? 'PROCESSING' : 'PROCEED →'}
+                  topText="SEND VIA WHATSAPP"
+                  bottomText="OPEN CHAT →"
                   variant="primary"
                   as="span"
                   className={isDisabled ? 'pointer-events-none' : ''}
                 />
               </button>
+              <button
+                type="button"
+                onClick={handleEmailCompose}
+                disabled={isDisabled}
+                className="inline-flex items-center justify-center min-h-11 px-5 py-3 rounded-full border border-border-subtle text-cream text-xs sm:text-sm font-semibold uppercase tracking-wide hover:border-accent hover:text-accent transition-colors disabled:opacity-50"
+              >
+                Or open in Email
+              </button>
             </div>
+            <p className="text-xs text-muted text-center md:text-left">
+              No server email required — your message opens in WhatsApp or your mail app, ready to send.
+            </p>
           </form>
 
           <div className="mt-16 pt-12 border-t border-border-subtle flex flex-col items-center justify-center text-center w-full">
@@ -332,18 +334,25 @@ const Contact = () => {
                 Click to copy email address
               </span>
 
-              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-8">
-                <a
-                  href={site.whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center min-h-11 py-3 font-mono text-xs uppercase tracking-widest text-cream hover:text-accent transition-colors"
-                >
-                  WhatsApp · {site.whatsapp}
-                </a>
-                <span className="font-mono text-xs uppercase tracking-widest text-muted">
-                  Based in {site.location}
-                </span>
+              <div className="mt-6 sm:mt-8 flex flex-col items-center justify-center gap-4">
+                <SocialIconLinks
+                  className="justify-center"
+                  linkClassName="text-cream hover:text-accent"
+                />
+                <CvDownloadLink className="mt-1" />
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-8">
+                  <a
+                    href={site.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center min-h-11 py-3 font-mono text-xs uppercase tracking-widest text-cream hover:text-accent transition-colors"
+                  >
+                    WhatsApp · {site.whatsapp}
+                  </a>
+                  <span className="font-mono text-xs uppercase tracking-widest text-muted">
+                    Based in {site.location}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

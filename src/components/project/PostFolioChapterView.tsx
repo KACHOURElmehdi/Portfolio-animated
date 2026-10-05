@@ -318,7 +318,7 @@ export default function PostFolioChapterView({ chapter }: PostFolioChapterViewPr
           )}
         </nav>
 
-        {chapter.id === 'selected-works' && (
+        {chapter.id === 'collection-3' && (
           <>
             {project.tech?.length > 0 && (
               <section className="mb-12 sm:mb-16">

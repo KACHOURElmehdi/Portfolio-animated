@@ -10,15 +10,22 @@ import HomeBanner from '@/components/sections/HomeBanner';
 import Projects from '@/components/sections/Projects';
 import About from '@/components/sections/About';
 import MarqueeStrip from '@/components/sections/MarqueeStrip';
+import Listening from '@/components/sections/Listening';
 import CurvedSectionDivider from '@/components/ui/CurvedSectionDivider';
 import Contact from '@/components/sections/Contact';
 import Footer from '@/components/shared/Footer';
 import Navbar from '@/components/shared/Navbar';
 import HomeScrollOrchestrator from '@/components/home/HomeScrollOrchestrator';
+import JsonLd from '@/components/seo/JsonLd';
+import { getAllProjects } from '@/lib/projects';
+import { portfolioItemListJsonLd } from '@/lib/seo';
 
 export default function Home() {
+  const projects = getAllProjects();
+
   return (
     <>
+      <JsonLd data={portfolioItemListJsonLd(projects)} />
       <Navbar />
       <HomeScrollOrchestrator
         banner={<HomeBanner />}
@@ -29,6 +36,7 @@ export default function Home() {
           <Projects />
         </section>
         <MarqueeStrip />
+        <Listening />
         <CurvedSectionDivider curveColor="var(--green-50)" bottomColor="var(--green-800)" />
         <div className="relative z-25 bg-ink overflow-hidden">
           <Contact />

@@ -193,25 +193,26 @@ const projects: Project[] = [
       'Built a playful product identity system for a youth-focused beverage line.',
     ],
     images: [
-      media('brand-folio/soda-crave', 'gallery'),
-      media('brand-folio/soda-logo', 'gallery'),
-      media('brand-folio/soda-grape', 'gallery'),
-      media('brand-folio/soda-citrus', 'gallery'),
-      media('brand-folio/soda-strawberry', 'gallery'),
+      media('soda-crave/board', 'gallery'),
+      media('soda-crave/logo', 'gallery'),
+      media('soda-crave/grape', 'gallery'),
+      media('soda-crave/citrus', 'gallery'),
+      media('soda-crave/strawberry', 'gallery'),
     ],
     galleryLayout: [
-      { type: 'feature', src: media('brand-folio/soda-logo', 'gallery'), caption: 'Wordmark' },
+      { type: 'feature', src: media('soda-crave/board', 'gallery'), caption: 'Flavor lineup' },
+      { type: 'feature', src: media('soda-crave/logo', 'gallery'), caption: 'Wordmark' },
       {
         type: 'grid',
         sources: [
-          media('brand-folio/soda-grape', 'gallery'),
-          media('brand-folio/soda-citrus', 'gallery'),
-          media('brand-folio/soda-strawberry', 'gallery'),
+          media('soda-crave/grape', 'gallery'),
+          media('soda-crave/citrus', 'gallery'),
+          media('soda-crave/strawberry', 'gallery'),
         ],
         columns: 3,
       },
     ],
-    hoverImage: media('brand-folio/soda-crave', 'hero'),
+    hoverImage: media('soda-crave/board', 'hero'),
     github: '',
     liveUrl: '',
   },
@@ -263,35 +264,34 @@ const projects: Project[] = [
     id: 5,
     slug: 'post-folio',
     title: 'Post Folio',
-    type: 'Print & Social Media Design',
+    type: 'Poster Design',
     role: 'Graphic Designer',
     year: '2026',
     galleryKind: 'posters',
     tech: [
-      'Print Design',
       'Poster Design',
-      'Social Media Design',
-      'Promotional Graphics',
+      'Typography',
       'Campaign Visuals',
+      'Mockup Presentation',
     ],
     description:
-      'A collection of poster, print, and social media designs spanning promotional, editorial, and event visuals.',
+      'A poster folio of typographic statements, portrait treatments, and campaign mockups.',
     overview:
-      'Post Folio gathers poster mockups and campaign visuals—from typographic statements and portrait treatments to automotive, sports, and cultural pieces—alongside print and social media work for restaurants, events, and promotions.',
+      'Post Folio is dedicated to poster work—bold type, photography-led layouts, and wall mockups across editorial, sports, automotive, and cultural pieces.',
     architecture:
-      'Designs are organized as a visual collection rather than individual client case studies. Artwork emphasizes bold typography, photography-led layouts, and campaign-ready compositions for print and digital channels.',
+      'Organized as four poster chapters: Overview, Collection I, Collection II, and Collection III. Print collateral and social campaigns live in their own projects.',
     implementation:
-      'Presented as four connected chapters: Overview, Collection I, Collection II, and Selected Works—so each set of posters, print pieces, and campaign graphics can be browsed with intention.',
+      'Fifteen poster pieces from Media/post folio, curated across chapters so each set can be browsed with intention.',
     stats: [
       { value: '04', label: 'Chapters' },
-      { value: 'Print', label: 'Poster & flyer work' },
-      { value: 'Social', label: 'Digital campaigns' },
+      { value: '15', label: 'Posters' },
+      { value: 'Print', label: 'Mockup presentation' },
     ],
     accent: theme.green200,
     myRole: [
-      'Designed promotional posters and print communication pieces.',
-      'Created social media campaign graphics and event visuals.',
-      'Developed food, fashion, and entertainment-oriented poster layouts.',
+      'Designed promotional and editorial poster compositions.',
+      'Developed typography-led and portrait-driven layouts.',
+      'Art-directed mockup presentation for the folio.',
     ],
     // Home card / metadata only — chapter pages load their own curated media.
     images: [media('post-folio/art', 'gallery')],
@@ -301,6 +301,157 @@ const projects: Project[] = [
   },
   {
     id: 6,
+    slug: 'print-folio',
+    title: 'Print Folio',
+    type: 'Print & Collateral Design',
+    role: 'Graphic Designer',
+    year: '2025',
+    galleryKind: 'default',
+    tech: [
+      'Print Design',
+      'Flyer Design',
+      'Menu Design',
+      'Business Cards',
+      'Promotional Graphics',
+    ],
+    description:
+      'Print collateral—flyers, menus, spa boards, and identity pieces for events and local businesses.',
+    overview:
+      'Print Folio gathers production-ready print work: event flyers, restaurant and spa pieces, and visit-card systems.',
+    architecture:
+      'Each piece is framed for print clarity—hierarchy, finish, and format suited to physical touchpoints.',
+    implementation:
+      'Seven print pieces presented as a focused gallery, separate from the poster folio.',
+    stats: [
+      { value: '07', label: 'Print pieces' },
+      { value: 'Flyer', label: 'Event & promo' },
+      { value: 'ID', label: 'Collateral' },
+    ],
+    accent: theme.green400,
+    myRole: [
+      'Designed flyers and promotional print for events and venues.',
+      'Built menu and spa board layouts for print production.',
+      'Developed visit-card and identity collateral.',
+    ],
+    images: [
+      media('print-folio/friday-cocktail', 'gallery'),
+      media('print-folio/mexico-resto', 'gallery'),
+      media('print-folio/spa', 'gallery'),
+      media('print-folio/food', 'gallery'),
+      media('print-folio/front', 'gallery'),
+      media('print-folio/as', 'gallery'),
+      media('print-folio/visite-card', 'gallery'),
+    ],
+    galleryLayout: [
+      {
+        type: 'feature',
+        src: media('print-folio/friday-cocktail', 'gallery'),
+        caption: 'Event flyer',
+      },
+      {
+        type: 'pair',
+        sources: [
+          media('print-folio/mexico-resto', 'gallery'),
+          media('print-folio/spa', 'gallery'),
+        ],
+      },
+      {
+        type: 'grid',
+        sources: [
+          media('print-folio/food', 'gallery'),
+          media('print-folio/front', 'gallery'),
+          media('print-folio/as', 'gallery'),
+        ],
+        columns: 3,
+      },
+      {
+        type: 'feature',
+        src: media('print-folio/visite-card', 'gallery'),
+        caption: 'Identity collateral',
+      },
+    ],
+    hoverImage: media('print-folio/friday-cocktail', 'hero'),
+    github: '',
+    liveUrl: '',
+  },
+  {
+    id: 7,
+    slug: 'social-media',
+    title: 'Social Media',
+    type: 'Social Campaign Design',
+    role: 'Graphic Designer',
+    year: '2025',
+    galleryKind: 'default',
+    tech: [
+      'Social Media Design',
+      'Campaign Graphics',
+      'Digital Ads',
+      'Portrait Campaigns',
+    ],
+    description:
+      'Social campaign graphics spanning travel, health, entertainment, and portrait-led posts.',
+    overview:
+      'A set of social media creatives built for feed impact—bold crops, clear hierarchy, and campaign-ready frames.',
+    architecture:
+      'Compositions tuned for digital channels: square and story-friendly layouts with strong focal points.',
+    implementation:
+      'Eight social pieces in a dedicated gallery, kept separate from Post Folio posters.',
+    stats: [
+      { value: '08', label: 'Creatives' },
+      { value: 'Feed', label: 'Campaign graphics' },
+      { value: 'Digital', label: 'Social-first' },
+    ],
+    accent: theme.green600,
+    myRole: [
+      'Designed social campaign graphics for feed and story formats.',
+      'Built portrait and lifestyle-led promotional posts.',
+      'Kept messaging clear for fast digital scanning.',
+    ],
+    images: [
+      media('social-media/black', 'gallery'),
+      media('social-media/travel', 'gallery'),
+      media('social-media/health', 'gallery'),
+      media('social-media/7ari', 'gallery'),
+      media('social-media/shobbe', 'gallery'),
+      media('social-media/mada', 'gallery'),
+      media('social-media/macheal', 'gallery'),
+      media('social-media/design', 'gallery'),
+    ],
+    galleryLayout: [
+      {
+        type: 'feature',
+        src: media('social-media/black', 'gallery'),
+        caption: 'Campaign lead',
+      },
+      {
+        type: 'pair',
+        sources: [
+          media('social-media/travel', 'gallery'),
+          media('social-media/health', 'gallery'),
+        ],
+      },
+      {
+        type: 'grid',
+        sources: [
+          media('social-media/7ari', 'gallery'),
+          media('social-media/shobbe', 'gallery'),
+          media('social-media/mada', 'gallery'),
+        ],
+        columns: 3,
+      },
+      {
+        type: 'feature',
+        src: media('social-media/macheal', 'gallery'),
+        caption: 'Portrait campaign',
+      },
+      { type: 'fullBleed', src: media('social-media/design', 'gallery') },
+    ],
+    hoverImage: media('social-media/black', 'hero'),
+    github: '',
+    liveUrl: '',
+  },
+  {
+    id: 8,
     slug: 'product-packaging',
     title: 'Product Packaging',
     type: 'Product & Packaging Design',
@@ -349,6 +500,66 @@ const projects: Project[] = [
       { type: 'feature', src: media('packaging/spass', 'gallery'), caption: 'Spasmomen' },
     ],
     hoverImage: media('brand-folio/marani-brand', 'hero'),
+    github: '',
+    liveUrl: '',
+  },
+  {
+    id: 9,
+    slug: 'recent-projects',
+    title: 'Recent Projects',
+    type: 'Campaigns, Product & App Visuals',
+    role: 'Graphic Designer',
+    year: '2026',
+    galleryKind: 'default',
+    tech: [
+      'Digital Design',
+      'Campaign Graphics',
+      'Product Visuals',
+      'App Mockups',
+      'Social Creatives',
+    ],
+    description:
+      'A showcase of design solutions that deliver impact and innovation.',
+    overview:
+      'Recent Projects gathers fresh campaign and product visuals—real-estate promotion, consumer electronics, and mobile app presentations—each built for clear hierarchy, bold type, and scroll-stopping color.',
+    architecture:
+      'Four standalone pieces share one editorial gallery: Dubai luxury living, Studio Pro headphones, Spotscape discovery app, and an organic food-order interface.',
+    implementation:
+      'Presented as a curated board from Media/Recent Projects: lineup hero plus individual campaign frames.',
+    stats: [
+      { value: '04', label: 'Recent pieces' },
+      { value: 'Apps', label: 'UI mockups' },
+      { value: 'Ads', label: 'Campaign graphics' },
+    ],
+    accent: theme.green500,
+    myRole: [
+      'Designed luxury real-estate campaign graphics for Dubai living and business locations.',
+      'Created product showcase visuals for Studio Pro wireless headphones.',
+      'Built Spotscape app presentation mockups for discovery and property browsing.',
+      'Art-directed organic food-order app visuals with botanical illustration accents.',
+    ],
+    images: [
+      media('recent-projects/spotscape', 'gallery'),
+      media('recent-projects/dubai-luxury', 'gallery'),
+      media('recent-projects/studio-pro', 'gallery'),
+      media('recent-projects/organic-order', 'gallery'),
+    ],
+    galleryLayout: [
+      { type: 'feature', src: media('recent-projects/spotscape', 'gallery'), caption: 'Spotscape' },
+      {
+        type: 'pair',
+        sources: [
+          media('recent-projects/studio-pro', 'gallery'),
+          media('recent-projects/organic-order', 'gallery'),
+        ],
+      },
+      {
+        type: 'feature',
+        src: media('recent-projects/dubai-luxury', 'gallery'),
+        caption: 'Dubai luxury living',
+      },
+    ],
+    hoverImage: media('recent-projects/spotscape', 'hero'),
     github: '',
     liveUrl: '',
   },

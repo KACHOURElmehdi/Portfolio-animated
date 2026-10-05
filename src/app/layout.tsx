@@ -12,6 +12,12 @@ import ClientLayout from './ClientLayout';
 import { siteMetadata } from '@/lib/metadata';
 import { Analytics } from '@vercel/analytics/react';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import JsonLd from '@/components/seo/JsonLd';
+import {
+  personJsonLd,
+  websiteJsonLd,
+  professionalServiceJsonLd,
+} from '@/lib/seo';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -46,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} antialiased bg-cream`}
       >
+        <JsonLd data={[personJsonLd(), websiteJsonLd(), professionalServiceJsonLd()]} />
         <a href="#main-content" className="skip-link">
           Skip to content
         </a>

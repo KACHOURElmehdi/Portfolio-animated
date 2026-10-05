@@ -4,9 +4,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import AnimatedLink from '@/components/ui/AnimateLink';
 import Magnetic from '@/components/ui/Magnetic';
 import { FaArrowUp } from 'react-icons/fa';
+import { FaSpotify } from 'react-icons/fa6';
 import { useHandleLinkClick } from '@/lib/navigation';
 import { useLenis } from '@/components/providers/SmoothScrollProvider';
-import { site, socialList, navLinks } from '@/lib/site';
+import { site, socialList, socialNetworks, navLinks } from '@/lib/site';
+import SocialIconLinks from '@/components/shared/SocialIconLinks';
+import CvDownloadLink from '@/components/shared/CvDownloadLink';
 import Lenis from 'lenis';
 
 const Footer = () => {
@@ -78,7 +81,7 @@ const Footer = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 mb-10 md:mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 mb-10 md:mb-12">
           <div>
             <h3 className="text-light/90 text-base sm:text-lg font-sans tracking-wide font-semibold mb-4 md:mb-6">
               Menu
@@ -98,6 +101,33 @@ const Footer = () => {
                 </AnimatedLink>
               ))}
             </ul>
+          </div>
+
+          <div>
+            <h3 className="text-light/90 text-base sm:text-lg font-sans tracking-wide font-semibold mb-4 md:mb-6">
+              Social
+            </h3>
+            <SocialIconLinks
+              items={socialNetworks}
+              className="flex-col items-start gap-2"
+              linkClassName="text-gray-soft hover:text-cream"
+            />
+            <a
+              href={site.spotify.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-2 min-h-11 text-gray-soft hover:text-cream text-xs sm:text-sm font-medium uppercase tracking-wide transition-colors"
+            >
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-subtler bg-elevated-dark/60">
+                <FaSpotify className="h-4 w-4" aria-hidden />
+              </span>
+              <span className="flex flex-col leading-tight">
+                <span>Spotify</span>
+                <span className="font-mono text-[10px] sm:text-[11px] text-gray-soft/80 normal-case tracking-normal">
+                  {site.spotify.title}
+                </span>
+              </span>
+            </a>
           </div>
 
           <div>
@@ -136,10 +166,16 @@ const Footer = () => {
                   {site.whatsapp}
                 </a>
               </li>
+              <li>
+                <CvDownloadLink
+                  variant="inline"
+                  className="text-gray-soft hover:text-cream text-xs sm:text-sm font-medium"
+                />
+              </li>
             </ul>
           </div>
 
-          <div className="col-span-2 md:col-span-1 mt-6 md:mt-0">
+          <div className="col-span-2 md:col-span-1 mt-2 md:mt-0">
             <h3 className="text-light/90 text-base sm:text-lg font-sans tracking-wide font-semibold mb-2 md:mb-6">
               Local Time
             </h3>

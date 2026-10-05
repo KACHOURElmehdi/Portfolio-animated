@@ -333,6 +333,9 @@ function MobileSnapProjects({ projects, inactive = false }: MobileSnapProjectsPr
           words={[{ t: 'SELECTED' }, { t: 'works', serif: true }]}
           className="text-[clamp(3rem,14vw,5rem)] leading-none text-charcoal"
         />
+        <p className="mt-3 max-w-md text-sm text-gray-soft leading-relaxed">
+          A showcase of design solutions that deliver impact and innovation.
+        </p>
       </div>
 
       <div className="flex flex-col gap-3 px-4">
@@ -637,6 +640,9 @@ export default function ProjectsPage() {
             words={[{ t: 'SELECTED' }, { t: 'works', serif: true }]}
             className="text-[clamp(2.5rem,7vw,6.5rem)] leading-none text-charcoal"
           />
+          <p className="mt-4 max-w-xl text-sm sm:text-base text-gray-soft leading-relaxed">
+            A showcase of design solutions that deliver impact and innovation.
+          </p>
         </div>
         <hr className="border-t border-border w-full mb-4" />
 
@@ -778,7 +784,7 @@ export default function ProjectsPage() {
       )}
 
       {showMobile && (
-        <MobileSnapProjects projects={projects} inactive={mode === 'desktop'} />
+        <MobileSnapProjects projects={projects} inactive={mode !== 'mobile'} />
       )}
     </section>
   );

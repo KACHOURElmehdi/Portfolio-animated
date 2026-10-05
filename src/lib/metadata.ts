@@ -1,64 +1,68 @@
 import { Metadata } from 'next';
 import { site } from '@/lib/site';
-
-const description =
-  'Explore the portfolio of Aymen Rguig, a Graphic Designer and Art Director specializing in brand identity, logo design, packaging, print design, and creative visual communication.';
+import { absoluteUrl, seoCopy } from '@/lib/seo';
 
 export const siteMetadata: Metadata = {
   title: {
-    default: 'Aymen Rguig — Graphic Designer & Art Director',
-    template: '%s | Aymen Rguig',
+    default: seoCopy.titleDefault,
+    template: seoCopy.titleTemplate,
   },
-  description,
-  keywords: [
-    'Aymen Rguig',
-    'Graphic Designer',
-    'Art Director',
-    'Brand Identity',
-    'Logo Design',
-    'Packaging Design',
-    'Print Design',
-    'Social Media Design',
-    'Typography',
-    'Portfolio',
-    'Completo',
-  ],
-  authors: [
-    {
-      name: site.name,
-    },
-  ],
+  description: seoCopy.description,
+  keywords: seoCopy.keywords,
+  authors: [{ name: site.name, url: absoluteUrl('/') }],
   creator: site.name,
+  publisher: site.name,
+  category: 'design',
+  applicationName: `${site.name} Portfolio`,
   metadataBase: new URL(site.url),
   alternates: {
-    canonical: './',
+    canonical: absoluteUrl('/'),
   },
   icons: {
-    icon: '/logo.webp',
+    icon: [{ url: '/logo.webp', type: 'image/webp' }],
+    apple: [{ url: '/logo.png', type: 'image/png' }],
+    shortcut: '/logo.webp',
   },
   openGraph: {
-    title: 'Aymen Rguig — Graphic Designer & Art Director',
-    description,
-    url: site.url,
-    siteName: 'Aymen Rguig Portfolio',
+    title: seoCopy.titleDefault,
+    description: seoCopy.description,
+    url: absoluteUrl('/'),
+    siteName: `${site.name} Portfolio`,
+    locale: 'en_US',
+    type: 'website',
     images: [
       {
-        url: '/og-image.png',
+        url: seoCopy.ogImage,
         width: 1200,
         height: 630,
-        alt: 'Aymen Rguig — Graphic Designer & Art Director',
+        alt: seoCopy.titleDefault,
+        type: 'image/png',
       },
     ],
-    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Aymen Rguig — Graphic Designer & Art Director',
-    description,
-    images: ['/og-image.png'],
+    title: seoCopy.titleDefault,
+    description: seoCopy.description,
+    images: [seoCopy.ogImage],
+    creator: '@4pexvisual',
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+  },
+  other: {
+    'geo.region': 'MA',
+    'geo.placename': site.location,
   },
 };

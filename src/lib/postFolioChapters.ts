@@ -5,7 +5,7 @@ export type PostFolioChapterId =
   | 'overview'
   | 'collection-1'
   | 'collection-2'
-  | 'selected-works';
+  | 'collection-3';
 
 export interface PostFolioChapter {
   id: PostFolioChapterId;
@@ -21,17 +21,12 @@ export interface PostFolioChapter {
   blocks: GalleryBlock[];
 }
 
+/** Only images from public/Media/post folio → public/optimized/post-folio */
 const pf = (stem: string) => media(`post-folio/${stem}`, 'gallery');
-const pr = (stem: string) => media(`print-folio/${stem}`, 'gallery');
-const sm = (stem: string) => media(`social-media/${stem}`, 'gallery');
 
 /**
- * Curated chapter distribution — art-directed, not sequential slicing.
- *
- * 01 Overview — statement pieces that define the folio’s range
- * 02 Collection I — wall-mockup posters: typography, portraits, energy
- * 03 Collection II — atmospheric mockups into print collateral
- * 04 Selected Works — commercial / social campaigns as the closing chapter
+ * Post Folio — poster mockups only (15 pieces from Media/post folio).
+ * Print and social are separate projects.
  */
 export const POST_FOLIO_CHAPTERS: PostFolioChapter[] = [
   {
@@ -41,13 +36,12 @@ export const POST_FOLIO_CHAPTERS: PostFolioChapter[] = [
     label: 'Overview',
     shortLabel: 'Overview',
     title: 'Overview',
-    subtitle: 'Project introduction and selected highlights',
+    subtitle: 'Statement posters that set the tone',
     href: '/projects/post-folio',
     hero: pf('art'),
     blocks: [
       { type: 'feature', src: pf('spider'), caption: 'Bold campaign statement' },
       { type: 'pair', sources: [pf('pale'), pf('mohammed-one')] },
-      { type: 'feature', src: pr('mexico-resto'), caption: 'Bridge into print & promotion' },
     ],
   },
   {
@@ -57,14 +51,12 @@ export const POST_FOLIO_CHAPTERS: PostFolioChapter[] = [
     label: 'Collection I',
     shortLabel: 'Collection I',
     title: 'Collection I',
-    subtitle: 'Poster mockups — typography, portrait, and motion',
+    subtitle: 'Typography, portrait, and wall mockups',
     href: '/projects/post-folio/collection-1',
     hero: pf('cool'),
     blocks: [
       { type: 'pair', sources: [pf('chill'), pf('glory')] },
-      { type: 'grid', sources: [pf('goatt'), pf('idol'), pf('m')], columns: 3 },
-      { type: 'feature', src: pf('gt3'), caption: 'Automotive editorial' },
-      { type: 'pair', sources: [pf('derham'), pf('lhaj-esco-one')] },
+      { type: 'feature', src: pf('goatt') },
     ],
   },
   {
@@ -74,35 +66,26 @@ export const POST_FOLIO_CHAPTERS: PostFolioChapter[] = [
     label: 'Collection II',
     shortLabel: 'Collection II',
     title: 'Collection II',
-    subtitle: 'Atmosphere, culture, and print systems',
+    subtitle: 'Editorial energy and automotive',
     href: '/projects/post-folio/collection-2',
-    hero: pf('move'),
+    hero: pf('idol'),
     blocks: [
-      {
-        type: 'asymmetric',
-        primary: pf('youssra'),
-        secondary: pr('friday-cocktail'),
-      },
-      { type: 'grid', sources: [pr('spa'), pr('food'), pr('front')], columns: 3 },
-      { type: 'fullBleed', src: pr('as') },
-      { type: 'feature', src: pr('visite-card'), caption: 'Identity collateral' },
+      { type: 'pair', sources: [pf('m'), pf('gt3')] },
+      { type: 'feature', src: pf('move'), caption: 'Atmosphere in motion' },
     ],
   },
   {
-    id: 'selected-works',
-    segment: 'selected-works',
+    id: 'collection-3',
+    segment: 'collection-3',
     index: 4,
-    label: 'Selected Works',
-    shortLabel: 'Selected',
-    title: 'Selected Works',
-    subtitle: 'Campaign graphics and commercial applications',
-    href: '/projects/post-folio/selected-works',
-    hero: sm('black'),
+    label: 'Collection III',
+    shortLabel: 'Collection III',
+    title: 'Collection III',
+    subtitle: 'Culture and portrait close',
+    href: '/projects/post-folio/collection-3',
+    hero: pf('youssra'),
     blocks: [
-      { type: 'pair', sources: [sm('travel'), sm('health')] },
-      { type: 'grid', sources: [sm('7ari'), sm('shobbe'), sm('mada')], columns: 3 },
-      { type: 'feature', src: sm('macheal'), caption: 'Portrait campaign' },
-      { type: 'fullBleed', src: sm('design') },
+      { type: 'pair', sources: [pf('derham'), pf('lhaj-esco-one')] },
     ],
   },
 ];
